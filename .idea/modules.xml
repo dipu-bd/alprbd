@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/ALPR-Bangladesh.iml" filepath="$PROJECT_DIR$/.idea/ALPR-Bangladesh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../OpenCV_3_License_Plate_Recognition_Python/.idea/OpenCV_3_License_Plate_Recognition_Python.iml" filepath="$PROJECT_DIR$/../OpenCV_3_License_Plate_Recognition_Python/.idea/OpenCV_3_License_Plate_Recognition_Python.iml" />
+    </modules>
+  </component>
+</project>
