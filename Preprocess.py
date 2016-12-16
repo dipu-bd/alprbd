@@ -11,27 +11,48 @@ ADAPTIVE_THRESH_WEIGHT = 9
 
 ###################################################################################################
 def preprocess(imgOriginal):
-    imgGrayscale = extractValue(imgOriginal)
+
+    imgScaled = scaleImage(imgOriginal)                  # scale image
+
+    imgGrayscale = extractValue(imgScaled)               # make grayscale
 
     imgMaxContrastGrayscale = maximizeContrast(imgGrayscale)
 
     height, width = imgGrayscale.shape
+    imgBlurred = np.zeros((height, width, 1), np.uint8)  # fail safe copy of blur image
+    imgBlurred = cv2.GaussianBlur(                       # blur image
+        imgMaxContrastGrayscale,
+        GAUSSIAN_SMOOTH_FILTER_SIZE, 0)
 
-    imgBlurred = np.zeros((height, width, 1), np.uint8)
+    imgThresh = cv2.adaptiveThreshold(                   # extract threshold
+        imgBlurred, 255.0,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY_INV,
+        ADAPTIVE_THRESH_BLOCK_SIZE,
+        ADAPTIVE_THRESH_WEIGHT)
 
-    imgBlurred = cv2.GaussianBlur(imgMaxContrastGrayscale, GAUSSIAN_SMOOTH_FILTER_SIZE, 0)
+    return imgScaled, imgGrayscale, imgThresh
+# end function
 
-    imgThresh = cv2.adaptiveThreshold(imgBlurred, 255.0, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, ADAPTIVE_THRESH_BLOCK_SIZE, ADAPTIVE_THRESH_WEIGHT)
+###################################################################################################
+def scaleimage(imgOriginal):
 
-    return imgGrayscale, imgThresh
+    height, width = imgOriginal.shape       # original height and width
+
+    ratio = 640.0 / width                   # new image ratio
+    dim = (640, int(ratio * height))        # new dimension
+
+    # perform the actual resizing of the image and show it
+    imgResized = cv2.resize(imgOriginal, dim, interpolation=cv2.INTER_AREA)
+
+    return imgResized
 # end function
 
 ###################################################################################################
 def extractValue(imgOriginal):
     height, width, numChannels = imgOriginal.shape
 
-    imgHSV = np.zeros((height, width, 3), np.uint8)
-
+    imgHSV = np.zeros((height, width, 3), np.uint8)             # fail safe copy
     imgHSV = cv2.cvtColor(imgOriginal, cv2.COLOR_BGR2HSV)
 
     imgHue, imgSaturation, imgValue = cv2.split(imgHSV)

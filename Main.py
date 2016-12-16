@@ -1,35 +1,43 @@
-#!/usr/bin/python
 
 import os
+import sys
 import cv2
-import Preprocess
+
+import Preprocess as pp
 
 ###################################################################################################
-def main(imgFile):
+def main(img_file):
+    """Start point of the application.
 
-    imgOriginal  = cv2.imread(imgFile)                        # open image
+    Keyword arguments:
+    img_file -- the image file to use for ALPR
+    """
 
-    if imgOriginal is None:                                 # if image was not read successfully
-        print "\nerror: count not read image file \n\n"     # print error message to std out
+    img_original = cv2.imread(img_file)                     # open image
+
+    if img_original is None:                                # if image was not read successfully
+        print "\nERROR: count not read image file \n"       # print error message to std out
         os.system("pause")                                  # pause so user can see error message
         return                                              # and exit program
     # end if
 
-    cv2.imshow("imgOriginal", imgOriginal)                  # show scene image
+    scaled, grayscale, thresh = pp.preprocess(img_original)
 
-    imgGrayscale, imgThresh = preprocess(imgOriginal)                  # calls pre-process routines
+    cv2.imshow("Scaled Image", scaled)
+    cv2.waitKey(0)
 
-    cv2.imgshow("imgGrayscale", imgGrayscale)
-    cv2.imgshow("imgThresh", imgThresh)
+    cv2.imshow("Grayscale Image", grayscale)
+    cv2.waitKey(0)
 
-    cv2.waitKey(0)					# hold windows open until user presses a key
-    return
+    cv2.imshow("Threshold Applied", thresh)
+    cv2.waitKey(0)
+
 # end main
 
 ###################################################################################################
 
 if __name__ == "__main__":
-    main(sys.argv[2])
+    main(sys.argv[1])
 
 
 
