@@ -2,6 +2,7 @@
 
 import os
 import cv2
+import numpy as np
 from shutil import rmtree
 
 ###############################################################################
@@ -46,6 +47,8 @@ def main():
         cv2.imwrite(outFile + "/2 grayscale.jpg", res[1]);
         cv2.imwrite(outFile + "/3 blurred.jpg", res[2]);
         cv2.imwrite(outFile + "/4 threshold.jpg", res[3]);
+        cv2.imwrite(outFile + "/5 scaled.jpg", res[4]);
+        cv2.imwrite(outFile + "/6 detected edges.jpg", res[5]);
     #end for
 
     print "\nDONE\n"
@@ -68,9 +71,32 @@ def processImage(img):
                                   cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
                                   cv2.THRESH_BINARY, 51, 7)
 
-    return [img, gray, blur, thres]
+    # scale image
+    scaled = scaleImage(img, 1024, 768)
+
+    # canny edge detection
+    edges = cv2.Canny(blur, 100,200)
+
+    return [img, gray, blur, thres, scaled, edges]
 
 # end processImage
+
+def scaleImage(img, newWidth, newHeight):
+
+    height, width = img.shape[:2]
+
+    if height < width:
+        newHeight =  height * newWidth / width
+    else:
+        newWidth = width * newHeight / height
+    #end if
+
+    dim = (int(newWidth), int(newHeight))
+
+    res = cv2.resize(img, dim, interpolation = cv2.INTER_CUBIC)
+    return res
+
+# end scaleImage
 
 ###############################################################################
 if __name__ == "__main__":
