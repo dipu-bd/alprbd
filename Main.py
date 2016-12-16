@@ -1,3 +1,4 @@
+#!/home/dipu/anaconda2/bin/python
 
 import os
 import sys
@@ -33,7 +34,6 @@ def main(imgFile):
 
     cv2.imshow("Threshold Applied", imgThresh)
     cv2.waitKey(0)
-
 # end main
 
 ###################################################################################################
@@ -54,6 +54,8 @@ def TEST(gray):
         cv2.imwrite(outFile, thresh)
 
 # end TEST
+
+###################################################################################################
 
 if __name__ == "__main__":
     main(sys.argv[1])

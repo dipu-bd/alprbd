@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/dipu/anaconda2/bin/python
 
 import cv2
 import math
