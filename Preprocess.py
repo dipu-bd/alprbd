@@ -5,17 +5,21 @@ import math
 import numpy as np
 
 # module level variables ##########################################################################
-GAUSSIAN_SMOOTH_FILTER_SIZE = (5, 5)
-ADAPTIVE_THRESH_BLOCK_SIZE = 19
+GAUSSIAN_SMOOTH_FILTER_SIZE = (1, 1)  #no blur
+ADAPTIVE_THRESH_BLOCK_SIZE = 79
 ADAPTIVE_THRESH_WEIGHT = 9
 
 ###################################################################################################
 def preprocess(imgOriginal):
+    """
+    Returns an array containing scaled image, grayscale image, and threshold image.
+    """
 
     imgScaled = scaleImage(imgOriginal)                  # scale image
 
     imgGrayscale = extractValue(imgScaled)               # make grayscale
 
+    """
     imgMaxContrastGrayscale = maximizeContrast(imgGrayscale)
 
     height, width = imgGrayscale.shape
@@ -23,9 +27,10 @@ def preprocess(imgOriginal):
     imgBlurred = cv2.GaussianBlur(                       # blur image
         imgMaxContrastGrayscale,
         GAUSSIAN_SMOOTH_FILTER_SIZE, 0)
+    """
 
     imgThresh = cv2.adaptiveThreshold(                   # extract threshold
-        imgBlurred, 255.0,
+        imgGrayscale, 255.0,
         cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY_INV,
         ADAPTIVE_THRESH_BLOCK_SIZE,
@@ -35,17 +40,21 @@ def preprocess(imgOriginal):
 # end function
 
 ###################################################################################################
-def scaleimage(imgOriginal):
+def scaleImage(imgOriginal):
 
-    height, width = imgOriginal.shape       # original height and width
+    # original height and width
+    height, width, numChannels = imgOriginal.shape
 
-    ratio = 640.0 / width                   # new image ratio
-    dim = (640, int(ratio * height))        # new dimension
+    # new dimension
+    _width = 1024.0
+    _height = _width * height / width
+    dim = (int(_width), int(_height))
 
     # perform the actual resizing of the image and show it
     imgResized = cv2.resize(imgOriginal, dim, interpolation=cv2.INTER_AREA)
 
     return imgResized
+
 # end function
 
 ###################################################################################################
