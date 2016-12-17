@@ -43,15 +43,14 @@ def main():
         outFile = outPath + "/" + f
         os.makedirs(outFile)
 
-        cv2.imwrite(outFile + "/1 original.jpg", res[0]);
-        cv2.imwrite(outFile + "/2 grayscale.jpg", res[1]);
-        cv2.imwrite(outFile + "/3 blurred.jpg", res[2]);
-        cv2.imwrite(outFile + "/4 threshold.jpg", res[3]);
-        cv2.imwrite(outFile + "/5 scaled.jpg", res[4]);
-        cv2.imwrite(outFile + "/6 detected edges.jpg", res[5]);
+        for name, img in res:
+            cv2.imwrite(outFile + "/" + name + ".jpg", img)
+        #end for
+
     #end for
 
-    print "\nDONE\n"
+    print "\n--------- DONE ---------\n"
+
 # end process files
 
 ###############################################################################
@@ -64,26 +63,51 @@ def processImage(img):
     gray = val
 
     # apply blur
-    blur = cv2.medianBlur(gray, 5)
+    blur = cv2.medianBlur(gray, 3)
 
-    # apply threshold value
-    thres = cv2.adaptiveThreshold(blur, 255,\
+    # scale image
+    scaled = scaleImage(blur, 1024, 768)
+
+    # working copy of image
+    work = blur
+
+    # canny edge detection
+    edges = cv2.Canny(work, 100,200)
+
+    # laplacian algo
+    laplacian = cv2.Laplacian(work, cv2.CV_64F)
+
+    # sobel operators
+    sobelx = cv2.Sobel(work, cv2.CV_64F, 1,0,ksize=5)
+    sobely = cv2.Sobel(work, cv2.CV_64F, 0,1,ksize=5)
+
+
+    # apply threshold value on edges
+    thres = cv2.adaptiveThreshold(work, 255,\
                                   cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
                                   cv2.THRESH_BINARY, 51, 7)
 
-    # scale image
-    scaled = scaleImage(img, 1024, 768)
 
-    # canny edge detection
-    edges = cv2.Canny(blur, 100,200)
-
-    return [img, gray, blur, thres, scaled, edges]
+    return [\
+            ["1 original", img],\
+            ["2 grayscale", gray],\
+            ["3 blur", blur],\
+            ["4 scaled", scaled],\
+            ["5 threshold", thres],\
+            ["6 edges", edges],\
+            ["7 laplacian", laplacian],\
+            ["8 sobel-x", sobelx],\
+            ["9 sobel-y", sobely],\
+        ]
 
 # end processImage
 
 def scaleImage(img, newWidth, newHeight):
 
     height, width = img.shape[:2]
+
+    newWidth = min(width, newWidth)
+    newHeight = min(height, newHeight)
 
     if height < width:
         newHeight =  height * newWidth / width
