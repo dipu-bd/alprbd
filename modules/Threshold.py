@@ -17,7 +17,5 @@ def apply(img, cutoff=0.3):
     thresh = img.copy()
     thresh[thresh <= cutoff] = 0
 
-    # save to file
     return thresh
-
 # end function

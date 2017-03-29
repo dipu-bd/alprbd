@@ -32,4 +32,5 @@ def apply(read, write):
     # save to file
     cv2.imwrite(write, out)
 
+    return  out
 # end function
