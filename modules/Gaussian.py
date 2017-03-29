@@ -69,13 +69,17 @@ def run(stage):
     :param stage: Stage number 
     :return: 
     """
+    util.log("Stage", stage, "Gaussian conversion")
     for read in util.get_images(stage):
+        file = util.stage_file(read, stage)
         # open image
-        img = cv2.imread(read)
-        gauss = apply(img)
+        img = cv2.imread(file)
+        out = apply(img)
         # save to file
         write = util.stage_file(read, stage + 1)
-        cv2.imwrite(write, gauss)
+        cv2.imwrite(write, out)
+        # log
+        util.log("Converted", read, stage=stage)
     # end for
 
 # end function
