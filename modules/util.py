@@ -20,7 +20,7 @@ def split_file(file):
     :param file: File to parse.
     :return: (filename, extension) pair
     """
-    return path.splitext(path.split(file)[1])
+    return path.splitext(path.split(file.lower())[1])
 # end function
 
 
