@@ -9,6 +9,4 @@ from modules import config as cfg
 util.ensure_path(cfg.WORK_PATH)
 
 # start program
-if __name__ == "__main__":
-    main(sys.argv)
-# end if
+main(sys.argv)
