@@ -6,7 +6,7 @@ from modules import config as cfg
 
 def apply(read, write):
     """
-    Apply grayscale conversion
+    Rescale image
     :param read: input image file 
     :param write: output image file
     """
