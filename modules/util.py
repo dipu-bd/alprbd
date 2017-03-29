@@ -9,6 +9,7 @@ from modules import config as cfg
 VALID_DATA = [".npy"]
 VALID_IMAGE = [".jpg", ".gif", ".png", ".bmp"]
 
+
 def log(*args, stage=None, force=False):
     if not (cfg.DEBUG or force):
         return
@@ -20,7 +21,7 @@ def log(*args, stage=None, force=False):
     # end if
 
     if stage is not None:
-        out = "> [" + str(stage) + "]: " + out
+        out = "> [" + str(stage+1) + "]: " + out
     else:
         out = "> " + out
     # end if
