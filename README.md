@@ -28,7 +28,6 @@ The `stages` folder must have a folder named `stage <your stage number>`.
 
 ### Definitions
 - `main.py`: Main starting script.
-- `main.py`: Main starting script.
 - `stage`: **Stage** here means states of the processing.
 `stage.0` identifies original image list.
  After applying first step the `stage.1` is found, and so on.
