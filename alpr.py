@@ -11,7 +11,11 @@ from modules import LocatePlate
 from modules import Opening
 from modules import Closing
 from modules import CropPlate
-
+from modules import ExtractPlate
+from modules import BlackWhite
+from modules import HorizontalSegment
+from modules import VerticalSegment
+from modules import Features
 
 # Mapping of Stage to Action
 STAGE_MAP = [
@@ -30,9 +34,9 @@ STAGE_MAP = [
     BlackWhite.run,         # 13
     # remove border
     # rotate
-    # horizontal segmentation
-    # vertical segmentation
-    # feature extraction
+    HorizontalSegment.run,  # 14
+    VerticalSegment.run,    # 15
+    Features.run,           # 16
     # neural network
 ]
 
