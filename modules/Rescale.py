@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-from modules import util
 from modules import config as cfg
 
 
@@ -15,19 +14,11 @@ def apply(read, write):
     # open image
     img = cv2.imread(read)
 
-    # split image parts
-    b, g, r = cv2.split(img)
+    # Rescale dimension
+    h, w = cfg.SCALE_DIM
 
-    # join parts using a ratio
-    r = cfg.GRAY_RATIO[0] * r
-    g = cfg.GRAY_RATIO[1] * g
-    b = cfg.GRAY_RATIO[2] * b
-
-    # to gray
-    gray = r + g + b
-
-    # normalize image
-    out = util.normalize(gray)
+    # rescale image -- https://goo.gl/I9b3Ms
+    out = cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA)
 
     # save to file
     cv2.imwrite(write, out)

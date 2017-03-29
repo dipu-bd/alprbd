@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from modules import util
+from modules import Grayscale
+from modules import Rescale
 
 
-STAGE_MAP = {}
+# Mapping of Stage to Action
+STAGE_MAP = {
+    '0': Grayscale.apply,
+    '1': Rescale.apply,
+
+}
 
 
 def execute(stage, images):
@@ -14,15 +21,15 @@ def execute(stage, images):
     :return: True if success, False otherwise.
     """
     # check if stage is valid
-    if stage not in STAGE_MAP:
+    if str(stage) not in STAGE_MAP:
         util.log("Unknown stage:", stage)
         return False
     # end if
 
     # execute the stage function for each image
-    f = STAGE_MAP[stage]
+    func = STAGE_MAP[str(stage)]
     for read, write in images:
-        f(read, write)
+        func(read, write)
         util.log("Executed:", stage, stage=stage)
     # end for
 
