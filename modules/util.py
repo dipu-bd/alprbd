@@ -6,6 +6,8 @@ import numpy as np
 from os import path
 from modules import config as cfg
 
+VALID_DATA = [".npy"]
+VALID_IMAGE = [".jpg", ".gif", ".png", ".bmp"]
 
 def log(*args, stage=None, force=False):
     if not (cfg.DEBUG or force):
@@ -57,6 +59,10 @@ def stage_image(filename, stage):
     :param stage: Stage number
     :return: Full path of the image file
     """
+    name, ext = path.splitext(filename)
+    if ext in VALID_DATA:
+        filename = name
+    # end if
     return path.join(stage_folder(stage), filename)
 # end function
 
@@ -68,7 +74,10 @@ def stage_data(filename, stage):
     :param stage: Stage number
     :return: Full path of the data file
     """
-    filename = path.splitext(filename)[0] + ".npy"
+    name, ext = path.splitext(filename)
+    if ext not in VALID_DATA:
+        filename += VALID_DATA[0]
+    # end if
     return path.join(stage_folder(stage), filename)
 # end function
 
@@ -128,8 +137,7 @@ def get_files(stage):
     # Open all images
     data = []
     images = []
-    valid_data = [".npy"]
-    valid_images = [".jpg", ".gif", ".png", ".bmp"]
+    global VALID_DATA, VALID_IMAGE
     for file in os.listdir(folder):
         name = file.lower()
         if name.startswith('.'):
@@ -137,9 +145,9 @@ def get_files(stage):
         # end if
 
         _, ext = path.splitext(name)
-        if ext in valid_images:
+        if ext in VALID_IMAGE:
             images.append(name)  # image file
-        elif ext in valid_data:
+        elif ext in VALID_DATA:
             data.append(name)    # data file
         # end if
     # end for

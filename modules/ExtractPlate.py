@@ -3,18 +3,19 @@
 import cv2
 import numpy as np
 from modules import util
-from modules import config as cfg
 
 
 def process(img, region):
     """
     Extract plate regions    
-    :param img: plate image
-    :param region: position of the image
-    :return cropped plate image and region 
+    :param img: input image
+    :param region: region data
     """
 
-    return img, region
+    x1, x2, y1, y2 = region
+    plate = img[x1:x2, y1:y2]
+
+    return plate
 # end function
 
 
@@ -24,20 +25,18 @@ def run(stage):
     :param stage: Stage number 
     :return: 
     """
-    util.log("Stage", stage, "Crop the plate regions")
-    for read in util.get_images(stage):
-        # open plate region data
-        region = util.stage_data(read, 7)
+    util.log("Stage", stage, "Locate plate regions")
+    for read in util.get_data(stage):
+        # scaled image from 2nd stage
+        name = ".".join(read.split(".")[1:])
+        img = util.stage_image(name, 2)
+        img = cv2.imread(img, cv2.CV_8UC1)
+        # processed image from last stage
+        region = util.stage_data(read, stage)
         region = np.load(region)
-        # get plate from last stage
-        plate = util.stage_image(read, stage)
-        plate = cv2.imread(plate, cv2.CV_8UC1)
         # get result
-        plate, region = process(plate, region)
-        # save new region to data files
-        write = util.stage_data(read, stage + 1)
-        np.save(write, region)
-        # save plates to image files
+        plate = process(img, region)
+        # save plate
         write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, plate)
         # log

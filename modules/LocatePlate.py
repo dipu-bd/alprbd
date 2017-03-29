@@ -6,18 +6,17 @@ from modules import util
 from modules import config as cfg
 
 
-def process(img, matched):
+def process(matched):
     """
-    Extract plate regions    
-    :param img: input image
+    Extract plate regions
     :param matched: image after matched filter is applied
     """
 
     plates = []
     regions = []
-    H, W = cfg.SCALE_DIM
-    minM, minN = cfg.MIN_PLATE_SIZE
-    maxM, maxN = cfg.MAX_PLATE_SIZE
+    height, width = cfg.SCALE_DIM
+    min_m, min_n = cfg.MIN_PLATE_SIZE
+    max_m, max_n = cfg.MAX_PLATE_SIZE
 
     # map all contours -- http://stackoverflow.com/a/41322331/1583052
     contours = cv2.findContours(matched, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
@@ -26,7 +25,7 @@ def process(img, matched):
     for cnt in contours:
         # get bounding box
         y, x, n, m = cv2.boundingRect(cnt)
-        if m > n or (m < minM or n < minN) or (m > maxM or n > maxN):
+        if m > n or (m < min_m or n < min_n) or (m > max_m or n > max_n):
             continue
         # end if
 
@@ -38,15 +37,11 @@ def process(img, matched):
 
         # get corner points
         x1 = max(0, x)
-        x2 = min(H, x + m)
+        x2 = min(height, x + m)
         y1 = max(0, y)
-        y2 = min(W, y + n)
-
-        # extract plate
-        plate = img[x1:x2, y1:y2]
+        y2 = min(width, y + n)
 
         # store values
-        plates.append(plate)
         regions.append([x1, x2, y1, y2])
     # end for
 
@@ -58,19 +53,14 @@ def run(stage):
     """
     Run stage task
     :param stage: Stage number 
-    :return: 
     """
     util.log("Stage", stage, "Locate plate regions")
     for read in util.get_images(stage):
-        # scaled image from 2nd stage
-        scaled = util.stage_image(read, 2)
-        scaled = cv2.imread(scaled, cv2.CV_8UC1)
         # processed image from last stage
-        processed = util.stage_image(read, stage)
-        processed = cv2.imread(processed, cv2.CV_8UC1)
+        matched = util.stage_image(read, stage)
+        matched = cv2.imread(matched, cv2.CV_8UC1)
         # get result
-        plates, regions = process(scaled, processed)
-
+        plates, regions = process(matched)
         # save regions to data files
         for index, mat in enumerate(regions):
             name = "{}.{}".format(index, read)
@@ -78,15 +68,7 @@ def run(stage):
             np.save(write, mat)
         # end for
 
-        # save plates to image files
-        for index, plate in enumerate(plates):
-            name = "{}.{}".format(index, read)
-            write = util.stage_image(name, stage + 1)
-            cv2.imwrite(write, plate)
-        # end for
-
         # log
         util.log("Converted", read, stage=stage)
     # end for
-
 # end function

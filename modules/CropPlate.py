@@ -14,6 +14,8 @@ def process(img, region):
     :return cropped plate image and region 
     """
 
+
+
     return img, region
 # end function
 

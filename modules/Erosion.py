@@ -5,19 +5,20 @@ from modules import util
 from modules import config as cfg
 
 
-def apply(img):
+def apply(img, _pass=1):
     """
-    Rescale image
-    :param img: input image  
+    Apply morphological operation
+    :param img: input image
+    :param _pass: iteration count
     """
 
     # build structuring element
     se = cv2.getStructuringElement(cv2.MORPH_RECT, cfg.MORPH_RECT_SIZE)
 
-    # apply morphological dilation -- https://goo.gl/AuOAyL
-    dilated = cv2.dilate(img, se, iterations=2)
+    # apply morphological erosion -- https://goo.gl/AuOAyL
+    out = cv2.erode(img, se, iterations=_pass)
 
-    return dilated
+    return out
 # end function
 
 
@@ -27,7 +28,7 @@ def run(stage):
     :param stage: Stage number 
     :return: 
     """
-    util.log("Stage", stage, "Applying Dilation")
+    util.log("Stage", stage, "Applying Erosion", 1, "pass")
     for read in util.get_images(stage):
         # open image
         file = util.stage_image(read, stage)
@@ -37,6 +38,12 @@ def run(stage):
         # save to file
         write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, out)
+        # glass view
+        file = util.stage_image(read, 7)
+        img = cv2.imread(file, cv2.CV_8UC1)
+        img[out < 250] = 0
+        write = util.stage_image("." + read, stage + 1)
+        cv2.imwrite(write, img)
         # log
         util.log("Converted", read, stage=stage)
     # end for

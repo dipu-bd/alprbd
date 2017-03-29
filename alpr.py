@@ -17,7 +17,7 @@ from modules import HorizontalSegment
 from modules import VerticalSegment
 from modules import Features
 from modules import PlateNoise
-from modules import Dilation
+from modules import Erosion
 
 # Mapping of Stage to Action
 # TODO: use a dictionary instead of array
@@ -29,20 +29,22 @@ STAGE_MAP = [
     Intensify.run,          # 5
     MatchFilter.run,        # 6
     LocatePlate.run,        # 7
-    Sobel.run,              # 8
-    Closing.run,            # 9
-    Opening.run,            # 10
-    Dilation.run,           # 11
+    ExtractPlate.run,       # 8
+    Sobel.run,              # 9
+    Closing.run,            # 10
+    Opening.run,            # 11
     PlateNoise.run,         # 12
-    CropPlate.run,          # 13
 
-    ExtractPlate.run,       # 13
-    BlackWhite.run,         # 14
+
+    #CropPlate.run,          # 12
+
+    #ExtractPlate.run,       # 13
+    #BlackWhite.run,         # 14
     # remove border
     # rotate
-    HorizontalSegment.run,  # 15
-    VerticalSegment.run,    # 16
-    Features.run,           # 17
+    #HorizontalSegment.run,  # 15
+    #VerticalSegment.run,    # 16
+    #Features.run,           # 17
     # neural network
 ]
 
