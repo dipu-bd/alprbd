@@ -44,8 +44,3 @@ The `stages` folder must have a folder named `stage <your stage number>`.
 - Import it inside `alpr.py`.
 - Insert the name of the function in `STAGE_FUNC` variable.
 
-
-## License 
-    I can not provide an open-source license yet. 
-    You can view the source code and use similar idea in your implementation.
-    But to use this entire system you must inform me first.
