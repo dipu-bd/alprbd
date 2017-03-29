@@ -7,9 +7,8 @@ from modules import config as cfg
 
 
 def log(*args, stage=0, force=False):
-    text = " ".join(args)
     if cfg.DEBUG or force:
-        print(" " * stage + text)
+        print(" " * stage, args)
     # end if
 # end function
 

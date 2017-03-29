@@ -17,7 +17,7 @@ This repository contains the implementation for the above thesis.
 - Input image file-names should follow the format: `[name].[extension]`
 - Run `python main.py` to execute all stages simultaneously.
 - Run `python main.py <stage number>` to execute a single stage.
-Replace the `<stage number>` here with an integer from `1` to maximum possible stage.
+Replace the `<stage number>` here with an integer from `0` to maximum possible stage.
 The `stages` folder must have a folder named `stage <your stage number>`.
 
 

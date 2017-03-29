@@ -8,28 +8,27 @@ from modules import Gaussian
 
 
 # Mapping of Stage to Action
-STAGE_MAP = {
-    '0': Grayscale.apply,
-    '1': Rescale.apply,
-    '2': Sobel.apply,
-    '3': Gaussian.apply,
-    # '4': intensify (stage.1, stage.3)
-    # '5': sobel + matched + smoothing + threshold
-    # '6': extract plate like regions (save image & region data)
-    # '7': apply sobel
-    # '8': morph opening
-    # '9': morph closing
-    # '10': apply dilation
-    # '11': final check + extraction (stage.6.data, stage.1)
-    # '12': convert black and white
-    # '13': remove border
-    # '14': rotate
-    # '15': horizontal segmentation
-    # '16': vertical segmentation
-    # '17': feature extraction
-    # '18': neural network
-
-}
+STAGE_MAP = [
+    Grayscale.apply,
+    Rescale.apply,
+    Sobel.apply,
+    Gaussian.apply,
+    # intensify (stage.1, stage.3)
+    # sobel + matched + smoothing + threshold
+    # extract plate like regions (save image & region data)
+    # apply sobel
+    # morph opening
+    # morph closing
+    # apply dilation
+    # final check + extraction (stage.6.data, stage.1)
+    # convert black and white
+    # remove border
+    # rotate
+    # horizontal segmentation
+    # vertical segmentation
+    # feature extraction
+    # neural network
+]
 
 
 def execute(stage, images):
@@ -40,16 +39,16 @@ def execute(stage, images):
     :return: True if success, False otherwise.
     """
     # check if stage is valid
-    if str(stage) not in STAGE_MAP:
+    if stage < 0 or stage >= len(STAGE_MAP):
         util.log("Unknown stage:", stage)
         return False
     # end if
 
     # execute the stage function for each image
-    func = STAGE_MAP[str(stage)]
-    for read, write in images:
-        func(read, write)
-        util.log("Executed:", stage, stage=stage)
+    func = STAGE_MAP[stage]
+    for read, stage in images:
+        func(read, stage)
+        util.log("Executed:", stage)
     # end for
 
     return True

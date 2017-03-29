@@ -54,14 +54,19 @@ def load_images(stage=0):
 
     # Open all images
     images = []
-    valid_images = ["jpg", "gif", "png", "bmp"]
+    valid_images = [".jpg", ".gif", ".png", ".bmp"]
+    valid_data = [".mat"]
     for read in os.listdir(folder):
         name, ext = util.split_file(read)
         if ext in valid_images:
             write = os.path.join(folder2, name + "." + ext)
             images.append((read, write))
+        elif ext in valid_data:
+            pass
         # end if
     # end for
+
+    util.log(len(images), 'images found on stage', stage)
 
     return images
 # end function
