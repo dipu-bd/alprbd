@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/modules" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/samples" />
       <excludeFolder url="file://$MODULE_DIR$/stages" />
     </content>
     <orderEntry type="inheritedJdk" />
