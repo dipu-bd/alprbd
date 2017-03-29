@@ -1,3 +1,4 @@
+stages/
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
@@ -138,8 +139,3 @@ ENV/
 
 # Rope project settings
 .ropeproject
-.idea/alpr-bd.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
-stages/
