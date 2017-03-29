@@ -31,7 +31,7 @@ STAGE_MAP = [
 ]
 
 
-def execute(stage, images):
+def execute(stage, images, data):
     """
     Call the function to for given stage variable.    
     :param stage: Stage number
@@ -46,10 +46,21 @@ def execute(stage, images):
 
     # execute the stage function for each image
     func = STAGE_MAP[stage]
-    for read, stage in images:
-        func(read, stage)
-        util.log("Executed:", stage)
-    # end for
+
+    if len(images) > 0:
+        for file in images:
+            func(file, stage + 1)
+            util.log("Executed by image", stage=stage)
+        # end for
+    elif len(data) > 0:
+        for file in data:
+            func(file, stage + 1)
+            util.log("Executed by data", stage=stage)
+        # end for
+    else:
+        util.log("No file to execute", stage=stage)
+        return False
+    # end if
 
     return True
 # end function

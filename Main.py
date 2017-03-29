@@ -2,6 +2,7 @@
 
 import os
 import alpr
+import shutil
 from modules import util
 from modules import config as cfg
 
@@ -28,8 +29,8 @@ def main(*args):
 
 
 def run_stage(stage_no):
-    images = load_images(stage_no)
-    alpr.execute(stage_no, images)
+    images, data = load_images(stage_no)
+    alpr.execute(stage_no, images, data)
 # end function
 
 
@@ -48,25 +49,26 @@ def load_images(stage=0):
         raise Exception("Input folder does not exists")
     # end if
 
-    # folder for next stage
+    # folder to write
     folder2 = os.path.join(cfg.WORK_PATH, 'stage.' + str(stage + 1))
-    util.ensure_path(folder2)
+    shutil.rmtree(folder2)      # delete old
+    util.ensure_path(folder2)   # create new
 
     # Open all images
+    data = []
     images = []
-    valid_images = [".jpg", ".gif", ".png", ".bmp"]
     valid_data = [".mat"]
-    for read in os.listdir(folder):
-        name, ext = util.split_file(read)
+    valid_images = [".jpg", ".gif", ".png", ".bmp"]
+    for file in os.listdir(folder):
+        name, ext = util.split_file(file)
         if ext in valid_images:
-            write = os.path.join(folder2, name + "." + ext)
-            images.append((read, write))
+            images.append(file)
         elif ext in valid_data:
-            pass
+            data.append(file)
         # end if
     # end for
 
-    util.log(len(images), 'images found on stage', stage)
+    util.log(len(images), 'images &', len(data), 'data found on stage', stage)
 
-    return images
+    return images, data
 # end function
