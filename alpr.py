@@ -23,29 +23,34 @@ from modules import Erosion
 # Mapping of Stage to Action
 # TODO: use a dictionary instead of array
 STAGE_MAP = [
-    Grayscale.run,          # 1
-    Rescale.run,            # 2
+    Grayscale.run,          # 1 *
+    Rescale.run,            # 2 *
     Sobel.run,              # 3
     Gaussian.run,           # 4
     Intensify.run,          # 5
     MatchFilter.run,        # 6
-    LocatePlate.run,        # 7
+    LocatePlate.run,        # 7 *
     ExtractPlate.run,       # 8
     Sobel.run,              # 9
     Closing.run,            # 10
     Opening.run,            # 11
     PlateNoise.run,         # 13
-    LocatePlate.run,        # 14
+    LocatePlate.run,        # 14 *
     ExtractOriginal.run,    # 15
     BlackWhite.run,         # 16
-
-    # remove border
     # rotate
+    # remove border
     #HorizontalSegment.run,  # 15
     #VerticalSegment.run,    # 16
     #Features.run,           # 17
     # neural network
 ]
+
+# index number of most referenced stages
+GRAYSCALE = 1
+RESCALE = 2
+SCALE_REGION = 7
+ORIGINAL_REGION = 14
 
 
 def execute(stage):
