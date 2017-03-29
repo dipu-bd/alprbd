@@ -12,7 +12,23 @@ STAGE_MAP = {
     '0': Grayscale.apply,
     '1': Rescale.apply,
     '2': Sobel.apply,
-    '3': Gaussian.apply
+    '3': Gaussian.apply,
+    # '4': intensify (stage.1, stage.3)
+    # '5': sobel + matched + smoothing + threshold
+    # '6': extract plate like regions (save image & region data)
+    # '7': apply sobel
+    # '8': morph opening
+    # '9': morph closing
+    # '10': apply dilation
+    # '11': final check + extraction (stage.6.data, stage.1)
+    # '12': convert black and white
+    # '13': remove border
+    # '14': rotate
+    # '15': horizontal segmentation
+    # '16': vertical segmentation
+    # '17': feature extraction
+    # '18': neural network
+
 }
 
 
