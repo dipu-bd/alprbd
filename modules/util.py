@@ -118,6 +118,10 @@ def get_files(stage):
     valid_images = [".jpg", ".gif", ".png", ".bmp"]
     for file in os.listdir(folder):
         name = file.lower()
+        if name.startswith('.'):
+            continue    # don't process hidden files
+        # end if
+
         _, ext = path.splitext(name)
         if ext in valid_images:
             images.append(name)  # image file

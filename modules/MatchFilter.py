@@ -10,10 +10,11 @@ from modules import config as cfg
 mixture_model = np.array([])
 
 
-def apply(img, all=None):
+def apply(img, all=False):
     """
     Apply vertical Sobel operator
     :param img: enhanced image 
+    :param all: True to return all artifacts 
     """
 
     # apply sobel filter
@@ -21,17 +22,22 @@ def apply(img, all=None):
 
     # apply matched filter
     kernel = build_mixture_model()
-    matched = cv2.filter2D(sobel, cv2.CV_8UC1, kernel)
+    matched = cv2.filter2D(sobel, cv2.CV_64F, kernel)
+    matched = util.normalize(matched)
 
     # smoothing by gaussian kernel
     smooth = Gaussian.apply(matched)
 
     # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(smooth, cfg.SMOOTH_CUTOFF,
+    _, thresh = cv2.threshold(np.uint8(smooth), cfg.SMOOTH_CUTOFF,
                               255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    # normalize image
-    return util.normalize(thresh)
+    # return all artifacts
+    if all:
+        return sobel, matched, smooth, thresh
+    else:
+        return thresh
+    # end if
 # end function
 
 
@@ -50,7 +56,7 @@ def build_mixture_model():
     # formula -- see paper
 
     m, n = cfg.MIXTURE_SIZE
-    A, B = cfg.MIXTURE_COEFF
+    A, B = cfg.MIXTURE_CO
     sx, sy = cfg.MIXTURE_SIGMA
 
     a = int(m / 3)
@@ -89,13 +95,25 @@ def run(stage):
     """
     util.log("Stage", stage, "Applying mixture model")
     for read in util.get_images(stage):
-        file = util.stage_file(read, stage)
         # open image
+        file = util.stage_file(read, stage)
         img = cv2.imread(file, cv2.CV_8UC1)
-        out = apply(img)
+        # all artifacts
+        sobel, matched, smooth, thresh = apply(img, True)
         # save to file
         write = util.stage_file(read, stage + 1)
-        cv2.imwrite(write, out)
+        cv2.imwrite(write, thresh)
+        
+        # ---## other artifacts ##--- #
+        write = util.stage_file(".1." + read, stage + 1)
+        cv2.imwrite(write, matched)
+        write = util.stage_file(".2." + read, stage + 1)
+        cv2.imwrite(write, smooth)
+        # glass looking view
+        img[thresh == 0] = 0
+        write = util.stage_file(".3." + read, stage + 1)
+        cv2.imwrite(write, img)
+        
         # log
         util.log("Converted", read, stage=stage)
     # end for

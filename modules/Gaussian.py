@@ -20,9 +20,9 @@ def apply(img):
     kernel = build_blur_kernel()
 
     # apply 2D Gaussian filter -- https://goo.gl/jfuzjO
-    gauss = cv2.filter2D(img, cv2.CV_8UC1, kernel)
+    gauss = cv2.filter2D(img, cv2.CV_64F, kernel)
 
-    return gauss
+    return util.normalize(gauss)
 # end function
 
 
@@ -40,7 +40,7 @@ def build_blur_kernel():
 
     # formula -- https://goo.gl/3AmmaE
 
-    A = cfg.BLUR_COE
+    A = cfg.BLUR_CO
     m, n = cfg.BLUR_SIZE
     sx, sy = cfg.BLUR_SIGMA
 
