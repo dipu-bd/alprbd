@@ -15,7 +15,7 @@ def main(*args):
     elif len(args) == 1:
         # run all stages sequentially
         for key in alpr.STAGE_MAP:
-            run_stage(key)
+            run_stage(int(key))
         # end for
 
     else:
@@ -33,14 +33,14 @@ def run_stage(stage_no):
 # end function
 
 
-def load_images(stage = 0):
+def load_images(stage=0):
     """Open an stage by stage number
     :param stage: Stage number to open 
     :return: An array of stage objects
     """
 
     # get folder
-    folder = os.path.join(cfg.WORK_PATH, str(stage))
+    folder = os.path.join(cfg.WORK_PATH, 'stage.'+str(stage))
 
     # check folder
     if not os.path.exists(folder):
@@ -49,7 +49,7 @@ def load_images(stage = 0):
     # end if
 
     # folder for next stage
-    folder2 = os.path.join(cfg.WORK_PATH, str(stage + 1))
+    folder2 = os.path.join(cfg.WORK_PATH, 'stage.' + str(stage + 1))
     util.ensure_path(folder2)
 
     # Open all images

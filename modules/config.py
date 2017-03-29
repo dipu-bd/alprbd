@@ -3,13 +3,13 @@
 from os import path
 
 # Define working directory
-WORK_PATH = path.join(path.curdir, "stages")
+WORK_PATH = path.abspath(path.join(path.curdir, "stages"))
 
 # Set True to show log messages
 DEBUG = True
 
 # Values defined in paper
-GRAY_RATIO = [0.59,0.30,0.11]   # fixed
+GRAY_RATIO = [0.59, 0.30, 0.11]  # fixed
 SCALE_DIM = (480, 640)          # fixed
 
 SOBEL_CUTOFF = 0.042            # should keep it low
