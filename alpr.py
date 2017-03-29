@@ -49,12 +49,12 @@ def execute(stage, images, data):
 
     if len(images) > 0:
         for file in images:
-            func(file, stage + 1)
+            func(file)
             util.log("Executed by image", stage=stage)
         # end for
     elif len(data) > 0:
         for file in data:
-            func(file, stage + 1)
+            func(file)
             util.log("Executed by data", stage=stage)
         # end for
     else:

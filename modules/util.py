@@ -8,18 +8,44 @@ from modules import config as cfg
 
 def log(*args, stage=0, force=False):
     if cfg.DEBUG or force:
-        print(" " * stage, args)
+        if stage > 0:
+            print("  [", stage, "]", args)
+        else:
+            print('> ', args)
+        #end if
     # end if
 # end function
 
 
-def split_file(file):
+def get_file(current, stage=None, ext=None):
     """
-    Split a file info filename and extension pair
-    :param file: File to parse.
-    :return: (filename, extension) pair
+    Get another stage's file from given
+    :param current: 
+    :param stage:
+    :param ext: 
+    :return: 
     """
-    return path.splitext(path.split(file.lower())[1])
+    # split given file
+    folder, file = path.split(current.lower())
+    name, cur_ext = path.splitext(file)
+
+    if ext is None:
+        ext = cur_ext
+    # end if
+    if not ext.startswith("."):
+        ext = "." + ext
+    # end if
+
+    cur = folder.split('.')[-1]
+    if stage is None:
+        stage = int(cur) + 1
+    # end if
+
+    new = path.dirname(folder)
+    new = path.join(new, 'stage.' + str(stage))
+    ensure_path(new)
+
+    return path.join(new, file + ext)
 # end function
 
 
