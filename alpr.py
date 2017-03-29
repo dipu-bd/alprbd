@@ -1,24 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from modules import util
-from modules import Grayscale
-from modules import Rescale
-from modules import Sobel
-from modules import Gaussian
-from modules import Intensify
-from modules import MatchFilter
-from modules import LocatePlate
-from modules import Opening
-from modules import Closing
-from modules import ExtractOriginal
-from modules import ExtractPlate
-from modules import PlateNoise
-from modules import BlackWhite
-from modules import Threshold
-from modules import HorizontalSegment
-from modules import VerticalSegment
-from modules import Features
-from modules import Erosion
+from modules import *
 
 # Mapping of Stage to Action
 # TODO: use a dictionary instead of array
@@ -47,10 +29,13 @@ STAGE_MAP = [
 ]
 
 # index number of most referenced stages
+ORIGINAL = 0
 GRAYSCALE = 1
-RESCALE = 2
-SCALE_REGION = 7
-ORIGINAL_REGION = 14
+RESCALED = 2
+LOCATE_SCALED = 7
+SCALED_PLATE = 8
+LOCATE_ORIGIN = 14
+ORIGINAL_PLATE = 15
 
 
 def execute(stage):
