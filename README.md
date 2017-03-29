@@ -15,8 +15,8 @@ This repository contains the implementation for the above thesis.
 ## Usage 
 - Save input images inside `stages/stage.0` folder.
 - Input image file-names should follow the format: `[name].[extension]`
-- Run `python main.py` to execute all stages simultaneously.
-- Run `python main.py <stage number>` to execute a single stage.
+- Run `python .` to execute all stages simultaneously.
+- Run `python . <stage number>` to execute a single stage.
 Replace the `<stage number>` here with an integer from `0` to maximum possible stage.
 The `stages` folder must have a folder named `stage <your stage number>`.
 
@@ -27,6 +27,7 @@ The `stages` folder must have a folder named `stage <your stage number>`.
 - I prefer **PyCharm** *Community Edition*.
 
 ### Definitions
+- `main.py`: Main starting script.
 - `main.py`: Main starting script.
 - `stage`: **Stage** here means states of the processing.
 `stage.0` identifies original image list.
@@ -43,7 +44,6 @@ The `stages` folder must have a folder named `stage <your stage number>`.
 - create a python file inside `modules` folder. 
 - Import it inside `alpr.py`.
 - Insert the name of the function in `STAGE_FUNC` variable.
-
 
 
 ## License 
