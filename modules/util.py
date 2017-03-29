@@ -6,22 +6,21 @@ from os import path
 from modules import config as cfg
 
 
-def extract_info(img_file):
-    """
-    Extracts information from given path.
-    :param img_file: Image file to parse.
-    :return: 
-    """
-    folder, file = path.split(img_file)[0]
-    parts = file.split(".")
-    return {
-        'folder': folder,
-        'file': file,
-        'ext': parts[-1],
-        'id': parts[-2],
-        'name': ".".join(parts[0:-2])
-    }
+def log(*args, stage=0, force=False):
+    text = " ".join(args)
+    if cfg.DEBUG or force:
+        print(" " * stage + text)
+    # end if
+# end function
 
+
+def split_file(file):
+    """
+    Split a file info filename and extension pair
+    :param file: File to parse.
+    :return: (filename, extension) pair
+    """
+    return path.splitext(path.split(file)[1])
 # end function
 
 
@@ -65,9 +64,3 @@ def normalize(img):
     return norm
 # end function
 
-
-def log(stage, text, force=False):
-    if cfg.DEBUG or force:
-        print(" " * stage + text)
-    # end if
-# end function
