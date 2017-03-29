@@ -19,6 +19,7 @@ from modules import Features
 from modules import PlateNoise
 
 # Mapping of Stage to Action
+# TODO: use a dictionary instead of array
 STAGE_MAP = [
     Grayscale.run,          # 1
     Rescale.run,            # 2
