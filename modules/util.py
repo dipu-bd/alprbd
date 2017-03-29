@@ -50,13 +50,17 @@ def stage_folder(stage_no):
 # end function
 
 
-def stage_file(filename, stage):
+def stage_file(filename, stage, data=False):
     """
     Get another stage's file from given
     :param filename: Current file name
     :param stage: Stage number
+    :param data: True if the file is data file
     :return: Full path of the file
     """
+    if data:
+        filename = path.splitext(filename)[0]
+    # end if
     return path.join(stage_folder(stage), filename)
 # end function
 
@@ -66,10 +70,12 @@ def normalize(img):
     Intensity boundary is [0, 255].
     :param img: Image to apply normalize
     """
-    maxi = np.max(img)
-    if maxi > 512:
-        img *= 512.0 / maxi
-    # end if
+    # maxi = np.max(img)
+    # if maxi > 512:
+    #     img *= 512.0 / maxi
+    # # end if
+
+    img = 255 * img / np.max(img)
 
     norm = np.round(img)
     norm[norm < 0] = 0
@@ -114,7 +120,7 @@ def get_files(stage):
     # Open all images
     data = []
     images = []
-    valid_data = [".mat"]
+    valid_data = [".npy"]
     valid_images = [".jpg", ".gif", ".png", ".bmp"]
     for file in os.listdir(folder):
         name = file.lower()

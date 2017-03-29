@@ -6,29 +6,45 @@ from modules import util
 from modules import config as cfg
 
 
-def apply(img, gauss):
+def process(img, gauss):
     """
     Intensify image around plate-like regions 
     :param img: scaled image
     :param gauss: gaussian image
     """
 
+    # calculate
+    mean, sdev = calculate(img.shape[0], img.shape[1], gauss)
+
+    # apply intensify
+    f = np.vectorize(weight)
+    ret = f(sdev) * (img - mean) + mean
+
+    # normalize and return
+    ret[ret < 0] = 0
+    ret[ret > 255] = 255
+    return np.uint8(ret)
+# end function
+
+
+def calculate(row, col, gauss):
+    """
+    Calculate (mean, and standard deviation) values for Intensifying
+    """
     m, n = cfg.BLOCK_COUNT
-    row, col = img.shape
     h = int(row / m)
     w = int(col / n)
 
-    x, y = np.ogrid[0:1:(1.0 / h), 0:1:(1.0 / w)]
+    x, y = np.ogrid[0:1:(1.0/h), 0:1:(1.0/w)]
+    negX, negY = np.float64(1 - x), np.float64(1 - y)
+
+    mean = np.zeros((row, col), dtype=np.float64)
+    sdev = np.zeros((row, col), dtype=np.float64)
 
     # loop iterators
     winX, winY = np.ogrid[0:row:h, 0:col:w]
     winX = winX.flatten()
     winY = winY.flatten()
-
-    # gX, gY = np.ogrid[0:row:h, 0:col:w]
-
-    mean = np.zeros((row, col), dtype=np.float64)
-    sdev = np.zeros((row, col), dtype=np.float64)
 
     # for all windows
     for i in winX:
@@ -39,23 +55,18 @@ def apply(img, gauss):
             iC, dC = local_mean_std(gauss, i + h, j, h, w)
             iD, dD = local_mean_std(gauss, i + h, j + w, h, w)
             # calculate local intensity
-            upperL = (1 - y) * iA + y * iB
-            lowerL = (1 - y) * iC + y * iD
-            mean[i:i + h, j:j + w] = np.dot(1 - x, upperL) + np.dot(x, lowerL)
+            upperL = negY * iA + y * iB
+            lowerL = negY * iC + y * iD
+            mean[i:i + h, j:j + w] = np.dot(negX, upperL) + np.dot(x, lowerL)
             # calculate local standard deviation
-            upperD = (1 - y) * dA + y * dB
-            lowerD = (1 - y) * dC + y * dD
-            sdev[i:i + h, j:j + w] = np.dot(1 - x, upperD) + np.dot(x, lowerD)
+            upperD = negY * dA + y * dB
+            lowerD = negY * dC + y * dD
+            sdev[i:i+h, j:j+w] = np.dot(negX, upperD) + np.dot(x, lowerD)
             # end for j
     # end for i
 
-    # apply intensify
-    f = np.vectorize(weight)
-    ret = f(sdev) * (img - mean) + mean
-
-    return util.normalize(ret)
-
-# end function
+    return mean, sdev
+#end function
 
 
 def local_mean_std(img, i, j, p, q):
@@ -74,12 +85,12 @@ def local_mean_std(img, i, j, p, q):
     y1 = int(max(0, j - int(q / 2)))
     x2 = int(min(row, i + int(p / 2)))
     y2 = int(min(col, j + int(q / 2)))
-    W = img[x1:x2, y1:y2]
+    window = img[x1:x2, y1:y2]
 
     # calculate mean and std
-    mean = np.mean(W)
-    std = np.std(W / 255.0)
-    return (mean, std)
+    mean = np.mean(window)
+    std = np.std(window / np.float64(255))
+    return mean, std
 # end function
 
 
@@ -121,7 +132,7 @@ def run(stage):
         gray = cv2.imread(gray, cv2.CV_8UC1)
         gauss = cv2.imread(gauss, cv2.CV_8UC1)
         # apply
-        out = apply(gray, gauss)
+        out = process(gray, gauss)
         # save to file
         write = util.stage_file(read, stage + 1)
         cv2.imwrite(write, out)

@@ -7,22 +7,23 @@ from modules import Sobel
 from modules import Gaussian
 from modules import Intensify
 from modules import MatchFilter
+from modules import ExtractPlate
+from modules import Opening
+from modules import Closing
 
 
 # Mapping of Stage to Action
 STAGE_MAP = [
-    Grayscale.run,
-    Rescale.run,
-    Sobel.run,
-    Gaussian.run,
-    Intensify.run,
-    MatchFilter.run,
-    # sobel + matched + smoothing + threshold
-    # extract plate like regions (save image & region data)
-    # apply sobel
-    # morph opening
-    # morph closing
-    # apply dilation
+    Grayscale.run,          # 1
+    Rescale.run,            # 2
+    Sobel.run,              # 3
+    Gaussian.run,           # 4
+    Intensify.run,          # 5
+    MatchFilter.run,        # 6
+    ExtractPlate.run,       # 7
+    Sobel.run,              # 8
+    Closing.run,            # 9
+    Opening.run,            # 10
     # final check + extraction (stage.6.data, stage.1)
     # convert black and white
     # remove border
