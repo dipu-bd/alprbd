@@ -32,7 +32,7 @@ def load_images(stage = 0):
     for read in os.listdir(folder):
         name, ext = util.split_file(read)
         if ext in valid_images:
-            write = os.path.join(folder2, name+"."+ext)
+            write = os.path.join(folder2, name + "." + ext)
             images.append((read, write))
         # end if
     # end for
