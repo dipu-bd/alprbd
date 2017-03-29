@@ -34,6 +34,7 @@ STAGE_MAP = [
     Closing.run,            # 10
     Opening.run,            # 11
     PlateNoise.run,         # 12
+    LocatePlate.run,        # 13
 
 
     #CropPlate.run,          # 12
