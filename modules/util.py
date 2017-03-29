@@ -65,3 +65,9 @@ def normalize(img):
     return norm
 # end function
 
+
+def log(stage, text, force=False):
+    if cfg.DEBUG or force:
+        print(" " * stage + text)
+    # end if
+# end function
