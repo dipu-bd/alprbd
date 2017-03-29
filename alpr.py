@@ -17,6 +17,7 @@ from modules import HorizontalSegment
 from modules import VerticalSegment
 from modules import Features
 from modules import PlateNoise
+from modules import Dilation
 
 # Mapping of Stage to Action
 # TODO: use a dictionary instead of array
@@ -31,9 +32,10 @@ STAGE_MAP = [
     Sobel.run,              # 8
     Closing.run,            # 9
     Opening.run,            # 10
-    PlateNoise.run,         # 11
+    Dilation.run,           # 11
+    PlateNoise.run,         # 12
+    CropPlate.run,          # 13
 
-    CropPlate.run,          # 12
     ExtractPlate.run,       # 13
     BlackWhite.run,         # 14
     # remove border
@@ -60,7 +62,7 @@ def execute(stage):
 
     # execute the stage function for each image
     STAGE_MAP[stage](stage)
-    util.log("Executed: ", util.function_name(STAGE_MAP[stage]), '\n')
+    util.log("Executed: ", util.name_of(STAGE_MAP[stage]), '\n')
 
     return True
 # end function

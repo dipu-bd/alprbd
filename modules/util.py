@@ -150,35 +150,7 @@ def get_files(stage):
 # end function
 
 
-def other_stage_file(file, stage, other_stage=None, other_ext=None):
-    """
-    Get another stage's file from given
-    :param file: Current file name
-    :param stage: Current stage number
-    :param other_stage: Other stage number. Default is stage + 1
-    :param other_ext: Extension of stage file. Default is current extension.
-    :return: 
-    """
-    # split given file
-    file = file.lower()
-    name, ext = path.splitext(file)
-
-    if other_ext is None:
-        other_ext = ext
-    # end if
-    if not other_ext.startswith("."):
-        other_ext = "." + other_ext
-    # end if
-
-    if other_stage is None:
-        other_stage = int(stage) + 1
-    # end if
-
-    return stage_image(file + other_ext, other_stage)
-# end function
-
-
-def function_name(func):
+def name_of(func):
     """
     Retrieves the full name of the function
     :param func: Function name
