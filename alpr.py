@@ -3,13 +3,14 @@
 from modules import util
 from modules import Grayscale
 from modules import Rescale
+from modules import Sobel
 
 
 # Mapping of Stage to Action
 STAGE_MAP = {
     '0': Grayscale.apply,
     '1': Rescale.apply,
-
+    '2': Sobel.apply,
 }
 
 
