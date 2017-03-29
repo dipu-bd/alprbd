@@ -25,9 +25,9 @@ STAGE_MAP = [
     Sobel.run,              # 8
     Closing.run,            # 9
     Opening.run,            # 10
-    CropPlate.run        # 11
-    # final check + extraction (stage.6.data, stage.1)
-    # convert black and white
+    CropPlate.run,          # 11
+    ExtractPlate.run,       # 12
+    BlackWhite.run,         # 13
     # remove border
     # rotate
     # horizontal segmentation
