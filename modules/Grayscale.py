@@ -5,16 +5,11 @@ from modules import util
 from modules import config as cfg
 
 
-def apply(read):
+def apply(img):
     """
     Apply Gray-scale conversion
-    :param read: input image file 
+    :param img: input image file 
     """
-
-    util.log(read)
-
-    # open image
-    img = cv2.imread(read)
 
     # split image parts
     b, g, r = cv2.split(img)
@@ -30,16 +25,23 @@ def apply(read):
     # normalize image
     out = util.normalize(gray)
 
-    # save to file
-    write = util.get_file(out)
-    cv2.imwrite(write, out)
-
     return out
 # end function
 
 
-def run(stage_no)
-
-
+def run(stage):
+    """
+    Run stage task
+    :param stage: Stage number 
+    :return: 
+    """
+    for read in util.get_images(stage):
+        # open image
+        img = cv2.imread(read)
+        gray = apply(img)
+        # save to file
+        write = util.stage_file(read, stage + 1)
+        cv2.imwrite(write, gray)
+    # end for
 
 # end function

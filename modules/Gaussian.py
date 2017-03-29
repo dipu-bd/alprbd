@@ -8,15 +8,11 @@ from modules import config as cfg
 blur_kernel = []
 
 
-def apply(read, write):
+def apply(img):
     """
     Apply Gaussian blur
-    :param read: input image file 
-    :param write: output image file
+    :param img: input image 
     """
-
-    # open image
-    img = cv2.imread(read)
 
     # cv2 thresh -- https://goo.gl/OHjx6d
 
@@ -28,9 +24,6 @@ def apply(read, write):
 
     # normalize image
     out = util.normalize(gauss)
-
-    # save to file
-    cv2.imwrite(write, out)
 
     return out
 # end function
@@ -68,3 +61,22 @@ def build_blur_kernel():
 
     return blur_kernel
 # end function
+
+
+def run(stage):
+    """
+    Run stage task
+    :param stage: Stage number 
+    :return: 
+    """
+    for read in util.get_images(stage):
+        # open image
+        img = cv2.imread(read)
+        gauss = apply(img)
+        # save to file
+        write = util.stage_file(read, stage + 1)
+        cv2.imwrite(write, gauss)
+    # end for
+
+# end function
+

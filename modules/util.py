@@ -141,9 +141,9 @@ def get_files(stage):
 def stage_file(current, stage=None, ext=None):
     """
     Get another stage's file from given
-    :param current: 
-    :param stage:
-    :param ext: 
+    :param current: Current file name
+    :param stage: What stage file to extract. Default is next stage.
+    :param ext: Extension of stage file
     :return: 
     """
     # split given file

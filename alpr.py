@@ -9,10 +9,10 @@ from modules import Gaussian
 
 # Mapping of Stage to Action
 STAGE_MAP = [
-    Grayscale.apply,
-    Rescale.apply,
-    Sobel.apply,
-    Gaussian.apply,
+    Grayscale.run,
+    Rescale.run,
+    Sobel.run,
+    Gaussian.run,
     # intensify (stage.1, stage.3)
     # sobel + matched + smoothing + threshold
     # extract plate like regions (save image & region data)
@@ -31,7 +31,7 @@ STAGE_MAP = [
 ]
 
 
-def execute(stage, images, data):
+def execute(stage):
     """
     Call the function to for given stage variable.    
     :param stage: Stage number
@@ -45,22 +45,8 @@ def execute(stage, images, data):
     # end if
 
     # execute the stage function for each image
-    func = STAGE_MAP[stage]
-
-    if len(images) > 0:
-        for file in images:
-            func(file)
-            util.log("Executed by image", stage=stage)
-        # end for
-    elif len(data) > 0:
-        for file in data:
-            func(file)
-            util.log("Executed by data", stage=stage)
-        # end for
-    else:
-        util.log("No file to execute", stage=stage)
-        return False
-    # end if
+    STAGE_MAP[stage]()
+    util.log("Executed: ", STAGE_MAP[stage].__name__, '()')
 
     return True
 # end function
