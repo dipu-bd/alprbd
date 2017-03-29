@@ -36,12 +36,15 @@ def run(stage):
     :return: 
     """
     for read in util.get_images(stage):
+        file = util.stage_file(read, stage)
         # open image
-        img = cv2.imread(read)
+        img = cv2.imread(file)
         gray = apply(img)
         # save to file
         write = util.stage_file(read, stage + 1)
         cv2.imwrite(write, gray)
+        # log
+        util.log("Converted", read, stage=stage)
     # end for
 
 # end function

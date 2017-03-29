@@ -27,16 +27,6 @@ def log(*args, stage=0, force=False):
 # end function
 
 
-def split_file(file):
-    """
-    Split a file info filename and extension pair
-    :param file: File to parse.
-    :return: (filename, extension) pair
-    """
-    return path.splitext(path.split(file.lower())[1])
-# end function
-
-
 def ensure_path(directory):
     """Ensures the given path to exist.
     :param directory: Path to ensure
@@ -57,6 +47,17 @@ def stage_folder(stage_no):
     folder = path.join(cfg.WORK_PATH, name)
     ensure_path(folder)
     return folder
+# end function
+
+
+def stage_file(filename, stage):
+    """
+    Get another stage's file from given
+    :param filename: Current file name
+    :param stage: Stage number
+    :return: Full path of the file
+    """
+    return path.join(stage_folder(stage), filename)
 # end function
 
 
@@ -121,14 +122,17 @@ def get_files(stage):
     # Open all images
     data = []
     images = []
-    valid_data = [".mat"]
-    valid_images = [".jpg", ".gif", ".png", ".bmp"]
+    valid_data = ["mat"]
+    valid_images = ["jpg", "gif", "png", "bmp"]
     for file in os.listdir(folder):
-        name, ext = split_file(file)
+        name, ext = file.split(".")[-1]
+        if name.startswith("H"):
+            continue    # hidden file
+        # end if
         if ext in valid_images:
-            images.append(file)
+            images.append(file)  # image file
         elif ext in valid_data:
-            data.append(file)
+            data.append(file)    # data file
         # end if
     # end for
 
@@ -138,34 +142,30 @@ def get_files(stage):
 # end function
 
 
-def stage_file(current, stage=None, ext=None):
+def other_stage_file(file, stage, other_stage=None, other_ext=None):
     """
     Get another stage's file from given
-    :param current: Current file name
-    :param stage: What stage file to extract. Default is next stage.
-    :param ext: Extension of stage file
+    :param file: Current file name
+    :param stage: Current stage number
+    :param other_stage: Other stage number. Default is stage + 1
+    :param other_ext: Extension of stage file. Default is current extension.
     :return: 
     """
     # split given file
-    folder, file = path.split(current.lower())
-    name, cur_ext = path.splitext(file)
+    file = file.lower()
+    name, ext = path.splitext(file)
 
-    if ext is None:
-        ext = cur_ext
+    if other_ext is None:
+        other_ext = ext
     # end if
-    if not ext.startswith("."):
-        ext = "." + ext
-    # end if
-
-    cur = folder.split('.')[-1]
-    if stage is None:
-        stage = int(cur) + 1
+    if not other_ext.startswith("."):
+        other_ext = "." + other_ext
     # end if
 
-    new = path.dirname(folder)
-    new = path.join(new, 'stage.' + str(stage))
-    ensure_path(new)
+    if other_stage is None:
+        other_stage = int(stage) + 1
+    # end if
 
-    return path.join(new, file + ext)
+    return stage_file(file + other_ext, other_stage)
 # end function
 
