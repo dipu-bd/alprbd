@@ -6,6 +6,7 @@ from modules import Rescale
 from modules import Sobel
 from modules import Gaussian
 from modules import Intensify
+from modules import MatchFilter
 
 
 # Mapping of Stage to Action
@@ -15,6 +16,7 @@ STAGE_MAP = [
     Sobel.run,
     Gaussian.run,
     Intensify.run,
+    MatchFilter.run,
     # sobel + matched + smoothing + threshold
     # extract plate like regions (save image & region data)
     # apply sobel
@@ -47,7 +49,7 @@ def execute(stage):
 
     # execute the stage function for each image
     STAGE_MAP[stage](stage)
-    util.log("Executed: ", STAGE_MAP[stage].__name__, '()')
+    util.log("Executed: ", util.function_name(STAGE_MAP[stage]))
 
     return True
 # end function

@@ -159,3 +159,16 @@ def other_stage_file(file, stage, other_stage=None, other_ext=None):
     return stage_file(file + other_ext, other_stage)
 # end function
 
+
+def function_name(func):
+    """
+    Retrieves the full name of the function
+    :param func: Function name
+    :return: 
+    """
+
+    folder = func.__code__.co_filename
+    file = path.split(folder)[1]
+    file = ".".join(path.splitext(file)[:-1])
+    return "{}.{}()".format(file, func.__name__)
+# end function
