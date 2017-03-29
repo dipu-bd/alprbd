@@ -30,6 +30,8 @@ SMOOTH_CUTOFF = 225             # set high value for removing noise
 MIN_PLATE_SIZE = (25, 60)       #
 MAX_PLATE_SIZE = (300, 400)     #
 
+PLATE_OFFSET = 175              # high value can erase text borders
+
 MORPH_RECT_SIZE = (10, 3)       #
 CUTOFF_AVERAGE = 0.38           #
 

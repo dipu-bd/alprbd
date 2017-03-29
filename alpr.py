@@ -16,6 +16,7 @@ from modules import BlackWhite
 from modules import HorizontalSegment
 from modules import VerticalSegment
 from modules import Features
+from modules import PlateNoise
 
 # Mapping of Stage to Action
 STAGE_MAP = [
@@ -29,14 +30,16 @@ STAGE_MAP = [
     Sobel.run,              # 8
     Closing.run,            # 9
     Opening.run,            # 10
-    CropPlate.run,          # 11
-    ExtractPlate.run,       # 12
-    BlackWhite.run,         # 13
+    PlateNoise.run,         # 11
+
+    CropPlate.run,          # 12
+    ExtractPlate.run,       # 13
+    BlackWhite.run,         # 14
     # remove border
     # rotate
-    HorizontalSegment.run,  # 14
-    VerticalSegment.run,    # 15
-    Features.run,           # 16
+    HorizontalSegment.run,  # 15
+    VerticalSegment.run,    # 16
+    Features.run,           # 17
     # neural network
 ]
 
@@ -56,7 +59,7 @@ def execute(stage):
 
     # execute the stage function for each image
     STAGE_MAP[stage](stage)
-    util.log("Executed: ", util.function_name(STAGE_MAP[stage]))
+    util.log("Executed: ", util.function_name(STAGE_MAP[stage]), '\n')
 
     return True
 # end function
