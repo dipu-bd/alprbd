@@ -36,7 +36,7 @@ The `stages` folder must have a folder named `stage <your stage number>`.
 ### Stage Artifacts
 - **Stage Artifacts** are the output files generated after executing each stages.
 - The output images should be stored inside `stage.[stage number]` folder.
-- The format of these image file: `[id].[name].[extension]`. 
+- The format of these image file: `[name].[extension]`. 
 - Here `[name]` refers to the name of original image.
 
 ### Creating A Stage:
