@@ -5,16 +5,17 @@ import numpy as np
 from modules import util
 from modules import Sobel
 from modules import Gaussian
+from modules import Threshold
 from modules import config as cfg
 
 mixture_model = np.array([])
 
 
-def apply(img, all=False):
+def apply(img, _all=False):
     """
     Apply vertical Sobel operator
     :param img: enhanced image 
-    :param all: True to return all artifacts 
+    :param _all: True to return all artifacts 
     """
 
     # apply sobel filter
@@ -28,12 +29,11 @@ def apply(img, all=False):
     # smoothing by gaussian kernel
     smooth = Gaussian.apply(matched)
 
-    # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(np.uint8(smooth), cfg.SMOOTH_CUTOFF,
-                              255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    # apply threshold
+    thresh = Threshold.apply(np.uint8(smooth), cfg.SMOOTH_CUTOFF)
 
     # return all artifacts
-    if all:
+    if _all:
         return sobel, matched, smooth, thresh
     else:
         return thresh
