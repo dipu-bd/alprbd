@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+import alpr
 from modules import util
 from modules import config as cfg
 
@@ -32,19 +33,22 @@ def run(stage):
         # open image
         file = util.stage_image(read, stage)
         img = cv2.imread(file, cv2.CV_8UC1)
+
         # apply
         out = apply(img)
+
         # save to file
         write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, out)
+
         # glass view
-        file = util.stage_image(read, 8)
+        file = util.stage_image(read, alpr.SCALED_PLATE)
         img = cv2.imread(file, cv2.CV_8UC1)
         img[out < 250] = 0
         write = util.stage_image("." + read, stage + 1)
         cv2.imwrite(write, img)
+
         # log
         util.log("Converted", read, stage=stage)
     # end for
-
 # end function

@@ -39,7 +39,7 @@ def run(stage):
         # get plate from last stage
         plate = util.stage_image(read, stage)
         plate = cv2.imread(plate, cv2.CV_8UC1)
-        
+
         # get result
         out = apply(plate)
 

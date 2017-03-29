@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+import alpr
 import numpy as np
 from modules import util
 from modules import config as cfg
@@ -48,21 +49,20 @@ def run(stage):
     :param stage: Stage number 
     :return: 
     """
-    util.log("Stage", stage, "Crop the plate regions")
+    util.log("Stage", stage, "Extracting the plate from full sized image")
     for read in util.get_data(stage):
-
         # open relative region data
         region2 = util.stage_data(read, stage)
         region2 = np.load(region2)
 
         # open scaled region data
         name = ".".join(read.split(".")[1:])
-        region1 = util.stage_data(name, 7)
+        region1 = util.stage_data(name, alpr.LOCATE_SCALED)
         region1 = np.load(region1)
 
         # get original image
         name = ".".join(read.split(".")[2:])
-        img = util.stage_image(name, 1)
+        img = util.stage_image(name, alpr.GRAYSCALE)
         img = cv2.imread(img, cv2.CV_8UC1)
 
         # get result
@@ -78,6 +78,5 @@ def run(stage):
 
         # log
         util.log("Converted", read, stage=stage)
-
     # end for
 # end function
