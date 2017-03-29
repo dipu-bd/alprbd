@@ -7,7 +7,7 @@ from os import path
 from modules import config as cfg
 
 
-def log(*args, stage=0, force=False):
+def log(*args, stage=None, force=False):
     if not (cfg.DEBUG or force):
         return
     # end if
@@ -17,8 +17,8 @@ def log(*args, stage=0, force=False):
         out += " " + str(i)
     # end if
 
-    if stage > 0:
-        out = "  [" + str(stage) + "]" + out
+    if stage is not None:
+        out = "> [" + str(stage) + "]: " + out
     else:
         out = "> " + out
     # end if
@@ -104,35 +104,25 @@ def get_files(stage):
     """
 
     # get folder
-    folder = os.path.join(cfg.WORK_PATH, 'stage.'+str(stage))
-
-    # check folder
-    if not os.path.exists(folder):
-        log(folder, "does not exists")
-        raise Exception("Input folder does not exists")
-    # end if
+    folder = stage_folder(stage)
 
     # folder to write
-    folder2 = os.path.join(cfg.WORK_PATH, 'stage.' + str(stage + 1))
-    if os.path.exists(folder2):
-        shutil.rmtree(folder2)      # delete old
-    # end if
+    folder2 = stage_folder(stage + 1)
+    shutil.rmtree(folder2) # delete old
     ensure_path(folder2)   # create new
 
     # Open all images
     data = []
     images = []
-    valid_data = ["mat"]
-    valid_images = ["jpg", "gif", "png", "bmp"]
+    valid_data = [".mat"]
+    valid_images = [".jpg", ".gif", ".png", ".bmp"]
     for file in os.listdir(folder):
-        name, ext = file.split(".")[-1]
-        if name.startswith("H"):
-            continue    # hidden file
-        # end if
+        name = file.lower()
+        _, ext = path.splitext(name)
         if ext in valid_images:
-            images.append(file)  # image file
+            images.append(name)  # image file
         elif ext in valid_data:
-            data.append(file)    # data file
+            data.append(name)    # data file
         # end if
     # end for
 
