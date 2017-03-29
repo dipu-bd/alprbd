@@ -16,11 +16,7 @@ def apply(img):
     sobel = cv2.Sobel(img, cv2.CV_8UC1, 1, 0, ksize=3)
 
     # apply custom threshold
-    # thresh = Threshold.apply(sobel, cfg.SOBEL_CUTOFF)
-
-    # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(sobel, cfg.SOBEL_CUTOFF,
-                                255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    thresh = Threshold.apply(sobel, cfg.SOBEL_CUTOFF)
 
     # normalize image
     return thresh
