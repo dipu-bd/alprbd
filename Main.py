@@ -1,10 +1,36 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import os
-import sys
 import alpr
 from modules import util
 from modules import config as cfg
+
+
+def main(*args):
+
+    if len(args) == 2:
+        # run specific stage
+        run_stage(int(args[1]))
+
+    elif len(args) == 1:
+        # run all stages sequentially
+        for key in alpr.STAGE_MAP:
+            run_stage(key)
+        # end for
+
+    else:
+        # wrong number of arguments
+        util.log("Invalid number of arguments")
+    # end if
+
+    print("\nSUCCESS.")
+# end main
+
+
+def run_stage(stage_no):
+    images = load_images(stage_no)
+    alpr.execute(stage_no, images)
+# end function
 
 
 def load_images(stage = 0):
@@ -39,39 +65,3 @@ def load_images(stage = 0):
 
     return images
 # end function
-
-
-def run_stage(stage_no):
-    images = load_images(stage_no)
-    alpr.execute(stage_no, images)
-# end function
-
-
-def main(*args):
-
-    if len(args) == 2:
-        # run specific stage
-        run_stage(int(args[1]))
-
-    elif len(args) == 1:
-        # run all stages sequentially
-        for key in alpr.STAGE_MAP:
-            run_stage(key)
-        # end for
-
-    else:
-        # wrong number of arguments
-        util.log("Invalid number of arguments")
-    # end if
-
-    print("\nSUCCESS.")
-# end main
-
-
-# ensure that working directory exists
-util.ensure_path(cfg.WORK_PATH)
-
-# start program
-if __name__ == "__main__":
-    main(sys.argv)
-# end if
