@@ -40,7 +40,7 @@ def build_blur_kernel():
 
     # formula -- https://goo.gl/3AmmaE
 
-    A = cfg.BLUR_COEFF
+    A = cfg.BLUR_COE
     m, n = cfg.BLUR_SIZE
     sx, sy = cfg.BLUR_SIGMA
 

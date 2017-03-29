@@ -5,6 +5,7 @@ from modules import Grayscale
 from modules import Rescale
 from modules import Sobel
 from modules import Gaussian
+from modules import Intensify
 
 
 # Mapping of Stage to Action
@@ -13,7 +14,7 @@ STAGE_MAP = [
     Rescale.run,
     Sobel.run,
     Gaussian.run,
-    # intensify (stage.1, stage.3)
+    Intensify.run,
     # sobel + matched + smoothing + threshold
     # extract plate like regions (save image & region data)
     # apply sobel
