@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+import numpy as np
 from modules import util
 from modules import Threshold
 from modules import config as cfg
@@ -13,13 +14,17 @@ def apply(img):
     """
 
     # vertical Sobel operator -- https://goo.gl/3fQnc9
-    sobel = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
+    sobel = cv2.Sobel(img, cv2.CV_8UC1, 1, 0, ksize=3)
 
-    # a low threshold
-    thresh = Threshold.apply(sobel, cfg.SOBEL_CUTOFF)
+    # apply custom threshold
+    # thresh = Threshold.apply(sobel, cfg.SOBEL_CUTOFF)
+
+    # Otsu's thresholding -- https://goo.gl/6n5Kgn
+    _, thresh = cv2.threshold(sobel, cfg.SOBEL_CUTOFF,
+                                255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # normalize image
-    return util.normalize(thresh)
+    return thresh
 # end function
 
 
@@ -33,7 +38,7 @@ def run(stage):
     for read in util.get_images(stage):
         file = util.stage_file(read, stage)
         # open image
-        img = cv2.imread(file)
+        img = cv2.imread(file, cv2.CV_8UC1)
         out = apply(img)
         # save to file
         write = util.stage_file(read, stage + 1)

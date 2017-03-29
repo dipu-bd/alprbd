@@ -12,7 +12,7 @@ DEBUG = True
 GRAY_RATIO = [0.59, 0.30, 0.11]  # fixed
 SCALE_DIM = (480, 640)          # fixed
 
-SOBEL_CUTOFF = 0.042            # should keep it low
+SOBEL_CUTOFF = 127              # should keep it low
 SMOOTH_CUTOFF = 0.36            # can be high for removing noise
 BNW_THRESH = 75                 # high value can clear entire image
 
