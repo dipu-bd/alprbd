@@ -15,7 +15,7 @@ def main(argv):
     elif len(argv) >= 2:
         # run specific stage
         for i in range(0, len(argv) - 1):
-            alpr.execute(int(argv[i + 1]))
+            alpr.execute(int(argv[i + 1]) - 1)
         # end for
 
     else:
