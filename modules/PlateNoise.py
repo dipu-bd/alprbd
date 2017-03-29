@@ -14,14 +14,16 @@ def apply(img):
     :param img: input image 
     :param offset: Threshold offset 
     """
+    # apply a threshold before
+    pre = Threshold.apply(np.uint8(img), cfg.PLATE_THRESH)
 
     # apply gaussian blur
-    gauss = Gaussian.apply(img)
+    gauss = Gaussian.apply(pre)
 
-    # apply a threshold
-    thresh = Threshold.apply(np.uint8(gauss), cfg.PLATE_OFFSET)
+    # apply a threshold after
+    post = Threshold.apply(np.uint8(gauss), cfg.PLATE_OFFSET)
 
-    return thresh
+    return post
 # end function
 
 

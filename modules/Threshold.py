@@ -22,6 +22,7 @@ def run(stage):
     """
     Run stage task
     :param stage: Stage number 
+    :param stage: Threshold amount 
     :return: 
     """
     util.log("Stage", stage, "Applying threshold")

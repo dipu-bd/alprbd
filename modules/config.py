@@ -31,9 +31,11 @@ MAX_PLATE_SIZE = (300, 400)     #
 
 MORPH_RECT_SIZE = (10, 3)       # fixed. possible size of single character
 
+PLATE_THRESH = 175              # high value can erase text borders
 PLATE_OFFSET = 175              # high value can erase text borders
+
+BNW_THRESH = 40                 # high value can clear entire image
 
 CUTOFF_AVERAGE = 0.38           #
 
-BNW_THRESH = 75                 # high value can clear entire image
 

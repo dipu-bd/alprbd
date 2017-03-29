@@ -6,15 +6,25 @@ from modules import util
 from modules import config as cfg
 
 
-def process(img, region):
+def apply(img):
     """
-    Extract plate regions    
-    :param img: plate image
-    :param region: position of the image
-    :return cropped plate image and region 
+    Converts to black and white    
+    :param img: plate image 
     """
 
-    return img, region
+    # which type of threshold to apply
+    _type = cv2.THRESH_BINARY_INV
+    if np.mean(img) < 80:
+        _type = cv2.THRESH_BINARY
+    # end if
+
+    # also apply Otsu's threshold
+    _type = _type | cv2.THRESH_OTSU
+
+    # applying threshold mixture
+    bnw = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255, _type)[1]
+
+    return bnw
 # end function
 
 
@@ -24,22 +34,20 @@ def run(stage):
     :param stage: Stage number 
     :return: 
     """
-    util.log("Stage", stage, "Crop the plate regions")
+    util.log("Stage", stage, "Converts to black and white")
     for read in util.get_images(stage):
-        # open plate region data
-        region = util.stage_data(read, 7)
-        region = np.load(region)
         # get plate from last stage
         plate = util.stage_image(read, stage)
         plate = cv2.imread(plate, cv2.CV_8UC1)
         # get result
-        plate, region = process(plate, region)
-        # save new region to data files
-        write = util.stage_data(read, stage + 1)
-        np.save(write, region)
+        out = apply(plate)
+
         # save plates to image files
-        write = util.stage_image(read, stage + 1)
-        cv2.imwrite(write, plate)
+        if out is not None:
+            write = util.stage_image(read, stage + 1)
+            cv2.imwrite(write, out)
+        # end if
+
         # log
         util.log("Converted", read, stage=stage)
     # end for

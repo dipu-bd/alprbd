@@ -14,6 +14,7 @@ from modules import ExtractOriginal
 from modules import ExtractPlate
 from modules import PlateNoise
 from modules import BlackWhite
+from modules import Threshold
 from modules import HorizontalSegment
 from modules import VerticalSegment
 from modules import Features
@@ -33,12 +34,11 @@ STAGE_MAP = [
     Sobel.run,              # 9
     Closing.run,            # 10
     Opening.run,            # 11
-    PlateNoise.run,         # 12
-    LocatePlate.run,        # 13
-    ExtractOriginal.run,    # 14
+    PlateNoise.run,         # 13
+    LocatePlate.run,        # 14
+    ExtractOriginal.run,    # 15
+    BlackWhite.run,         # 16
 
-    #ExtractPlate.run,       # 13
-    #BlackWhite.run,         # 14
     # remove border
     # rotate
     #HorizontalSegment.run,  # 15
