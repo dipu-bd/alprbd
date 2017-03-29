@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+import alpr
 import numpy as np
 from modules import util
 from modules import config as cfg
