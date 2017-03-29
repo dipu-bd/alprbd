@@ -27,7 +27,7 @@ def run(stage):
     :param stage: Stage number 
     :return: 
     """
-    util.log("Stage", stage, "Morphological opening")
+    util.log("Stage", stage, "Morphological closing")
     for read in util.get_images(stage):
         file = util.stage_image(read, stage)
         # open image
