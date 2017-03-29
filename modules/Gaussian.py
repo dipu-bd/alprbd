@@ -5,7 +5,7 @@ import numpy as np
 from modules import util
 from modules import config as cfg
 
-blur_kernel = []
+blur_kernel = np.array([])
 
 
 def apply(img):
@@ -20,12 +20,9 @@ def apply(img):
     kernel = build_blur_kernel()
 
     # apply 2D Gaussian filter -- https://goo.gl/jfuzjO
-    gauss = cv2.filter2D(img, cv2.CV_64F, kernel)
+    gauss = cv2.filter2D(img, cv2.CV_8UC1, kernel)
 
-    # normalize image
-    out = util.normalize(gauss)
-
-    return out
+    return gauss
 # end function
 
 
@@ -73,7 +70,7 @@ def run(stage):
     for read in util.get_images(stage):
         file = util.stage_file(read, stage)
         # open image
-        img = cv2.imread(file)
+        img = cv2.imread(file, cv2.CV_8UC1)
         out = apply(img)
         # save to file
         write = util.stage_file(read, stage + 1)
