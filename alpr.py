@@ -7,7 +7,7 @@ from modules import Sobel
 from modules import Gaussian
 from modules import Intensify
 from modules import MatchFilter
-from modules import ExtractPlate
+from modules import LocatePlate
 from modules import Opening
 from modules import Closing
 
@@ -20,7 +20,7 @@ STAGE_MAP = [
     Gaussian.run,           # 4
     Intensify.run,          # 5
     MatchFilter.run,        # 6
-    ExtractPlate.run,       # 7
+    LocatePlate.run,       # 7
     Sobel.run,              # 8
     Closing.run,            # 9
     Opening.run,            # 10
