@@ -10,7 +10,7 @@ from modules import MatchFilter
 from modules import LocatePlate
 from modules import Opening
 from modules import Closing
-from modules import ExtractPlate
+from modules import CropPlate
 
 
 # Mapping of Stage to Action
@@ -25,7 +25,7 @@ STAGE_MAP = [
     Sobel.run,              # 8
     Closing.run,            # 9
     Opening.run,            # 10
-    ExtractPlate.run        # 11
+    CropPlate.run        # 11
     # final check + extraction (stage.6.data, stage.1)
     # convert black and white
     # remove border
