@@ -6,15 +6,11 @@ from modules import Threshold
 from modules import config as cfg
 
 
-def apply(read, write):
+def apply(img):
     """
     Apply vertical Sobel operator
-    :param read: input image file 
-    :param write: output image file
+    :param img: input image 
     """
-
-    # open image
-    img = cv2.imread(read)
 
     # vertical Sobel operator -- https://goo.gl/3fQnc9
     sobel = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3)
@@ -23,10 +19,23 @@ def apply(read, write):
     thresh = Threshold.apply(sobel, cfg.SOBEL_CUTOFF)
 
     # normalize image
-    out = util.normalize(thresh)
+    return util.normalize(thresh)
+# end function
 
-    # save to file
-    cv2.imwrite(write, out)
 
-    return  out
+def run(stage):
+    """
+    Run stage task
+    :param stage: Stage number 
+    :return: 
+    """
+    for read in util.get_images(stage):
+        # open image
+        img = cv2.imread(read)
+        out = apply(img)
+        # save to file
+        write = util.stage_file(read, stage + 1)
+        cv2.imwrite(write, out)
+    # end for
+
 # end function

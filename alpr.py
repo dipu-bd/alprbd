@@ -45,7 +45,7 @@ def execute(stage):
     # end if
 
     # execute the stage function for each image
-    STAGE_MAP[stage]()
+    STAGE_MAP[stage](stage)
     util.log("Executed: ", STAGE_MAP[stage].__name__, '()')
 
     return True
