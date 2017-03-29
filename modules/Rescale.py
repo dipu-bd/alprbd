@@ -31,7 +31,7 @@ def run(stage):
     for read in util.get_images(stage):
         file = util.stage_file(read, stage)
         # open image
-        img = cv2.imread(file)
+        img = cv2.imread(file, cv2.CV_8UC1)
         out = apply(img)
         # save to file
         write = util.stage_file(read, stage + 1)
