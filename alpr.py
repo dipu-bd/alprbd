@@ -10,13 +10,13 @@ from modules import MatchFilter
 from modules import LocatePlate
 from modules import Opening
 from modules import Closing
-from modules import CropPlate
+from modules import ExtractOriginal
 from modules import ExtractPlate
+from modules import PlateNoise
 from modules import BlackWhite
 from modules import HorizontalSegment
 from modules import VerticalSegment
 from modules import Features
-from modules import PlateNoise
 from modules import Erosion
 
 # Mapping of Stage to Action
@@ -35,9 +35,7 @@ STAGE_MAP = [
     Opening.run,            # 11
     PlateNoise.run,         # 12
     LocatePlate.run,        # 13
-
-
-    #CropPlate.run,          # 12
+    ExtractOriginal.run,    # 14
 
     #ExtractPlate.run,       # 13
     #BlackWhite.run,         # 14
@@ -65,8 +63,8 @@ def execute(stage):
 
     # execute the stage function for each image
     STAGE_MAP[stage](stage)
+
     util.log("Executed: ", util.name_of(STAGE_MAP[stage]), '\n')
 
     return True
 # end function
-
