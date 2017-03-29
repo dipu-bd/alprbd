@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-import numpy as np
 from modules import util
 from modules import Threshold
 from modules import config as cfg
