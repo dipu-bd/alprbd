@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+import alpr
 import numpy as np
 from modules import util
 from modules import config as cfg
@@ -36,37 +37,39 @@ def calculate(row, col, gauss):
     w = int(col / n)
 
     x, y = np.ogrid[0:1:(1.0/h), 0:1:(1.0/w)]
-    negX, negY = np.float64(1 - x), np.float64(1 - y)
+    neg_x, neg_y = np.float64(1 - x), np.float64(1 - y)
 
     mean = np.zeros((row, col), dtype=np.float64)
     sdev = np.zeros((row, col), dtype=np.float64)
 
     # loop iterators
-    winX, winY = np.ogrid[0:row:h, 0:col:w]
-    winX = winX.flatten()
-    winY = winY.flatten()
+    win_x, win_y = np.ogrid[0:row:h, 0:col:w]
+    win_x = win_x.flatten()
+    win_y = win_y.flatten()
 
     # for all windows
-    for i in winX:
-        for j in winY:
+    for i in win_x:
+        for j in win_y:
             # local average of four corners
-            iA, dA = local_mean_std(gauss, i, j, h, w)
-            iB, dB = local_mean_std(gauss, i, j + w, h, w)
-            iC, dC = local_mean_std(gauss, i + h, j, h, w)
-            iD, dD = local_mean_std(gauss, i + h, j + w, h, w)
+            i_a, d_a = local_mean_std(gauss, i, j, h, w)
+            i_b, d_b = local_mean_std(gauss, i, j + w, h, w)
+            i_c, d_c = local_mean_std(gauss, i + h, j, h, w)
+            i_d, d_d = local_mean_std(gauss, i + h, j + w, h, w)
+
             # calculate local intensity
-            upperL = negY * iA + y * iB
-            lowerL = negY * iC + y * iD
-            mean[i:i + h, j:j + w] = np.dot(negX, upperL) + np.dot(x, lowerL)
+            upper_l = neg_y * i_a + y * i_b
+            lower_l = neg_y * i_c + y * i_d
+            mean[i:i + h, j:j + w] = np.dot(neg_x, upper_l) + np.dot(x, lower_l)
+
             # calculate local standard deviation
-            upperD = negY * dA + y * dB
-            lowerD = negY * dC + y * dD
-            sdev[i:i+h, j:j+w] = np.dot(negX, upperD) + np.dot(x, lowerD)
-            # end for j
+            upper_d = neg_y * d_a + y * d_b
+            lower_d = neg_y * d_c + y * d_d
+            sdev[i:i+h, j:j+w] = np.dot(neg_x, upper_d) + np.dot(x, lower_d)
+        # end for j
     # end for i
 
     return mean, sdev
-#end function
+# end function
 
 
 def local_mean_std(img, i, j, p, q):
@@ -126,16 +129,21 @@ def run(stage):
     """
     util.log("Stage", stage, "Intensity distribution")
     for read in util.get_images(stage):
-        gray = util.stage_image(read, 2)
-        gauss = util.stage_image(read, stage)
         # open image
-        gray = cv2.imread(gray, cv2.CV_8UC1)
+        gauss = util.stage_image(read, stage)
         gauss = cv2.imread(gauss, cv2.CV_8UC1)
+
+        # scaled image
+        gray = util.stage_image(read, alpr.RESCALED)
+        gray = cv2.imread(gray, cv2.CV_8UC1)
+
         # apply
         out = process(gray, gauss)
+
         # save to file
         write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, out)
+
         # log
         util.log("Converted", read, stage=stage)
     # end for
