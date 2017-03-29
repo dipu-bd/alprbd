@@ -29,15 +29,18 @@ def run(stage):
     """
     util.log("Stage", stage, "Rescaling")
     for read in util.get_images(stage):
-        file = util.stage_image(read, stage)
         # open image
+        file = util.stage_image(read, stage)
         img = cv2.imread(file, cv2.CV_8UC1)
+
+        # apply
         out = apply(img)
+
         # save to file
         write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, out)
+
         # log
         util.log("Converted", read, stage=stage)
     # end for
-
 # end function

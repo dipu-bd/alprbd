@@ -13,7 +13,7 @@ mixture_model = np.array([])
 
 def apply(img, _all=False):
     """
-    Apply vertical Sobel operator
+    Apply matched filter using a mixture model
     :param img: enhanced image 
     :param _all: True to return all artifacts 
     """
@@ -98,8 +98,10 @@ def run(stage):
         # open image
         file = util.stage_image(read, stage)
         img = cv2.imread(file, cv2.CV_8UC1)
+
         # all artifacts
         sobel, matched, smooth, thresh = apply(img, True)
+
         # save to file
         write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, thresh)
@@ -109,7 +111,7 @@ def run(stage):
         cv2.imwrite(write, matched)
         write = util.stage_image(".2." + read, stage + 1)
         cv2.imwrite(write, smooth)
-        # glass looking view
+        # glass view
         img[thresh == 0] = 0
         write = util.stage_image(".3." + read, stage + 1)
         cv2.imwrite(write, img)
@@ -117,5 +119,4 @@ def run(stage):
         # log
         util.log("Converted", read, stage=stage)
     # end for
-
 # end function

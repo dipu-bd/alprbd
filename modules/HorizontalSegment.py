@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+import alpr
 import numpy as np
 from modules import util
-from modules import config as cfg
 
 
 def process(img, region):
@@ -26,20 +26,25 @@ def run(stage):
     """
     util.log("Stage", stage, "Crop the plate regions")
     for read in util.get_images(stage):
-        # open plate region data
-        region = util.stage_data(read, 7)
-        region = np.load(region)
         # get plate from last stage
         plate = util.stage_image(read, stage)
         plate = cv2.imread(plate, cv2.CV_8UC1)
+
+        # open plate region data
+        region = util.stage_data(read, alpr.ORIGIN_REGION)
+        region = np.load(region)
+
         # get result
         plate, region = process(plate, region)
+
         # save new region to data files
         write = util.stage_data(read, stage + 1)
         np.save(write, region)
+
         # save plates to image files
         write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, plate)
+
         # log
         util.log("Converted", read, stage=stage)
     # end for

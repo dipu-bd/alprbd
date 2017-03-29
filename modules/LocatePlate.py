@@ -59,8 +59,10 @@ def run(stage):
         # processed image from last stage
         matched = util.stage_image(read, stage)
         matched = cv2.imread(matched, cv2.CV_8UC1)
+
         # get result
         plates, regions = process(matched)
+
         # save regions to data files
         for index, mat in enumerate(regions):
             name = "{}.{}".format(index, read)

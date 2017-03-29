@@ -33,11 +33,12 @@ def run(stage):
         file = util.stage_image(read, stage)
         img = cv2.imread(file, cv2.CV_8UC1)
         out = apply(img)
+
         # save to file
         write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, out)
+
         # log
         util.log("Converted", read, stage=stage)
     # end for
-
 # end function
