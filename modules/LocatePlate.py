@@ -62,8 +62,8 @@ def run(stage):
     """
     util.log("Stage", stage, "Locate plate regions")
     for read in util.get_images(stage):
-        scaled = util.stage_file(read, 2)
-        processed = util.stage_file(read, stage)
+        scaled = util.stage_image(read, 2)
+        processed = util.stage_image(read, stage)
         # open image
         scaled = cv2.imread(scaled, cv2.CV_8UC1)
         processed = cv2.imread(processed, cv2.CV_8UC1)
@@ -73,14 +73,14 @@ def run(stage):
         # save regions to data files
         for index, mat in enumerate(regions):
             name = "{}.{}".format(index, read)
-            write = util.stage_file(name, stage + 1, True)
+            write = util.stage_image(name, stage + 1, True)
             np.save(write, mat)
         # end for
 
         # save plates to image files
         for index, plate in enumerate(plates):
             name = "{}.{}".format(index, read)
-            write = util.stage_file(name, stage + 1)
+            write = util.stage_image(name, stage + 1)
             cv2.imwrite(write, plate)
         # end for
 

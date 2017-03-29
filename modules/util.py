@@ -50,17 +50,25 @@ def stage_folder(stage_no):
 # end function
 
 
-def stage_file(filename, stage, data=False):
+def stage_image(filename, stage):
     """
     Get another stage's file from given
     :param filename: Current file name
     :param stage: Stage number
-    :param data: True if the file is data file
-    :return: Full path of the file
+    :return: Full path of the image file
     """
-    if data:
-        filename = path.splitext(filename)[0]
-    # end if
+    return path.join(stage_folder(stage), filename)
+# end function
+
+
+def stage_data(filename, stage):
+    """
+    Get another stage's file from given
+    :param filename: Current file name
+    :param stage: Stage number
+    :return: Full path of the data file
+    """
+    filename = path.splitext(filename)[0] + ".npy"
     return path.join(stage_folder(stage), filename)
 # end function
 
@@ -166,7 +174,7 @@ def other_stage_file(file, stage, other_stage=None, other_ext=None):
         other_stage = int(stage) + 1
     # end if
 
-    return stage_file(file + other_ext, other_stage)
+    return stage_image(file + other_ext, other_stage)
 # end function
 
 

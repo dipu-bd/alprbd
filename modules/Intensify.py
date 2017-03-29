@@ -126,15 +126,15 @@ def run(stage):
     """
     util.log("Stage", stage, "Intensity distribution")
     for read in util.get_images(stage):
-        gray = util.stage_file(read, 2)
-        gauss = util.stage_file(read, stage)
+        gray = util.stage_image(read, 2)
+        gauss = util.stage_image(read, stage)
         # open image
         gray = cv2.imread(gray, cv2.CV_8UC1)
         gauss = cv2.imread(gauss, cv2.CV_8UC1)
         # apply
         out = process(gray, gauss)
         # save to file
-        write = util.stage_file(read, stage + 1)
+        write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, out)
         # log
         util.log("Converted", read, stage=stage)

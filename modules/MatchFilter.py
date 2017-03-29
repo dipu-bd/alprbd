@@ -96,22 +96,22 @@ def run(stage):
     util.log("Stage", stage, "Applying mixture model")
     for read in util.get_images(stage):
         # open image
-        file = util.stage_file(read, stage)
+        file = util.stage_image(read, stage)
         img = cv2.imread(file, cv2.CV_8UC1)
         # all artifacts
         sobel, matched, smooth, thresh = apply(img, True)
         # save to file
-        write = util.stage_file(read, stage + 1)
+        write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, thresh)
         
         # ---## other artifacts ##--- #
-        write = util.stage_file(".1." + read, stage + 1)
+        write = util.stage_image(".1." + read, stage + 1)
         cv2.imwrite(write, matched)
-        write = util.stage_file(".2." + read, stage + 1)
+        write = util.stage_image(".2." + read, stage + 1)
         cv2.imwrite(write, smooth)
         # glass looking view
         img[thresh == 0] = 0
-        write = util.stage_file(".3." + read, stage + 1)
+        write = util.stage_image(".3." + read, stage + 1)
         cv2.imwrite(write, img)
         
         # log

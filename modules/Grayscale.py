@@ -37,12 +37,12 @@ def run(stage):
     """
     util.log("Stage", stage, "Grayscale conversion")
     for read in util.get_images(stage):
-        file = util.stage_file(read, stage)
+        file = util.stage_image(read, stage)
         # open image
         img = cv2.imread(file)
         out = apply(img)
         # save to file
-        write = util.stage_file(read, stage + 1)
+        write = util.stage_image(read, stage + 1)
         cv2.imwrite(write, out)
         # log
         util.log("Converted", read, stage=stage)

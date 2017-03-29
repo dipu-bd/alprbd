@@ -10,6 +10,7 @@ from modules import MatchFilter
 from modules import LocatePlate
 from modules import Opening
 from modules import Closing
+from modules import ExtractPlate
 
 
 # Mapping of Stage to Action
@@ -20,10 +21,11 @@ STAGE_MAP = [
     Gaussian.run,           # 4
     Intensify.run,          # 5
     MatchFilter.run,        # 6
-    LocatePlate.run,       # 7
+    LocatePlate.run,        # 7
     Sobel.run,              # 8
     Closing.run,            # 9
     Opening.run,            # 10
+    ExtractPlate.run        # 11
     # final check + extraction (stage.6.data, stage.1)
     # convert black and white
     # remove border
