@@ -6,26 +6,25 @@ from modules import *
 # Mapping of Stage to Action
 # Elements: [function reference, previous stage, current stage, other arguments...]
 STAGE_MAP = [
-    # pre-processing
-    [Grayscale.run, 0, 1],
-    [Rescale.run, 1, 2],
-    [Sobel.run, 2, 3],
-    [Gaussian.run, 3, 4],
-    [Intensify.run, 4, 5, 2],
+    # pre-processing             # STEP-A #
+    [Grayscale.run, 0, 1],          # 1
+    [Rescale.run, 1, 2],            # 2
+    [Sobel.run, 2, 3],              # 3
+    [Gaussian.run, 3, 4],           # 4
+    [Intensify.run, 4, 5, 2],       # 5
 
-    # plate detection
-    [MatchFilter.run, 5, 6],
-    [LocatePlate.run, 6, 7],
-    [ExtractPlate.run, 7, 8, 2],
+    # plate detection            # STEP-B #
+    [MatchFilter.run, 5, 6],        # 6
+    [LocatePlate.run, 6, 7, 5],     # 7
+    [Sobel.run, 7, 8],              # 8
+    [Closing.run, 8, 9],            # 9
+    [Opening.run, 9, 10],           # 10   
 
-    # cleaning plate
-    [Sobel.run, 8, 9],
-    [Closing.run, 9, 10],
-    [Opening.run, 10, 11],
-    [PlateNoise.run, 11, 12, 8],
-    [LocatePlate.run, 12, 13],
-    [ExtractOriginal.run, 13, 14, 7, 1],
-    [BlackWhite.run, 14, 15],
+    # cleaning plate             # STEP-D #
+    [PlateNoise.run, 11, 12, 8],    # 12
+    [LocatePlate.run, 12, 13],      # 13
+    [Extract.run, 13, 14, 7, 1],    # 14
+    [BlackWhite.run, 14, 15],       # 15
 
     # segmentation
 
@@ -60,7 +59,7 @@ def execute(stage):
     method[0](*method[1:])      # call using arguments
 
     stop = cv2.getTickCount()   # end time
-    time = float(stop - start) / cv2.getTickFrequency()
+    time = (stop - start) / cv2.getTickFrequency()
     util.log("Executed in {:.3} seconds\n".format(time))
 # end function
 

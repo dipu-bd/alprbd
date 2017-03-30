@@ -181,3 +181,4 @@ def name_of(func):
     file = ".".join(path.splitext(file)[:-1])
     return file
 # end function
+

@@ -6,12 +6,14 @@ from modules import util
 from modules import config as cfg
 
 
-def process(matched):
+def process(img, matched):
     """
     Locate plate regions
+    :param img: scaled image 
     :param matched: image after matched filter is applied
     """
     # returnee variables
+    plates = []
     regions = []
 
     # minimum settings
@@ -24,10 +26,6 @@ def process(matched):
 
     # extract plate like regions
     for cnt in contours:
-        # minimum rectangle
-        rect = cv2.minAreaRect(cnt)
-        box = cv2.boxPoints(rect)
-
         # get bounding box
         y, x, n, m = cv2.boundingRect(cnt)
 
@@ -46,29 +44,41 @@ def process(matched):
         y2 = y + n
 
         # store values
-        out = [x1, x2, y1, y2]
-        regions.append(out)
+        plate = img[x1:x2, y1:y2]
+        plates.append(plate)
+
+        region = [x1, x2, y1, y2]
+        regions.append(region)
     # end for
 
-    return regions
+    return plates, regions
 # end function
 
 
-def run(prev, cur):
+def run(prev, cur, original):
     """
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
+    :param original: Stage number for original image
     """
     util.log("Stage", cur, "Locate plate regions")
     util.delete_stage(cur)
+
+    runtime = []
     for read in util.get_images(prev):
         # processed image from last stage
         matched = util.stage_image(read, prev)
         matched = cv2.imread(matched, cv2.CV_8UC1)
+        # original image
+        img = util.stage_image(read, original)
+        img = cv2.imread(img, cv2.CV_8UC1)
 
         # get result
-        regions = process(matched)
+        start = cv2.getTickCount()
+        plates, regions = process(img, matched)
+        time = cv2.getTickCount() - start
+        runtime.append(time)
 
         # save regions to data files
         for index, mat in enumerate(regions):
@@ -77,7 +87,17 @@ def run(prev, cur):
             np.savetxt(write, mat)
         # end for
 
+        # save plates to image files
+        for index, mat in enumerate(plates):
+            name = "{}.{}".format(index, read)
+            write = util.stage_image(name, cur)
+            cv2.imwrite(write, mat)
+        # end for
+
         # log
-        util.log("Converted", read, stage=cur)
+        time = "| {:.3} s".format(time / cv2.getTickFrequency())
+        util.log("Converted", read, time, stage=cur)
     # end for
+
+    return np.average(runtime)
 # end function
