@@ -24,6 +24,10 @@ STAGE_MAP = [
     [LocatePlate.run, 12, 13],
     [ExtractOriginal.run, 13, 14, 7, 1],
     [BlackWhite.run, 14, 15],
+
+    # character recognition
+    [Features.run, 30, 31],
+
     # rotate
     # remove border
     # HorizontalSegment.run,

@@ -1,48 +1,41 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-import alpr
 import numpy as np
 from modules import util
-from modules import config as cfg
 
 
-def process(img, region):
+def process(img):
     """
     Extract plate regions    
-    :param img: plate image
-    :param region: position of the image
-    :return cropped plate image and region 
+    :param img: plate image 
     """
+    height, width = img.shape
+    
 
-    return img, region
 # end function
 
 
-def run(stage):
+def run(prev, cur):
     """
     Run stage task
-    :param stage: Stage number 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
     """
-    util.log("Stage", stage, "Crop the plate regions")
-    for read in util.get_images(stage):
-        # open plate region data
-        region = util.stage_data(read, 7)
-        region = np.load(region)
+    util.log("Stage", cur, "Crop the plate regions")
+    for read in util.get_images(prev):
         # get plate from last stage
-        plate = util.stage_image(read, stage)
+        plate = util.stage_image(read, prev)
         plate = cv2.imread(plate, cv2.CV_8UC1)
-        # get result
-        plate, region = process(plate, region)
-        # save new region to data files
-        write = util.stage_data(read, stage + 1)
-        np.save(write, region)
-        # save plates to image files
-        write = util.stage_image(read, stage + 1)
-        cv2.imwrite(write, plate)
-        # log
-        util.log("Converted", read, stage=stage)
-    # end for
 
+        # get result
+        data = process(plate)
+
+        # save new region to data files
+        write = util.stage_data(read, cur)
+        np.save(write, data)
+
+        # log
+        util.log("Converted", read, stage=cur)
+    # end for
 # end function

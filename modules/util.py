@@ -132,8 +132,8 @@ def get_files(stage):
 
     # folder to write
     folder2 = stage_folder(stage + 1)
-    shutil.rmtree(folder2) # delete old
-    ensure_path(folder2)   # create new
+    shutil.rmtree(folder2)  # delete old
+    ensure_path(folder2)    # create new
 
     # Open all images
     data = []
