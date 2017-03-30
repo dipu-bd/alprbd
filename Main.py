@@ -7,7 +7,6 @@ from modules import util
 def main(argv):
 
     stages = []
-
     try:
         stages = parse_argv(argv)
     except:
@@ -22,10 +21,11 @@ def main(argv):
 
     # run all stages
     print()
+    time = 0
     for stage in stages:
-        alpr.execute(stage)
+        time += alpr.execute(stage)
     # end for
-    print("\nSUCCESS.")
+    print("\nTotal average runtime: ", time, "seconds.")
 
 # end main
 
@@ -47,36 +47,29 @@ def parse_argv(argv):
     :param argv: 
     :return: 
     """
-    stages = []
-
-    if len(argv) == 1:  # no input given
+    # no input is given
+    if len(argv) == 1:
         # all stages sequentially
-        stages = range(1, len(alpr.STAGE_MAP) + 1)
-
-    elif len(argv) == 2:  # either a range or single stage
-        if ':' not in argv[1]:  # single stage
-            stages = [get_stage(argv[1])]
-        else:  # range of stages
-
-            start, stop = argv[1].split('-')
-            if len(start) == 0:
-                start = 1
-            else:
-                start = get_stage(start)
-            # end if
-            if len(stop) == 0:
-                stop = len(alpr.STAGE_MAP) + 1
-            else:
-                stop = get_stage(stop) + 1
-            # end if
-            stages = range(start, stop)
-            # end if
-
-    elif len(argv) > 2:  # specified stages in specific order
-        for i in range(1, len(argv)):
-            stages.append(get_stage(argv[i]))
-        # end for
+        return range(1, len(alpr.STAGE_MAP) + 1)
     # end if
 
+    stages = []
+    for i in range(1, len(argv)):
+        start = 1
+        stop = len(alpr.STAGE_MAP)
+
+        if '-' not in argv[i]:    # single stage
+            start = stop = get_stage(argv[i])
+        elif argv[i][0] == '-':   # from beginning
+            stop = get_stage(argv[i][1:])
+        elif argv[i][-1] == '-':  # until end
+            start = get_stage(argv[i][:-1])
+        else:   # range of stages
+            start, stop = argv[1].split('-')
+        # end if
+
+        stages.extend(range(start, stop + 1))
+    # end for
     return stages
+
 # end function

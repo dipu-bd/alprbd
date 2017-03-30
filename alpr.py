@@ -78,5 +78,5 @@ def display_actions():
     print(" :Executes all stages starting from given stage.")
     print("\tpython . -<stage1>")
     print(" :Executes all stages 1 to given stage.")
-    
+
 # end function
