@@ -5,26 +5,26 @@ from modules import *
 # Mapping of Stage to Action
 # TODO: use a dictionary instead of array
 STAGE_MAP = [
-    Grayscale.run,          # 1 *
-    Rescale.run,            # 2 *
-    Sobel.run,              # 3
-    Gaussian.run,           # 4
-    Intensify.run,          # 5
-    MatchFilter.run,        # 6
-    LocatePlate.run,        # 7 *
-    ExtractPlate.run,       # 8
-    Sobel.run,              # 9
-    Closing.run,            # 10
-    Opening.run,            # 11
-    PlateNoise.run,         # 13
-    LocatePlate.run,        # 14 *
-    ExtractOriginal.run,    # 15
-    BlackWhite.run,         # 16
+    [Grayscale.run, 0, 1],
+    [Rescale.run, 1, 2],
+    [Sobel.run, 2, 3],
+    [Gaussian.run, 3, 4],
+    [Intensify.run, 4, 5],
+    [MatchFilter.run, 5, 6],
+    [LocatePlate.run, 6, 7],
+    [ExtractPlate.run, 7, 8],
+    [Sobel.run, 8, 9],
+    [Closing.run, 9, 10],
+    [Opening.run, 10, 11],
+    [PlateNoise.run, 11, 12],
+    [LocatePlate.run, 12, 13],
+    [ExtractOriginal.run, 13, 14],
+    [BlackWhite.run, 14, 15],
     # rotate
     # remove border
-    #HorizontalSegment.run,  # 15
-    #VerticalSegment.run,    # 16
-    #Features.run,           # 17
+    # HorizontalSegment.run,
+    # VerticalSegment.run,
+    # Features.run,
     # neural network
 ]
 
@@ -36,7 +36,6 @@ LOCATE_SCALED = 7
 SCALED_PLATE = 8
 ORIGIN_REGION = 14
 ORIGINAL_PLATE = 15
-
 
 def execute(stage):
     """
@@ -52,9 +51,9 @@ def execute(stage):
     # end if
 
     # execute the stage function for each image
-    STAGE_MAP[stage](stage)
+    method = STAGE_MAP[stage]
+    method[0](*method[1:])      # call using arguments
 
     util.log("Executed: ", util.name_of(STAGE_MAP[stage]), '\n')
-
     return True
 # end function
