@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-import alpr
 from modules import util
 from modules import config as cfg
 
 
 def apply(img, _pass=1):
     """
-    Apply erosion
+    Apply dilation
     :param img: input image
     :param _pass: iteration count
     """
@@ -16,40 +15,34 @@ def apply(img, _pass=1):
     # build structuring element
     se = cv2.getStructuringElement(cv2.MORPH_RECT, cfg.MORPH_RECT_SIZE)
 
-    # apply morphological erosion -- https://goo.gl/AuOAyL
+    # apply morphological erosion
     out = cv2.erode(img, se, iterations=_pass)
 
     return out
 # end function
 
 
-def run(stage):
+def run(prev, cur, _pass):
     """
     Run stage task
-    :param stage: Stage number 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
+    :param _pass: How many times to apply
     """
-    util.log("Stage", stage, "Applying Erosion", 1, "pass")
-    for read in util.get_images(stage):
+    util.log("Stage", prev, "Applying Erosion:", _pass, "pass")
+    for read in util.get_images(prev):
         # open image
-        file = util.stage_image(read, stage)
+        file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
         # apply
-        out = apply(img)
+        out = apply(img, _pass)
 
         # save to file
-        write = util.stage_image(read, stage + 1)
+        write = util.stage_image(read, cur)
         cv2.imwrite(write, out)
 
-        # glass view
-        file = util.stage_image(read, alpr.SCALED_PLATE)
-        img = cv2.imread(file, cv2.CV_8UC1)
-        img[out < 250] = 0
-        write = util.stage_image("." + read, stage + 1)
-        cv2.imwrite(write, img)
-
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, stage=cur)
     # end for
 # end function

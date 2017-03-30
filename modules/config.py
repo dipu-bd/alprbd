@@ -26,8 +26,9 @@ MIXTURE_CO = (-1.2, 0.6)        # difference between black and white dora
 
 SMOOTH_CUTOFF = 225             # set high value for removing noise
 
-MIN_PLATE_SIZE = (25, 60)       #
-MAX_PLATE_SIZE = (300, 400)     #
+MIN_PLATE_SIZE = (25, 60)       # minimum height, minimum width
+MAX_PLATE_SIZE = (300, 400)     # maximum height, maximum width
+PLATE_AREA = (1500, 100000)     # minimum area, maximum area
 
 MORPH_RECT_SIZE = (10, 3)       # fixed. possible size of single character
 

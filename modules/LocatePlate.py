@@ -8,7 +8,7 @@ from modules import config as cfg
 
 def process(matched):
     """
-    Extract plate regions
+    Locate plate regions
     :param matched: image after matched filter is applied
     """
 
@@ -17,6 +17,7 @@ def process(matched):
     height, width = cfg.SCALE_DIM
     min_m, min_n = cfg.MIN_PLATE_SIZE
     max_m, max_n = cfg.MAX_PLATE_SIZE
+    min_area, max_area = cfg.PLATE_AREA
 
     # map all contours -- http://stackoverflow.com/a/41322331/1583052
     contours = cv2.findContours(matched, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
@@ -25,7 +26,12 @@ def process(matched):
     for cnt in contours:
         # get bounding box
         y, x, n, m = cv2.boundingRect(cnt)
-        if m > n or (m < min_m or n < min_n) or (m > max_m or n > max_n):
+
+        # check image size and area
+        if m > n or (m < min_m or n < min_n) \
+                or (m > max_m or n > max_n)\
+                or (m * n < min_area)\
+                or (m * n > max_area):
             continue
         # end if
 
@@ -49,15 +55,16 @@ def process(matched):
 # end function
 
 
-def run(stage):
+def run(prev, cur):
     """
     Run stage task
-    :param stage: Stage number 
+    :param prev: Previous stage number
+    :param cur: Current stage number
     """
-    util.log("Stage", stage, "Locate plate regions")
-    for read in util.get_images(stage):
+    util.log("Stage", cur, "Locate plate regions")
+    for read in util.get_images(prev):
         # processed image from last stage
-        matched = util.stage_image(read, stage)
+        matched = util.stage_image(read, prev)
         matched = cv2.imread(matched, cv2.CV_8UC1)
 
         # get result
@@ -66,11 +73,11 @@ def run(stage):
         # save regions to data files
         for index, mat in enumerate(regions):
             name = "{}.{}".format(index, read)
-            write = util.stage_data(name, stage + 1)
+            write = util.stage_data(name, cur)
             np.save(write, mat)
         # end for
 
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, stage=cur)
     # end for
 # end function

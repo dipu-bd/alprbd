@@ -21,7 +21,7 @@ def log(*args, stage=None, force=False):
     # end if
 
     if stage is not None:
-        out = "> [" + str(stage+1) + "]: " + out
+        out = "> [" + str(stage) + "]: " + out
     else:
         out = "> " + out
     # end if
@@ -165,9 +165,8 @@ def name_of(func):
     :param func: Function name
     :return: 
     """
-
     folder = func.__code__.co_filename
     file = path.split(folder)[1]
     file = ".".join(path.splitext(file)[:-1])
-    return "{}.{}()".format(file, func.__name__)
+    return file
 # end function

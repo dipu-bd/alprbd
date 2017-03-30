@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-import alpr
 import numpy as np
 from modules import util
 from modules import config as cfg
@@ -121,30 +120,30 @@ def weight(rho):
 # end function
 
 
-def run(stage):
+def run(prev, cur, scaled):
     """
     Run stage task
-    :param stage: Stage number 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
     """
-    util.log("Stage", stage, "Intensity distribution")
-    for read in util.get_images(stage):
+    util.log("Stage", cur, "Intensity distribution")
+    for read in util.get_images(prev):
         # open image
-        gauss = util.stage_image(read, stage)
+        gauss = util.stage_image(read, prev)
         gauss = cv2.imread(gauss, cv2.CV_8UC1)
 
         # scaled image
-        gray = util.stage_image(read, alpr.RESCALED)
+        gray = util.stage_image(read, scaled)
         gray = cv2.imread(gray, cv2.CV_8UC1)
 
         # apply
         out = process(gray, gauss)
 
         # save to file
-        write = util.stage_image(read, stage + 1)
+        write = util.stage_image(read, cur)
         cv2.imwrite(write, out)
 
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, stage=cur)
     # end for
 # end function

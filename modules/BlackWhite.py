@@ -28,16 +28,16 @@ def apply(img):
 # end function
 
 
-def run(stage):
+def run(prev, cur):
     """
     Run stage task
-    :param stage: Stage number 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
     """
-    util.log("Stage", stage, "Converts to black and white")
-    for read in util.get_images(stage):
+    util.log("Stage", cur, "Converts to black and white")
+    for read in util.get_images(prev):
         # get plate from last stage
-        plate = util.stage_image(read, stage)
+        plate = util.stage_image(read, prev)
         plate = cv2.imread(plate, cv2.CV_8UC1)
 
         # get result
@@ -45,12 +45,11 @@ def run(stage):
 
         # save plates to image files
         if out is not None:
-            write = util.stage_image(read, stage + 1)
+            write = util.stage_image(read, cur)
             cv2.imwrite(write, out)
         # end if
 
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, stage=cur)
     # end for
-
 # end function

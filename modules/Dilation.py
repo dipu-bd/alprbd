@@ -2,41 +2,41 @@
 
 import cv2
 from modules import util
-from modules import Threshold
 from modules import config as cfg
 
 
-def apply(img):
+def apply(img, _pass=1):
     """
-    Apply vertical Sobel operator
-    :param img: input image 
+    Apply dilation
+    :param img: input image
+    :param _pass: iteration count
     """
 
-    # vertical Sobel operator -- https://goo.gl/3fQnc9
-    sobel = cv2.Sobel(img, cv2.CV_8UC1, 1, 0, ksize=3)
+    # build structuring element
+    se = cv2.getStructuringElement(cv2.MORPH_RECT, cfg.MORPH_RECT_SIZE)
 
-    # apply custom threshold
-    thresh = Threshold.apply(sobel, cfg.SOBEL_CUTOFF)
+    # apply morphological erosion -- https://goo.gl/AuOAyL
+    out = cv2.dilate(img, se, iterations=_pass)
 
-    # normalize image
-    return thresh
+    return out
 # end function
 
 
-def run(prev, cur):
+def run(prev, cur, _pass):
     """
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
+    :param _pass: How many times to apply
     """
-    util.log("Stage", cur, "Applying Sobel Operator")
+    util.log("Stage", prev, "Applying Dilation:", _pass, "pass")
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
         # apply
-        out = apply(img)
+        out = apply(img, _pass)
 
         # save to file
         write = util.stage_image(read, cur)

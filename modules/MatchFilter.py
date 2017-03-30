@@ -87,36 +87,36 @@ def build_mixture_model():
 # end function
 
 
-def run(stage):
+def run(prev, cur):
     """
     Run stage task
-    :param stage: Stage number 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
     """
-    util.log("Stage", stage, "Applying mixture model")
-    for read in util.get_images(stage):
+    util.log("Stage", cur, "Applying mixture model")
+    for read in util.get_images(prev):
         # open image
-        file = util.stage_image(read, stage)
+        file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
         # all artifacts
         sobel, matched, smooth, thresh = apply(img, True)
 
         # save to file
-        write = util.stage_image(read, stage + 1)
+        write = util.stage_image(read, cur)
         cv2.imwrite(write, thresh)
         
         # ---## other artifacts ##--- #
-        write = util.stage_image(".1." + read, stage + 1)
+        write = util.stage_image(".1." + read, cur)
         cv2.imwrite(write, matched)
-        write = util.stage_image(".2." + read, stage + 1)
+        write = util.stage_image(".2." + read, cur)
         cv2.imwrite(write, smooth)
         # glass view
         img[thresh == 0] = 0
-        write = util.stage_image(".3." + read, stage + 1)
+        write = util.stage_image(".3." + read, cur)
         cv2.imwrite(write, img)
         
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, stage=cur)
     # end for
 # end function

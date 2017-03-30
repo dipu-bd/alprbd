@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-import alpr
 from modules import util
 from modules import config as cfg
 
@@ -22,33 +21,26 @@ def apply(img):
 # end function
 
 
-def run(stage):
+def run(prev, cur):
     """
     Run stage task
-    :param stage: Stage number 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
     """
-    util.log("Stage", stage, "Morphological closing")
-    for read in util.get_images(stage):
+    util.log("Stage", cur, "Morphological closing")
+    for read in util.get_images(prev):
         # open image
-        file = util.stage_image(read, stage)
+        file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
         # apply
         out = apply(img)
 
         # save to file
-        write = util.stage_image(read, stage + 1)
+        write = util.stage_image(read, cur)
         cv2.imwrite(write, out)
 
-        # glass view
-        file = util.stage_image(read, alpr.SCALED_PLATE)
-        img = cv2.imread(file, cv2.CV_8UC1)
-        img[out < 250] = 0
-        write = util.stage_image("." + read, stage + 1)
-        cv2.imwrite(write, img)
-
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, stage=cur)
     # end for
 # end function

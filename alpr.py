@@ -3,22 +3,22 @@
 from modules import *
 
 # Mapping of Stage to Action
-# TODO: use a dictionary instead of array
+# Elements: [function reference, function arguments...]
 STAGE_MAP = [
     [Grayscale.run, 0, 1],
     [Rescale.run, 1, 2],
     [Sobel.run, 2, 3],
     [Gaussian.run, 3, 4],
-    [Intensify.run, 4, 5],
+    [Intensify.run, 4, 5, 2],
     [MatchFilter.run, 5, 6],
     [LocatePlate.run, 6, 7],
-    [ExtractPlate.run, 7, 8],
+    [ExtractPlate.run, 7, 8, 2],
     [Sobel.run, 8, 9],
     [Closing.run, 9, 10],
     [Opening.run, 10, 11],
-    [PlateNoise.run, 11, 12],
+    [PlateNoise.run, 11, 12, 8],
     [LocatePlate.run, 12, 13],
-    [ExtractOriginal.run, 13, 14],
+    [ExtractOriginal.run, 13, 14, 7, 1],
     [BlackWhite.run, 14, 15],
     # rotate
     # remove border
@@ -28,14 +28,6 @@ STAGE_MAP = [
     # neural network
 ]
 
-# index number of most referenced stages
-ORIGINAL = 0
-GRAYSCALE = 1
-RESCALED = 2
-LOCATE_SCALED = 7
-SCALED_PLATE = 8
-ORIGIN_REGION = 14
-ORIGINAL_PLATE = 15
 
 def execute(stage):
     """
@@ -47,6 +39,7 @@ def execute(stage):
     # check if stage is valid
     if stage < 0 or stage >= len(STAGE_MAP):
         util.log("Unknown stage:", stage)
+        display_actions()
         return False
     # end if
 
@@ -54,6 +47,18 @@ def execute(stage):
     method = STAGE_MAP[stage]
     method[0](*method[1:])      # call using arguments
 
-    util.log("Executed: ", util.name_of(STAGE_MAP[stage]), '\n')
+    util.log("Executed:", str(stage + 1) + ") ", util.name_of(method[0]), '.run()\n')
     return True
+# end function
+
+
+def display_actions():
+    """
+    Displays the list of actions
+    """
+    print("Available stages:")
+    for stage, action in enumerate(STAGE_MAP):
+        print("  %2d/  %s (%d params)" %
+              (stage + 1, util.name_of(action[0]), len(action) - 1))
+    # end for
 # end function

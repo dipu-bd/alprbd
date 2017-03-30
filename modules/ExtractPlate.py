@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-import alpr
 import numpy as np
 from modules import util
 
@@ -20,31 +19,32 @@ def process(img, region):
 # end function
 
 
-def run(stage):
+def run(prev, cur, scaled):
     """
     Run stage task
-    :param stage: Stage number 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
+    :param scaled: Stage number for scaled gray image
     """
-    util.log("Stage", stage, "Extracting plate from scaled image")
-    for read in util.get_data(stage):
+    util.log("Stage", cur, "Extracting plate from scaled image")
+    for read in util.get_data(prev):
+        # processed image from last stage
+        region = util.stage_data(read, prev)
+        region = np.load(region)
+
         # scaled image from 2nd stage
         name = ".".join(read.split(".")[1:])
-        img = util.stage_image(name, alpr.RESCALED)
+        img = util.stage_image(name, scaled)
         img = cv2.imread(img, cv2.CV_8UC1)
-
-        # processed image from last stage
-        region = util.stage_data(read, stage)
-        region = np.load(region)
 
         # get result
         plate = process(img, region)
 
         # save plate
-        write = util.stage_image(read, stage + 1)
+        write = util.stage_image(read, cur)
         cv2.imwrite(write, plate)
 
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, stage=cur)
     # end for
 # end function

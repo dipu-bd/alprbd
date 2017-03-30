@@ -21,24 +21,26 @@ def apply(img):
 # end function
 
 
-def run(stage):
+def run(prev, cur):
     """
     Run stage task
-    :param stage: Stage number 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
     """
-    util.log("Stage", stage, "Morphological opening")
-    for read in util.get_images(stage):
+    util.log("Stage", cur, "Morphological opening")
+    for read in util.get_images(prev):
         # open image
-        file = util.stage_image(read, stage)
+        file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
+
+        # apply
         out = apply(img)
 
         # save to file
-        write = util.stage_image(read, stage + 1)
+        write = util.stage_image(read, cur)
         cv2.imwrite(write, out)
 
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, stage=cur)
     # end for
 # end function
