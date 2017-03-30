@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import cv2
 from modules import *
 
 # Mapping of Stage to Action
@@ -37,17 +38,21 @@ def execute(stage):
     :return: True if success, False otherwise.
     """
     # check if stage is valid
-    if stage < 0 or stage >= len(STAGE_MAP):
+    if stage <= 0 or stage > len(STAGE_MAP):
         util.log("Unknown stage:", stage)
         display_actions()
         return False
     # end if
 
     # execute the stage function for each image
-    method = STAGE_MAP[stage]
+    start = cv2.getTickCount()  # start time
+
+    method = STAGE_MAP[stage - 1]
     method[0](*method[1:])      # call using arguments
 
-    util.log("Executed:", str(stage + 1) + ") ", util.name_of(method[0]), '.run()\n')
+    stop = cv2.getTickCount()   # end time
+    time = float(stop - start) / cv2.getTickFrequency()
+    util.log("Executed in {0:.3} seconds".format(time))
     return True
 # end function
 

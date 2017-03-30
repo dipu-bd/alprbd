@@ -6,31 +6,34 @@ from modules import util
 
 def main(argv):
 
-    print()
+    stages = []
 
     if len(argv) == 1:
-        # run all stages sequentially
-        for i in range(0, len(alpr.STAGE_MAP)):
-            alpr.execute(i)
-        # end for
+        # all stages sequentially
+        stages = range(1, len(alpr.STAGE_MAP) + 1)
 
     elif len(argv) >= 2:
-        # check if help required
-        if argv[1] == '-h':
-            alpr.display_actions()
-            return
-        # end if
-
-        # run all specified stages
-        for i in range(0, len(argv) - 1):
-            alpr.execute(int(argv[i + 1]) - 1)
+        # specified stages in specific order
+        for i in range(1, len(argv)):
+            try:
+                stages.append(int(argv[i]))
+            except err:
+                pass
+            # end try
         # end for
-
-    else:
-        # wrong number of arguments
-        util.log("Invalid number of arguments")
     # end if
 
+    if len(stages) == 0:
+        # wrong number of arguments
+        util.log("Invalid number of arguments")
+        return alpr.display_actions()
+    # end if
+
+    # run all stages
+    print()
+    for stage in stages:
+        alpr.execute(stage)
+    # end for
     print("\nSUCCESS.")
 
 # end main
