@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-import cv2
 import shutil
-import numpy as np
 from os import path
-from modules import config as cfg
+
+import cv2
+import numpy as np
+
+from helper import config as cfg
 
 VALID_DATA = [".txt"]
 VALID_IMAGE = [".jpg", ".png", ".bmp"]

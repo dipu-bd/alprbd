@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-from modules import util
-from modules import config as cfg
+import numpy as np
+from helper import *
 
 
 def apply(img, _pass=1):
@@ -22,21 +22,22 @@ def apply(img, _pass=1):
 # end function
 
 
-def run(prev, cur, _pass):
+def run(prev, cur):
     """
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
-    :param _pass: How many times to apply
     """
-    util.log("Stage", prev, "Applying Dilation:", _pass, "pass")
+    runtime = []
+    util.log("Stage", cur, "Dilation")
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
-        # apply
-        out = apply(img, _pass)
+        # get result
+        out, time = util.execute_module(apply, img)
+        runtime.append(time)
 
         # save to file
         write = util.stage_image(read, cur)
@@ -45,4 +46,7 @@ def run(prev, cur, _pass):
         # log
         util.log("Converted", read, stage=cur)
     # end for
+
+    return np.average(runtime)
 # end function
+

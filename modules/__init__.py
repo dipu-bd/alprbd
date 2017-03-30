@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from modules import util
-from modules import config as cfg
+from helper import *
 
 from modules import BlackWhite
 from modules import Closing

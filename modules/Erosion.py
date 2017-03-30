@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-from modules import util
-from modules import config as cfg
+from helper import *
 
 
 def apply(img, _pass=1):

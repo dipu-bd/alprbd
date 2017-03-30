@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import alpr
-from modules import util
+from helper import util
 
 
 def main(argv):

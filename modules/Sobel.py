@@ -2,9 +2,8 @@
 
 import cv2
 import numpy as np
+from helper import *
 from modules import Threshold
-from modules import config as cfg
-from modules import util
 
 
 def apply(img):

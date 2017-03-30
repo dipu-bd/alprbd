@@ -18,18 +18,18 @@ STAGE_MAP = [
     [Sobel.run, 7, 8],              # 8
     [Closing.run, 8, 9],            # 9
     [Opening.run, 9, 10],           # 10
+    [Dilation.run, 10, 11],         # 11
 
     # cleaning plate             # STEP-D #
-    [PlateNoise.run, 11, 12, 8],    # 12
-    [LocatePlate.run, 12, 13],      # 13
-    [Extract.run, 13, 14, 7, 1],    # 14
-    [BlackWhite.run, 14, 15],       # 15
+    # [PlateNoise.run, 11, 12, 8],    # 12
+    # [LocatePlate.run, 12, 13],      # 13
+    # [Extract.run, 13, 14, 7, 1],    # 14
+    # [BlackWhite.run, 14, 15],       # 15
 
     # segmentation
 
-
     # character recognition
-    [Features.run, 100, 101],
+    # [Features.run, 100, 101],
 
     # rotate
     # remove border

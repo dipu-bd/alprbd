@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-from modules import util
+from helper import *
 
 
 def apply(img, offset=127):

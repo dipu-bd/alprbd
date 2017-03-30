@@ -2,10 +2,9 @@
 
 import cv2
 import numpy as np
-from modules import Threshold
+from helper import *
 from modules import Gaussian
-from modules import config as cfg
-from modules import util
+from modules import Threshold
 
 
 def apply(img):

@@ -2,8 +2,7 @@
 
 import cv2
 import numpy as np
-from modules import util
-from modules import config as cfg
+from helper import *
 
 
 def apply(img):
