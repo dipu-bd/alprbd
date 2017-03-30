@@ -14,7 +14,6 @@ def process(img, region1, region2):
     :param region2: position relative to region1
     :return original plate image and region 
     """
-
     # translate to scaled region
     x1, x2, y1, y2 = region2
     x = region1[0]

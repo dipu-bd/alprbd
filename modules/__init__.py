@@ -19,6 +19,6 @@ from modules import BlackWhite
 from modules import Threshold
 from modules import Erosion
 from modules import Dilation
-from modules import HorizontalSegment
-from modules import VerticalSegment
+from modules import ProjectionX
+from modules import ProjectionY
 from modules import Features

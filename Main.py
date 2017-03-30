@@ -8,12 +8,12 @@ def main(argv):
 
     stages = []
 
-    if len(argv) == 1:      # no input given
-        # all stages sequentially
-        stages = range(1, len(alpr.STAGE_MAP) + 1)
+    try:
+        if len(argv) == 1:      # no input given
+            # all stages sequentially
+            stages = range(1, len(alpr.STAGE_MAP) + 1)
 
-    elif len(argv) == 2:    # either a range or single stage
-        try:
+        elif len(argv) == 2:    # either a range or single stage
             if ':' not in argv[1]:  # single stage
                 stages = [int(argv[1])]
             else:                   # range of stages
@@ -31,19 +31,15 @@ def main(argv):
                 # end if
                 stages = range(start, stop)
             # end if
-        except err:
-            pass
-        # end try
 
-    elif len(argv) > 2:     # specified stages in specific order
-        for i in range(1, len(argv)):
-            try:
+        elif len(argv) > 2:     # specified stages in specific order
+            for i in range(1, len(argv)):
                 stages.append(int(argv[i]))
-            except err:
-                pass
-            # end try
-        # end for
-    # end if
+            # end for
+        # end if
+    except:
+        pass
+    # end try
 
     # check if any input has been given
     if len(stages) == 0:
