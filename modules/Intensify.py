@@ -32,11 +32,12 @@ def calculate(row, col, gauss):
     Calculate (mean, and standard deviation) values for Intensifying
     """
     m, n = cfg.BLOCK_COUNT
-    h = int(row / m)
-    w = int(col / n)
+    h = row // m
+    w = col // n
 
-    x, y = np.ogrid[0:1:(1.0/h), 0:1:(1.0/w)]
-    neg_x, neg_y = np.float64(1 - x), np.float64(1 - y)
+    x, y = np.ogrid[0:1:(1/h), 0:1:(1/w)]
+    neg_x = np.float64(1 - x)
+    neg_y = np.float64(1 - y)
 
     mean = np.zeros((row, col), dtype=np.float64)
     sdev = np.zeros((row, col), dtype=np.float64)
@@ -83,10 +84,10 @@ def local_mean_std(img, i, j, p, q):
     row, col = img.shape
 
     # get window
-    x1 = int(max(0, i - int(p / 2)))
-    y1 = int(max(0, j - int(q / 2)))
-    x2 = int(min(row, i + int(p / 2)))
-    y2 = int(min(col, j + int(q / 2)))
+    x1 = max(0, i - p // 2)
+    y1 = max(0, j - q // 2)
+    x2 = min(row, i + p // 2)
+    y2 = min(col, j + q // 2)
     window = img[x1:x2, y1:y2]
 
     # calculate mean and std

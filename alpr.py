@@ -26,7 +26,7 @@ STAGE_MAP = [
     [BlackWhite.run, 14, 15],
 
     # character recognition
-    [Features.run, 30, 31],
+    [Features.run, 100, 101],
 
     # rotate
     # remove border
@@ -56,7 +56,7 @@ def execute(stage):
 
     stop = cv2.getTickCount()   # end time
     time = float(stop - start) / cv2.getTickFrequency()
-    util.log("Executed in {0:.3} seconds\n".format(time))
+    util.log("Executed in {:.3} seconds\n".format(time))
 # end function
 
 

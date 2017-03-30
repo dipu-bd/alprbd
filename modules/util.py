@@ -88,12 +88,11 @@ def normalize(img):
     Intensity boundary is [0, 255].
     :param img: Image to apply normalize
     """
-    # maxi = np.max(img)
-    # if maxi > 512:
-    #     img *= 512.0 / maxi
-    # # end if
-
-    img = 255 * img / np.max(img)
+    tol = 355
+    maxi = np.max(img)
+    if maxi > tol:
+        img = 255 * (img - (tol - 255)) / maxi
+    # end if
 
     norm = np.round(img)
     norm[norm < 0] = 0
@@ -126,7 +125,6 @@ def get_files(stage):
     :param stage: Stage number to open 
     :return: An array of stage objects
     """
-
     # get folder
     folder = stage_folder(stage)
 
@@ -153,7 +151,13 @@ def get_files(stage):
         # end if
     # end for
 
-    log(len(images), 'images +', len(data), 'data found on stage', stage)
+    # for debugging
+    if len(images):
+        log(len(images), 'images', 'found on stage', stage)
+    # end if
+    if len(data):
+        log(len(data), 'data', 'found on stage', stage)
+    # end if
 
     return images, data
 # end function
