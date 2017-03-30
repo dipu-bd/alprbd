@@ -3,10 +3,10 @@
 import cv2
 import numpy as np
 from modules import util
-from modules import Sobel
-from modules import Gaussian
-from modules import Threshold
 from modules import config as cfg
+from modules import Threshold
+from modules import Gaussian
+from modules import Sobel
 
 mixture_model = np.array([])
 
@@ -94,6 +94,7 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     util.log("Stage", cur, "Applying mixture model")
+    util.delete_stage(cur)
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)

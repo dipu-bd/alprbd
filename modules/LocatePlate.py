@@ -11,10 +11,10 @@ def process(matched):
     Locate plate regions
     :param matched: image after matched filter is applied
     """
-
-    plates = []
+    # returnee variables
     regions = []
-    height, width = cfg.SCALE_DIM
+
+    # minimum settings
     min_m, min_n = cfg.MIN_PLATE_SIZE
     max_m, max_n = cfg.MAX_PLATE_SIZE
     min_area, max_area = cfg.PLATE_AREA
@@ -24,34 +24,33 @@ def process(matched):
 
     # extract plate like regions
     for cnt in contours:
+        # minimum rectangle
+        rect = cv2.minAreaRect(cnt)
+        box = cv2.boxPoints(rect)
+
         # get bounding box
         y, x, n, m = cv2.boundingRect(cnt)
 
         # check image size and area
-        if m > n or (m < min_m or n < min_n) \
+        if m > n or (m < min_m or n < min_n)\
                 or (m > max_m or n > max_n)\
                 or (m * n < min_area)\
                 or (m * n > max_area):
             continue
         # end if
 
-        # fix positions
-        # x -= 5
-        # m += 10
-        # y -= 10
-        # n += 20
-
         # get corner points
-        x1 = max(0, x)
-        x2 = min(height, x + m)
-        y1 = max(0, y)
-        y2 = min(width, y + n)
+        x1 = x
+        x2 = x + m
+        y1 = y
+        y2 = y + n
 
         # store values
-        regions.append([x1, x2, y1, y2])
+        out = [x1, x2, y1, y2]
+        regions.append(out)
     # end for
 
-    return plates, regions
+    return regions
 # end function
 
 
@@ -62,19 +61,20 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     util.log("Stage", cur, "Locate plate regions")
+    util.delete_stage(cur)
     for read in util.get_images(prev):
         # processed image from last stage
         matched = util.stage_image(read, prev)
         matched = cv2.imread(matched, cv2.CV_8UC1)
 
         # get result
-        plates, regions = process(matched)
+        regions = process(matched)
 
         # save regions to data files
         for index, mat in enumerate(regions):
             name = "{}.{}".format(index, read)
             write = util.stage_data(name, cur)
-            np.save(write, mat)
+            np.savetxt(write, mat)
         # end for
 
         # log

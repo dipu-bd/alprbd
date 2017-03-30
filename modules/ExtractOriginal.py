@@ -15,9 +15,9 @@ def process(img, region1, region2):
     :return original plate image and region 
     """
     # translate to scaled region
-    x1, x2, y1, y2 = region2
-    x = region1[0]
-    y = region1[2]
+    x1, x2, y1, y2 = np.uint(region2)
+    x = int(region1[0])
+    y = int(region1[2])
 
     x1 += x
     x2 += x
@@ -50,15 +50,16 @@ def run(prev, cur, plate_region, gray):
     :param gray: Stage number of unscaled gray image
     """
     util.log("Stage", cur, "Extracting the plate from full sized image")
+    util.delete_stage(cur)
     for read in util.get_data(prev):
         # open relative region data
         region2 = util.stage_data(read, prev)
-        region2 = np.load(region2)
+        region2 = np.loadtxt(region2)
 
         # open scaled region data
         name = ".".join(read.split(".")[1:])
         region1 = util.stage_data(name, plate_region)
-        region1 = np.load(region1)
+        region1 = np.loadtxt(region1)
 
         # get original image
         name = ".".join(read.split(".")[2:])

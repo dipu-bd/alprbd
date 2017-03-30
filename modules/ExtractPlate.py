@@ -12,7 +12,7 @@ def process(img, region):
     :param region: region data
     """
 
-    x1, x2, y1, y2 = region
+    x1, x2, y1, y2 = np.uint(region)
     plate = img[x1:x2, y1:y2]
 
     return plate
@@ -27,10 +27,11 @@ def run(prev, cur, scaled):
     :param scaled: Stage number for scaled gray image
     """
     util.log("Stage", cur, "Extracting plate from scaled image")
+    util.delete_stage(cur)
     for read in util.get_data(prev):
         # processed image from last stage
         region = util.stage_data(read, prev)
-        region = np.load(region)
+        region = np.loadtxt(region)
 
         # scaled image from 2nd stage
         name = ".".join(read.split(".")[1:])

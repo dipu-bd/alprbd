@@ -6,17 +6,19 @@ from modules import *
 # Mapping of Stage to Action
 # Elements: [function reference, previous stage, current stage, other arguments...]
 STAGE_MAP = [
-    # plate localization
+    # pre-processing
     [Grayscale.run, 0, 1],
     [Rescale.run, 1, 2],
     [Sobel.run, 2, 3],
     [Gaussian.run, 3, 4],
     [Intensify.run, 4, 5, 2],
+
+    # plate detection
     [MatchFilter.run, 5, 6],
     [LocatePlate.run, 6, 7],
     [ExtractPlate.run, 7, 8, 2],
 
-    # plate segmentation
+    # cleaning plate
     [Sobel.run, 8, 9],
     [Closing.run, 9, 10],
     [Opening.run, 10, 11],
@@ -24,6 +26,9 @@ STAGE_MAP = [
     [LocatePlate.run, 12, 13],
     [ExtractOriginal.run, 13, 14, 7, 1],
     [BlackWhite.run, 14, 15],
+
+    # segmentation
+
 
     # character recognition
     [Features.run, 100, 101],

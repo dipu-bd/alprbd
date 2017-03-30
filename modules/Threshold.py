@@ -12,7 +12,7 @@ def apply(img, offset=127):
     """
 
     # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(img, offset, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(img, offset, 255, cv2.THRESH_OTSU)
 
     return thresh
 # end function

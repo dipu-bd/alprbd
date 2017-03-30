@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-from modules import util
+
 from modules import Threshold
 from modules import config as cfg
+from modules import util
 
 
 def apply(img):
@@ -30,6 +31,7 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     util.log("Stage", cur, "Applying Sobel Operator")
+    util.delete_stage(cur)
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)

@@ -2,10 +2,10 @@
 
 import cv2
 import numpy as np
-from modules import util
-from modules import Gaussian
 from modules import Threshold
+from modules import Gaussian
 from modules import config as cfg
+from modules import util
 
 
 def apply(img):
@@ -34,6 +34,7 @@ def run(prev, cur, plate):
     :param plate: Stage number of plate image
     """
     util.log("Stage", cur, "Removing plate noises")
+    util.delete_stage(cur)
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)

@@ -6,8 +6,8 @@ import numpy as np
 from os import path
 from modules import config as cfg
 
-VALID_DATA = [".npy"]
-VALID_IMAGE = [".jpg", ".gif", ".png", ".bmp"]
+VALID_DATA = [".txt"]
+VALID_IMAGE = [".jpg", ".png", ".bmp"]
 
 
 def log(*args, stage=None, force=False):
@@ -128,11 +128,6 @@ def get_files(stage):
     # get folder
     folder = stage_folder(stage)
 
-    # folder to write
-    folder2 = stage_folder(stage + 1)
-    shutil.rmtree(folder2)  # delete old
-    ensure_path(folder2)    # create new
-
     # Open all images
     data = []
     images = []
@@ -140,13 +135,13 @@ def get_files(stage):
     for file in os.listdir(folder):
         name = file.lower()
         if name.startswith('.'):
-            continue    # don't process hidden files
+            continue    # skip hidden files
         # end if
 
         _, ext = path.splitext(name)
-        if ext in VALID_IMAGE:
+        if ext.lower() in VALID_IMAGE:
             images.append(name)  # image file
-        elif ext in VALID_DATA:
+        elif ext.lower() in VALID_DATA:
             data.append(name)    # data file
         # end if
     # end for
@@ -161,6 +156,18 @@ def get_files(stage):
 
     return images, data
 # end function
+
+
+def delete_stage(stage):
+    """
+    Deletes a stage folder
+    :param stage: 
+    :return: 
+    """
+    folder = stage_folder(stage)
+    shutil.rmtree(folder)  # delete old
+    ensure_path(folder)    # create new
+# end if
 
 
 def name_of(func):

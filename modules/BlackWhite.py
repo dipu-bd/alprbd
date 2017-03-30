@@ -35,6 +35,7 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     util.log("Stage", cur, "Converts to black and white")
+    util.delete_stage(cur)
     for read in util.get_images(prev):
         # get plate from last stage
         plate = util.stage_image(read, prev)

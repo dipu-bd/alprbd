@@ -36,6 +36,7 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     util.log("Stage", cur, "Grayscale conversion")
+    util.delete_stage(cur)
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)

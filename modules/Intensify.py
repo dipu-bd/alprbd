@@ -128,6 +128,7 @@ def run(prev, cur, original):
     :param cur: Current stage number
     """
     util.log("Stage", cur, "Intensity distribution")
+    util.delete_stage(cur)
     for read in util.get_images(prev):
         # open image
         gauss = util.stage_image(read, prev)
