@@ -22,7 +22,7 @@ def apply(img, _all=False):
     sobel = Sobel.apply(img)
 
     # apply matched filter
-    kernel = build_mixture_model()
+    kernel = _mixture_model()
     matched = cv2.filter2D(sobel, cv2.CV_64F, kernel)
     matched = util.normalize(matched)
 
@@ -41,7 +41,7 @@ def apply(img, _all=False):
 # end function
 
 
-def build_mixture_model():
+def _mixture_model():
     """
     Builds a gaussian kernel for mixture model
     """
@@ -93,15 +93,17 @@ def run(prev, cur):
     :param prev: Previous stage number
     :param cur: Current stage number
     """
+    runtime = []
     util.log("Stage", cur, "Applying mixture model")
-    util.delete_stage(cur)
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
-        # all artifacts
-        sobel, matched, smooth, thresh = apply(img, True)
+        # get result
+        results, time = util.execute_module(apply, img, True)
+        sobel, matched, smooth, thresh = results
+        runtime.append(time)
 
         # save to file
         write = util.stage_image(read, cur)
@@ -116,8 +118,10 @@ def run(prev, cur):
         img[thresh == 0] = 0
         write = util.stage_image(".3." + read, cur)
         cv2.imwrite(write, img)
-        
+
         # log
-        util.log("Converted", read, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
+
+    return np.average(runtime)
 # end function

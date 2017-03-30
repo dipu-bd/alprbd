@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import cv2
 import shutil
 import numpy as np
 from os import path
@@ -182,3 +183,18 @@ def name_of(func):
     return file
 # end function
 
+
+def execute_module(method, *args):
+    """
+    
+    :param method: 
+    :param args: 
+    :return: 
+    """
+    # get result
+    start = cv2.getTickCount()
+    result = method(*args)
+    time = cv2.getTickCount() - start
+    time /= cv2.getTickFrequency()
+    return result, time
+# end function

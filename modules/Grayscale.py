@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+import numpy as np
 from modules import util
 from modules import config as cfg
 
@@ -35,21 +36,24 @@ def run(prev, cur):
     :param prev: Previous stage number
     :param cur: Current stage number
     """
+    runtime = []
     util.log("Stage", cur, "Grayscale conversion")
-    util.delete_stage(cur)
     for read in util.get_images(prev):
         # open image
-        file = util.stage_image(read, prev)
-        img = cv2.imread(file)
+        img = util.stage_image(read, prev)
+        img = cv2.imread(img)
 
-        # apply
-        out = apply(img)
+        # get result
+        out, time = util.execute_module(apply, img)
+        runtime.append(time)
 
         # save to file
         write = util.stage_image(read, cur)
         cv2.imwrite(write, out)
 
         # log
-        util.log("Converted", read, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
+
+    return np.average(runtime)
 # end function

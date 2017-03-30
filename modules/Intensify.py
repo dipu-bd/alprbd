@@ -14,10 +14,10 @@ def process(img, gauss):
     """
 
     # calculate
-    mean, sdev = calculate(img.shape[0], img.shape[1], gauss)
+    mean, sdev = _calculate(img.shape[0], img.shape[1], gauss)
 
     # apply intensify
-    f = np.vectorize(weight)
+    f = np.vectorize(_weight)
     ret = f(sdev) * (img - mean) + mean
 
     # normalize and return
@@ -27,7 +27,7 @@ def process(img, gauss):
 # end function
 
 
-def calculate(row, col, gauss):
+def _calculate(row, col, gauss):
     """
     Calculate (mean, and standard deviation) values for Intensifying
     """
@@ -51,10 +51,10 @@ def calculate(row, col, gauss):
     for i in win_x:
         for j in win_y:
             # local average of four corners
-            i_a, d_a = local_mean_std(gauss, i, j, h, w)
-            i_b, d_b = local_mean_std(gauss, i, j + w, h, w)
-            i_c, d_c = local_mean_std(gauss, i + h, j, h, w)
-            i_d, d_d = local_mean_std(gauss, i + h, j + w, h, w)
+            i_a, d_a = _mean_std(gauss, i, j, h, w)
+            i_b, d_b = _mean_std(gauss, i, j + w, h, w)
+            i_c, d_c = _mean_std(gauss, i + h, j, h, w)
+            i_d, d_d = _mean_std(gauss, i + h, j + w, h, w)
 
             # calculate local intensity
             upper_l = neg_y * i_a + y * i_b
@@ -72,7 +72,7 @@ def calculate(row, col, gauss):
 # end function
 
 
-def local_mean_std(img, i, j, p, q):
+def _mean_std(img, i, j, p, q):
     """
     Calculates the mean intensity and standard deviation of a point
     :param img: Original image
@@ -97,7 +97,7 @@ def local_mean_std(img, i, j, p, q):
 # end function
 
 
-def weight(rho):
+def _weight(rho):
     """The weighting function
 
     Parameter:
@@ -121,31 +121,35 @@ def weight(rho):
 # end function
 
 
-def run(prev, cur, original):
+def run(prev, cur, scaled):
     """
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
+    :param scaled: Stage number for scaled gray image
     """
+    runtime = []
     util.log("Stage", cur, "Intensity distribution")
-    util.delete_stage(cur)
     for read in util.get_images(prev):
         # open image
         gauss = util.stage_image(read, prev)
         gauss = cv2.imread(gauss, cv2.CV_8UC1)
 
         # scaled image
-        gray = util.stage_image(read, original)
+        gray = util.stage_image(read, scaled)
         gray = cv2.imread(gray, cv2.CV_8UC1)
 
-        # apply
-        out = process(gray, gauss)
+        # get result
+        out, time = util.execute_module(process, gray, gauss)
+        runtime.append(time)
 
         # save to file
         write = util.stage_image(read, cur)
         cv2.imwrite(write, out)
 
         # log
-        util.log("Converted", read, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
+
+    return np.average(runtime)
 # end function

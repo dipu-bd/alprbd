@@ -25,8 +25,7 @@ def main(argv):
     for stage in stages:
         time += alpr.execute(stage)
     # end for
-    print("\nTotal average runtime: ", time, "seconds.")
-
+    print("Mean Total: %.3f seconds" % time)
 # end main
 
 

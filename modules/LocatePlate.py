@@ -62,10 +62,8 @@ def run(prev, cur, original):
     :param cur: Current stage number
     :param original: Stage number for original image
     """
-    util.log("Stage", cur, "Locate plate regions")
-    util.delete_stage(cur)
-
     runtime = []
+    util.log("Stage", cur, "Locate plate regions")
     for read in util.get_images(prev):
         # processed image from last stage
         matched = util.stage_image(read, prev)
@@ -75,9 +73,7 @@ def run(prev, cur, original):
         img = cv2.imread(img, cv2.CV_8UC1)
 
         # get result
-        start = cv2.getTickCount()
-        plates, regions = process(img, matched)
-        time = cv2.getTickCount() - start
+        (plates, regions), time = util.execute_module(process, img, matched)
         runtime.append(time)
 
         # save regions to data files
@@ -95,8 +91,7 @@ def run(prev, cur, original):
         # end for
 
         # log
-        time = "| {:.3} s".format(time / cv2.getTickFrequency())
-        util.log("Converted", read, time, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
 
     return np.average(runtime)

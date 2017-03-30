@@ -66,22 +66,24 @@ def run(prev, cur):
     :param prev: Previous stage number
     :param cur: Current stage number
     """
-    util.log("Stage", cur, "Gaussian conversion")
-    util.delete_stage(cur)
+    runtime = []
+    util.log("Stage", cur, "Gaussian blur")
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
-        # apply
-        out = apply(img)
+        # get result
+        out, time = util.execute_module(apply, img)
+        runtime.append(time)
 
         # save to file
         write = util.stage_image(read, cur)
         cv2.imwrite(write, out)
 
         # log
-        util.log("Converted", read, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
-# end function
 
+    return np.average(runtime)
+# end function

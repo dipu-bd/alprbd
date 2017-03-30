@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import cv2
 from modules import *
 
 # Mapping of Stage to Action
@@ -52,7 +51,7 @@ def execute(stage):
     util.delete_stage(method[2])    # delete current stage folder
     time = method[0](*method[1:])   # call using arguments
 
-    util.log("Average execution time: {:.3} seconds\n".format(time))
+    util.log("Average execution time: %.3f seconds\n" % time)
     return time
 # end function
 

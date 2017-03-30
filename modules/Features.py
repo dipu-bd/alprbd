@@ -78,20 +78,23 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     util.log("Stage", cur, "Crop the plate regions")
-    util.delete_stage(cur)
+    runtime = []
     for read in util.get_images(prev):
         # get plate from last stage
         plate = util.stage_image(read, prev)
         plate = cv2.imread(plate, cv2.CV_8UC1)
 
         # get result
-        data = process(plate)
+        data, time = util.execute_module(process, plate)
+        runtime.append(time)
 
         # save new region to data files
         write = util.stage_data(read, cur)
         np.save(write, data)
 
         # log
-        util.log("Converted", read, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
+
+    return np.average(runtime)
 # end function
