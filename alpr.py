@@ -4,8 +4,9 @@ import cv2
 from modules import *
 
 # Mapping of Stage to Action
-# Elements: [function reference, function arguments...]
+# Elements: [function reference, previous stage, current stage, other arguments...]
 STAGE_MAP = [
+    # plate localization
     [Grayscale.run, 0, 1],
     [Rescale.run, 1, 2],
     [Sobel.run, 2, 3],
@@ -14,6 +15,8 @@ STAGE_MAP = [
     [MatchFilter.run, 5, 6],
     [LocatePlate.run, 6, 7],
     [ExtractPlate.run, 7, 8, 2],
+
+    # plate segmentation
     [Sobel.run, 8, 9],
     [Closing.run, 9, 10],
     [Opening.run, 10, 11],
@@ -34,14 +37,11 @@ def execute(stage):
     """
     Call the function to for given stage variable.    
     :param stage: Stage number
-    :param images: (read, write) image file array
-    :return: True if success, False otherwise.
     """
     # check if stage is valid
     if stage <= 0 or stage > len(STAGE_MAP):
         util.log("Unknown stage:", stage)
-        display_actions()
-        return False
+        return display_actions()
     # end if
 
     # execute the stage function for each image
@@ -52,8 +52,7 @@ def execute(stage):
 
     stop = cv2.getTickCount()   # end time
     time = float(stop - start) / cv2.getTickFrequency()
-    util.log("Executed in {0:.3} seconds".format(time))
-    return True
+    util.log("Executed in {0:.3} seconds\n".format(time))
 # end function
 
 

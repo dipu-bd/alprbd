@@ -120,7 +120,7 @@ def weight(rho):
 # end function
 
 
-def run(prev, cur, scaled):
+def run(prev, cur, original):
     """
     Run stage task
     :param prev: Previous stage number
@@ -133,7 +133,7 @@ def run(prev, cur, scaled):
         gauss = cv2.imread(gauss, cv2.CV_8UC1)
 
         # scaled image
-        gray = util.stage_image(read, scaled)
+        gray = util.stage_image(read, original)
         gray = cv2.imread(gray, cv2.CV_8UC1)
 
         # apply
