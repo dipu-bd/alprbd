@@ -18,7 +18,7 @@ STAGE_MAP = [
     [LocatePlate.run, 6, 7, 5],     # 7
     [Sobel.run, 7, 8],              # 8
     [Closing.run, 8, 9],            # 9
-    [Opening.run, 9, 10],           # 10   
+    [Opening.run, 9, 10],           # 10
 
     # cleaning plate             # STEP-D #
     [PlateNoise.run, 11, 12, 8],    # 12
@@ -46,21 +46,14 @@ def execute(stage):
     Call the function to for given stage variable.    
     :param stage: Stage number
     """
-    # check if stage is valid
-    if stage <= 0 or stage > len(STAGE_MAP):
-        util.log("Unknown stage:", stage)
-        return display_actions()
-    # end if
-
     # execute the stage function for each image
-    start = cv2.getTickCount()  # start time
-
     method = STAGE_MAP[stage - 1]
-    method[0](*method[1:])      # call using arguments
 
-    stop = cv2.getTickCount()   # end time
-    time = (stop - start) / cv2.getTickFrequency()
-    util.log("Executed in {:.3} seconds\n".format(time))
+    util.delete_stage(method[2])    # delete current stage folder
+    time = method[0](*method[1:])   # call using arguments
+
+    util.log("Average execution time: {:.3} seconds\n".format(time))
+    return time
 # end function
 
 
@@ -73,4 +66,17 @@ def display_actions():
         print("  %2d/  %s (%d params)" %
               (stage + 1, util.name_of(action[0]), len(action) - 1))
     # end for
+
+    print("Example usage:")
+    print("\tpython . <stage>")
+    print(" :Executes the stage.")
+    print("\tpython . <space separated stage numbers>")
+    print(" :Executes each stages on list.")
+    print("\tpython . <stage1>-<stage2>")
+    print(" :Executes stages between stage1 and stage2 (inclusive).")
+    print("\tpython . <stage>-")
+    print(" :Executes all stages starting from given stage.")
+    print("\tpython . -<stage1>")
+    print(" :Executes all stages 1 to given stage.")
+    
 # end function
