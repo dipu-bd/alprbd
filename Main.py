@@ -16,7 +16,7 @@ def main(argv):
         elif len(argv) == 2:    # either a range or single stage
             if ':' not in argv[1]:  # single stage
                 stages = [int(argv[1])]
-            else:                   # range of stages
+            else:               # range of stages
 
                 start, stop = argv[1].split(':')
                 if len(start) == 0:
