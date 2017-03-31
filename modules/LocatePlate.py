@@ -67,6 +67,7 @@ def run(prev, cur, original):
         # processed image from last stage
         matched = util.stage_image(read, prev)
         matched = cv2.imread(matched, cv2.CV_8UC1)
+
         # original image
         img = util.stage_image(read, original)
         img = cv2.imread(img, cv2.CV_8UC1)

@@ -11,9 +11,9 @@ STAGE_MAP = [
     [Sobel.run, 2, 3],              # 3
     [Gaussian.run, 3, 4],           # 4
     [Intensify.run, 4, 5, 2],       # 5
+    [MatchFilter.run, 5, 6],        # 6
 
     # plate detection            # STEP-B #
-    [MatchFilter.run, 5, 6],        # 6
     [LocatePlate.run, 6, 7, 5],     # 7
     [Sobel.run, 7, 8],              # 8
     [Closing.run, 8, 9],            # 9
