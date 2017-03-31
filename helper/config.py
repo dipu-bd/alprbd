@@ -33,9 +33,15 @@ SMOOTH_CUTOFF = 200              # high value removes more noise
 
 ##########################################################################
 
-MIN_PLATE_SIZE = (25, 75)       # minimum height, minimum width
-MAX_PLATE_SIZE = (300, 400)     # maximum height, maximum width
-PLATE_AREA = (1500, 100000)     # minimum area, maximum area
+# plate constraints
+MIN_WIDTH = 70
+MAX_WIDTH = 300
+MIN_HEIGHT = 25
+MAX_HEIGHT = 150
+MIN_AREA = 1800
+MAX_AREA = 30000
+MIN_ASPECT = 0.20
+MAX_ASPECT = 0.60
 
 MORPH_RECT_SIZE = (10, 3)       # fixed. possible size of single character
 

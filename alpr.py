@@ -20,6 +20,8 @@ STAGE_MAP = [
     [Opening.run, 9, 10],           # 10
     [Dilation.run, 10, 11],         # 11
 
+    [Contours.run, 6, 12, 5],       # 12
+
     # cleaning plate             # STEP-D #
     # [PlateNoise.run, 11, 12, 8],    # 12
     # [LocatePlate.run, 12, 13],      # 13

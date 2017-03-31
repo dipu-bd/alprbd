@@ -15,24 +15,24 @@ def process(img, matched):
     plates = []
     regions = []
 
-    # minimum settings
-    min_m, min_n = cfg.MIN_PLATE_SIZE
-    max_m, max_n = cfg.MAX_PLATE_SIZE
-    min_area, max_area = cfg.PLATE_AREA
-
     # map all contours -- http://stackoverflow.com/a/41322331/1583052
     contours = cv2.findContours(matched, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
 
     # extract plate like regions
     for cnt in contours:
+
         # get bounding box
         y, x, n, m = cv2.boundingRect(cnt)
 
         # check image size and area
-        if m > n or (m < min_m or n < min_n)\
-                or (m > max_m or n > max_n)\
-                or (m * n < min_area)\
-                or (m * n > max_area):
+        if m > n or m < cfg.MIN_HEIGHT\
+                or m > cfg.MAX_HEIGHT\
+                or n < cfg.MIN_WIDTH\
+                or n > cfg.MAX_WIDTH\
+                or m * n < cfg.MIN_AREA\
+                or m * n > cfg.MAX_AREA \
+                or m / n < cfg.MIN_ASPECT\
+                or m / n > cfg.MAX_ASPECT:
             continue
         # end if
 

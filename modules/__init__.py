@@ -22,3 +22,4 @@ from modules import Rescale
 from modules import Sobel
 from modules import Threshold
 from modules import TranslatePlate
+from modules import Contours
