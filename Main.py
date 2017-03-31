@@ -65,6 +65,8 @@ def parse_argv(argv):
             start = get_stage(argv[i][:-1])
         else:   # range of stages
             start, stop = argv[1].split('-')
+            start = int(start)
+            stop = int(stop)
         # end if
 
         stages.extend(range(start, stop + 1))
