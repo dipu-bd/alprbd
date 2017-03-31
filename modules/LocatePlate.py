@@ -25,14 +25,8 @@ def process(img, matched):
         y, x, n, m = cv2.boundingRect(cnt)
 
         # check image size and area
-        if m > n or m < cfg.MIN_HEIGHT\
-                or m > cfg.MAX_HEIGHT\
-                or n < cfg.MIN_WIDTH\
-                or n > cfg.MAX_WIDTH\
-                or m * n < cfg.MIN_AREA\
-                or m * n > cfg.MAX_AREA \
-                or m / n < cfg.MIN_ASPECT\
-                or m / n > cfg.MAX_ASPECT:
+        if m >= n or m < 30 or n < 85\
+                or m > 150 or n > 275:
             continue
         # end if
 

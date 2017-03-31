@@ -3,41 +3,41 @@
 import cv2
 import numpy as np
 from helper import *
+from modules import Threshold
 
 
-def apply(img, _iter=1):
+def apply(img):
     """
-    Apply dilation
-    :param img: input image
-    :param _iter: iteration count
+    Apply vertical Sobel operator
+    :param img: input image 
     """
 
-    # build structuring element
-    se = cv2.getStructuringElement(cv2.MORPH_RECT, cfg.MORPH_RECT_SIZE)
+    # vertical Sobel operator -- https://goo.gl/3fQnc9
+    sobel = cv2.Canny(img, cv2.CV_8UC1, 1, 0, ksize=3)
 
-    # apply morphological erosion -- https://goo.gl/AuOAyL
-    out = cv2.dilate(img, se, iterations=_iter)
+    # apply custom threshold
+    thresh = Threshold.apply(sobel, cfg.SOBEL_CUTOFF)
 
-    return out
+    # normalize image
+    return thresh
 # end function
 
 
-def run(prev, cur, _iter=1):
+def run(prev, cur):
     """
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
-    :param _iter: iteration count
     """
     runtime = []
-    util.log("Stage", cur, "Dilation")
+    util.log("Stage", cur, "Horizontal sobel operator")
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
         # get result
-        out, time = util.execute_module(apply, img, _iter)
+        out, time = util.execute_module(apply, img)
         runtime.append(time)
 
         # save to file
@@ -45,9 +45,8 @@ def run(prev, cur, _iter=1):
         cv2.imwrite(write, out)
 
         # log
-        util.log("Converted", read, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
 
     return np.average(runtime)
 # end function
-

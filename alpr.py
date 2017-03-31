@@ -18,9 +18,9 @@ STAGE_MAP = [
     [Sobel.run, 7, 8],              # 8
     [Closing.run, 8, 9],            # 9
     [Opening.run, 9, 10],           # 10
-    [Dilation.run, 10, 11],         # 11
+    [Dilation.run, 10, 11, 3],      # 11
 
-    [Contours.run, 6, 12, 5],       # 12
+    [Contours.run, 11, 12, 7],      # 12
 
     # cleaning plate             # STEP-D #
     # [PlateNoise.run, 11, 12, 8],    # 12

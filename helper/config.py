@@ -40,8 +40,9 @@ MIN_HEIGHT = 25
 MAX_HEIGHT = 150
 MIN_AREA = 1800
 MAX_AREA = 30000
-MIN_ASPECT = 0.20
-MAX_ASPECT = 0.60
+MIN_ASPECT = 0.20   # height / width
+MAX_ASPECT = 0.60   # height / width
+MAX_ANGLE = 10      # in degrees
 
 MORPH_RECT_SIZE = (10, 3)       # fixed. possible size of single character
 
