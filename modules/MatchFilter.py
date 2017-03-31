@@ -56,14 +56,14 @@ def _mixture_model():
 
     m, n = cfg.MIXTURE_SIZE
     A, B = cfg.MIXTURE_CO
-    sx, sy = cfg.MIXTURE_SIGMA
+    sx = cfg.MIXTURE_SIGMA
 
-    a = int(m / 3)
-    b = 2 * int(m / 3)
+    a = m // 3
+    b = 2 * m // 3
 
-    x1 = int(m / 6)
-    x2 = a + int(m / 6)
-    x3 = b + int(m / 6)
+    x1 = m // 6
+    x2 = a + m // 6
+    x3 = b + m // 6
 
     X = np.arange(m)
     Y = np.arange(n)

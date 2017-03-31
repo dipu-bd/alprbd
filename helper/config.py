@@ -11,7 +11,7 @@ DEBUG = True
 GRAY_RATIO = [0.59, 0.30, 0.11]  # fixed
 SCALE_DIM = (480, 640)           # fixed
 
-SOBEL_CUTOFF = 127              # keep it low
+SOBEL_CUTOFF = 85              # keep it low
 
 BLUR_SIZE = (60, 60)            # fixed. the kernel size
 BLUR_SIGMA = (10.0, 10.0)       # proportional to blur amount
@@ -21,10 +21,9 @@ BLOCK_COUNT = (8, 8)            # fixed. decreasing will decrease quality but in
 WEIGHT_DIST = (0.3, 0.5)        # fixed.
 
 MIXTURE_SIZE = (30, 80)         # fixed. mixture kernel size
-MIXTURE_SIGMA = (2.0, 1.0)      # control height,width of matched area
-MIXTURE_CO = (-1.2, 0.6)        # difference between black and white dora
-
-SMOOTH_CUTOFF = 225             # set high value for removing noise
+MIXTURE_SIGMA = 3.2      		# variance of main lobe towards x axis (keep it low)
+MIXTURE_CO = (-0.2, 0.1)       # A < 0, B > 0. (A ~ 2B)
+SMOOTH_CUTOFF = 200             # high value removes more noise
 
 MIN_PLATE_SIZE = (25, 75)       # minimum height, minimum width
 MAX_PLATE_SIZE = (300, 400)     # maximum height, maximum width
