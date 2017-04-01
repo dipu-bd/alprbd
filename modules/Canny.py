@@ -8,11 +8,11 @@ from modules import Threshold
 
 def apply(img):
     """
-    Apply vertical Sobel operator
+    Apply Canny edge detection algorithm
     :param img: input image 
     """
 
-    # vertical Sobel operator -- https://goo.gl/3fQnc9
+    # Canny edge detection
     canny = cv2.Canny(img, 100, 200, L2gradient=True)
 
     # normalize image

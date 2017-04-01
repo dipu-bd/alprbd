@@ -36,13 +36,15 @@ def process(img, matched):
 
         # check aspect ratio
         if n / m < cfg.MIN_ASPECT or n / m > cfg.MAX_ASPECT:
-            continue
+            pass
+            #continue
         # end if
 
         # check rotation ++++
         angle = cv2.minAreaRect(cnt)[2]
         if cfg.MAX_ANGLE < angle < 90 - cfg.MAX_ANGLE:
-            continue
+            pass
+            #continue
         # end if
 
         # draw the contour
