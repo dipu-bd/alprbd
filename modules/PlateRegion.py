@@ -20,7 +20,6 @@ def process(img, matched):
 
     # extract plate like regions
     for cnt in contours:
-
         # get bounding box
         y, x, n, m = cv2.boundingRect(cnt)
 
@@ -40,7 +39,7 @@ def process(img, matched):
         plate = img[x1:x2, y1:y2]
         plates.append(plate)
 
-        region = [x1, x2, y1, y2]
+        region = [x1, x2, y1, y2, n, m]
         regions.append(region)
     # end for
 

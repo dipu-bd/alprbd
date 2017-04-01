@@ -19,51 +19,38 @@ def process(img, matched):
     for cnt in contours:
         # get bounding box
         bound = cv2.boundingRect(cnt)
-        y, x, height, width = bound
+        y, x, m, n = bound
 
         # check height and width
-        if width >= height or width < cfg.MIN_HEIGHT\
-                or width > cfg.MAX_HEIGHT\
-                or height < cfg.MIN_WIDTH\
-                or height > cfg.MAX_WIDTH:
+        if n >= m or n < cfg.MIN_HEIGHT\
+                or n > cfg.MAX_HEIGHT\
+                or m < cfg.MIN_WIDTH\
+                or m > cfg.MAX_WIDTH:
             continue
         # end if
 
         # check area
-        if width * height < cfg.MIN_AREA or width * height > cfg.MAX_AREA:
+        if n * m < cfg.MIN_AREA or n * m > cfg.MAX_AREA:
             continue
         # end if
 
         # check aspect ratio
-        if width / height < cfg.MIN_ASPECT or width / height > cfg.MAX_ASPECT:
+        if n / m < cfg.MIN_ASPECT or n / m > cfg.MAX_ASPECT:
             continue
         # end if
 
         # check rotation ++++
-        angle = 0
-        if angle < -cfg.MAX_ANGLE or angle > cfg.MAX_ANGLE:
+        angle = cv2.minAreaRect(cnt)[2]
+        if cfg.MAX_ANGLE < angle < 90 - cfg.MAX_ANGLE:
             continue
         # end if
 
-        # minimum rectangle
-        rect = cv2.minAreaRect(cnt)
-        box = cv2.boxPoints(rect)
-
         # draw the contour
-        A = box[0][0], box[0][1]
-        B = box[1][0], box[1][1]
-        C = box[2][0], box[2][1]
-        D = box[3][0], box[3][1]
-        cv2.line(img, A, B, 255, thickness=3)
-        cv2.line(img, B, C, 255, thickness=3)
-        cv2.line(img, C, D, 255, thickness=3)
-        cv2.line(img, D, A, 255, thickness=3)
-        cv2.line(img, A, B, 0, thickness=2)
-        cv2.line(img, B, C, 0, thickness=2)
-        cv2.line(img, C, D, 0, thickness=2)
-        cv2.line(img, D, A, 0, thickness=2)
+        cv2.rectangle(img, (x, y), (x+m, y+n), 255, thickness=3)
+        cv2.rectangle(img, (x, y), (x+m, y+n), 0, thickness=2)
 
         # get region data
+        box = [x, x + m, y, y + n]
         regions.append(box)
     # end for
 

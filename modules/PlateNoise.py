@@ -32,15 +32,16 @@ def run(prev, cur, plate):
     :param cur: Current stage number
     :param plate: Stage number of plate image
     """
-    util.log("Stage", cur, "Removing plate noises")
-    util.delete_stage(cur)
+    runtime = []
+    util.log("Stage", cur, "Dilation")
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
-        # apply
-        out = apply(img)
+        # get result
+        out, time = util.execute_module(apply, img)
+        runtime.append(time)
 
         # save to file
         write = util.stage_image(read, cur)
@@ -54,6 +55,8 @@ def run(prev, cur, plate):
         cv2.imwrite(write, img)
 
         # log
-        util.log("Converted", read, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
+
+    return np.average(runtime)
 # end function

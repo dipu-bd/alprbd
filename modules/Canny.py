@@ -13,13 +13,10 @@ def apply(img):
     """
 
     # vertical Sobel operator -- https://goo.gl/3fQnc9
-    sobel = cv2.Canny(img, cv2.CV_8UC1, 1, 0, ksize=3)
-
-    # apply custom threshold
-    thresh = Threshold.apply(sobel, cfg.SOBEL_CUTOFF)
+    canny = cv2.Canny(img, 100, 200, L2gradient=True)
 
     # normalize image
-    return thresh
+    return canny
 # end function
 
 
@@ -30,7 +27,7 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     runtime = []
-    util.log("Stage", cur, "Horizontal sobel operator")
+    util.log("Stage", cur, "Canny edge detection")
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)
