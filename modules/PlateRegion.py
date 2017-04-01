@@ -5,7 +5,7 @@ import numpy as np
 from helper import *
 
 
-def process(matched):
+def locate(matched):
     """
     Locate plate regions
     :param matched: image after matched filter is applied
@@ -48,7 +48,7 @@ def run(prev, cur):
         matched = cv2.imread(matched, cv2.CV_8UC1)
 
         # get result
-        (plates, regions), time = util.execute_module(process, matched)
+        (plates, regions), time = util.execute_module(locate, matched)
         runtime.append(time)
 
         # save regions to data files
