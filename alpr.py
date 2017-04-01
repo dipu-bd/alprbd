@@ -17,8 +17,7 @@ STAGE_MAP = [
 
     # plate detection            # STEP-B #
     [Canny.run, 8, 9],              # 9
-    [Opening.run, 9, 10],           # 10
-    [Contours.run, 10, 11, 8],      # 11
+    [Contours.run, 9, 10, 8],       # 10
 
 
     # cleaning plate             # STEP-D #

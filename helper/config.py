@@ -34,14 +34,11 @@ SMOOTH_CUTOFF = 200              # high value removes more noise
 ##########################################################################
 
 # plate constraints
-MIN_HEIGHT = 26
-MAX_HEIGHT = 150
-MIN_WIDTH = 50
-MAX_WIDTH = 300
-MIN_AREA = 500
-MAX_AREA = 25000
-MIN_ASPECT = 0.10   # height / width
-MAX_ASPECT = 0.60   # height / width
+MIN_HEIGHT = 30     # in pixels
+MIN_WIDTH = 75      # in pixels
+MIN_AREA = 0.1      # contour_area / image_area
+MIN_ASPECT = 0.3    # contour_height / contour_width
+MAX_ASPECT = 0.6    # contour_height / contour_width
 MAX_ANGLE = 5      # in degrees
 
 MORPH_RECT_SIZE = (10, 3)       # fixed. possible size of single character

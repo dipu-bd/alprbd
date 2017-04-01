@@ -43,7 +43,7 @@ def run(prev, cur):
         cv2.imwrite(write, out)
 
         # log
-        util.log("Converted", read, stage=cur)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
 
     return np.average(runtime)

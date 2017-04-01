@@ -11,6 +11,9 @@ def process(img, matched):
     :param img: scaled image 
     :param matched: image after matched filter is applied
     """
+    height, width = img.shape
+    imgArea = height * width
+
     # map all contours -- http://stackoverflow.com/a/41322331/1583052
     contours = cv2.findContours(matched, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
 
@@ -18,41 +21,42 @@ def process(img, matched):
     regions = []
     for cnt in contours:
         # get bounding box
-        bound = cv2.boundingRect(cnt)
-        y, x, m, n = bound
+        y, x, col, row = cv2.boundingRect(cnt)
 
         # check height and width
-        if n >= m or n < cfg.MIN_HEIGHT\
-                or n > cfg.MAX_HEIGHT\
-                or m < cfg.MIN_WIDTH\
-                or m > cfg.MAX_WIDTH:
+        if row >= col or row < cfg.MIN_HEIGHT or col < cfg.MIN_WIDTH:
             continue
         # end if
 
         # check area
-        if n * m < cfg.MIN_AREA or n * m > cfg.MAX_AREA:
+        area = row * col
+        if area / imgArea < cfg.MIN_AREA:
             continue
         # end if
 
         # check aspect ratio
-        if n / m < cfg.MIN_ASPECT or n / m > cfg.MAX_ASPECT:
-            pass
-            #continue
+        aspect = row / col
+        if aspect < cfg.MIN_ASPECT or aspect > cfg.MAX_ASPECT:
+            continue
         # end if
 
-        # check rotation ++++
-        angle = cv2.minAreaRect(cnt)[2]
+        # minimum area box
+        rect = cv2.minAreaRect(cnt)
+        box = cv2.boxPoints(rect)
+
+        # check rotation
+        angle = abs(rect[2])
         if cfg.MAX_ANGLE < angle < 90 - cfg.MAX_ANGLE:
-            pass
-            #continue
+            continue
         # end if
 
         # draw the contour
-        cv2.rectangle(img, (x, y), (x+m, y+n), 255, thickness=3)
-        cv2.rectangle(img, (x, y), (x+m, y+n), 0, thickness=2)
+        box = np.int32(box)
+        cv2.drawContours(img, [box], 0, 255, 3)
+        cv2.drawContours(img, [box], 0, 0, 2)
 
         # get region data
-        box = [x, x + m, y, y + n]
+        box = [x, x + row, y, y + col]
         regions.append(box)
     # end for
 
