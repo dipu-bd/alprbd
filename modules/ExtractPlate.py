@@ -26,8 +26,8 @@ def process(img, region):
 
     # rotate plate
     cy, cx = region[2]
-    cols = y2 - y1 + 15
-    rows = x2 - x1 + 10
+    cols = y2 - y1
+    rows = x2 - x1
     rot_mat = cv2.getRotationMatrix2D((cy, cx), angle, 1)
     out = cv2.warpAffine(plate, rot_mat, (cols, rows))
 
