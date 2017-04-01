@@ -15,6 +15,7 @@ def apply_flood_fill(img, region, tx, ty):
             # end if
         # end if
     # end if
+    return img
 # end function
 
 
@@ -23,21 +24,27 @@ def calculate(img):
     Remove borders.
     :param img: plate image 
     """
+    # remove borders
+    d = 10
     row, col = img.shape
-    rd = 7
-    cd = 7
 
-    upper = img[0:rd, :]
-    apply_flood_fill(img, upper, 0, 0)
+    upper = img[0:d, :]
+    img = apply_flood_fill(img, upper, 0, 0)
 
-    lower = img[row-rd:row, :]
-    apply_flood_fill(img, lower, row-rd, 0)
+    lower = img[row-d:row, :]
+    img = apply_flood_fill(img, lower, row-d, 0)
 
-    left = img[:, 0:cd]
-    apply_flood_fill(img, left, 0, 0)
+    left = img[:, 0:d]
+    img = apply_flood_fill(img, left, 0, 0)
 
-    right = img[:, col-cd:col]
-    apply_flood_fill(img, right, 0, col-cd)
+    right = img[:, col-d:col]
+    img = apply_flood_fill(img, right, 0, col-d)
+
+    # remove remaining noise
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    # img = cv2.morphologyEx(img, cv2.MORPH_ELLIPSE, kernel)
+    img = cv2.dilate(img, kernel)
+    img = cv2.erode(img, kernel)
 
     return img
 # end function
