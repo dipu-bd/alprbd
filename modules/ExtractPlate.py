@@ -12,19 +12,26 @@ def process(img, region):
     :param region: region data
     """
 
-    x1, x2, y1, y2 = np.uint(region)
-    plate = img[x1:x2, y1:y2]
+    row, col = cfg.SCALE_DIM
+    height, width = img.shape
 
-    return plate
+    x1, x2, y1, y2 = np.uint(region)
+
+    x1 = x1 * height / row
+    x2 = x2 * height / row
+    y1 = y1 * width / col
+    y2 = y2 * width / col
+
+    return img[x1:x2, y1:y2]
 # end function
 
 
-def run(prev, cur, scaled):
+def run(prev, cur, full):
     """
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
-    :param scaled: Stage number for scaled gray image
+    :param full: Stage number of full scaled gray image
     """
     util.log("Stage", cur, "Extracting plate from scaled image")
     util.delete_stage(cur)
@@ -35,7 +42,7 @@ def run(prev, cur, scaled):
 
         # scaled image from 2nd stage
         name = ".".join(read.split(".")[1:])
-        img = util.stage_image(name, scaled)
+        img = util.stage_image(name, full)
         img = cv2.imread(img, cv2.CV_8UC1)
 
         # get result

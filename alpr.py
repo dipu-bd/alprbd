@@ -12,11 +12,14 @@ STAGE_MAP = [
     [Gaussian.run, 3, 4],           # 4
     [Intensify.run, 4, 5, 2],       # 5
     [MatchFilter.run, 5, 6],        # 6
-    [PlateRegion.run, 6, 7, 5],     # 7
+    [PlateRegion.run, 6, 7],        # 7
+    [ExtractPlate.run, 7, 8, 1],    # 8
 
     # plate detection            # STEP-B #
     [Canny.run, 7, 8],              # 8
+    [Opening.run, 8, 9],            # 9
     [Contours.run, 8, 9, 7],        # 9
+
 
     # cleaning plate             # STEP-D #
     # [PlateNoise.run, 11, 12, 8],    # 12
