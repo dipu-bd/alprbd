@@ -39,6 +39,7 @@ MIN_WIDTH = 75      # in pixels
 MIN_AREA = 0.1      # contour_area / image_area
 MIN_ASPECT = 0.3    # contour_height / contour_width
 MAX_ASPECT = 0.6    # contour_height / contour_width
-MAX_ANGLE = 8      # in degrees
+MAX_ANGLE = 8       # in degrees
 
+BNW_THRESH = 60     # black and white
 
