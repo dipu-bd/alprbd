@@ -56,31 +56,39 @@ def stage_folder(stage_no):
 # end function
 
 
-def stage_image(filename, stage):
+def stage_image(filename, stage, index=None):
     """
     Get another stage's file from given
     :param filename: Current file name
     :param stage: Stage number
+    :param index: Insert an index number ahead
     :return: Full path of the image file
     """
     name, ext = path.splitext(filename)
     if ext.lower() in VALID_DATA:
         filename = name
     # end if
+    if index is not None:
+        filename = "{:02}.{}".format(index, filename)
+    # end if
     return path.join(stage_folder(stage), filename)
 # end function
 
 
-def stage_data(filename, stage):
+def stage_data(filename, stage, index=None):
     """
     Get another stage's file from given
     :param filename: Current file name
     :param stage: Stage number
+    :param index: Insert an index number ahead
     :return: Full path of the data file
     """
     name, ext = path.splitext(filename)
     if ext.lower() not in VALID_DATA:
         filename += VALID_DATA[0]
+    # end if
+    if index is not None:
+        filename = "{:02}.{}".format(index, filename)
     # end if
     return path.join(stage_folder(stage), filename)
 # end function

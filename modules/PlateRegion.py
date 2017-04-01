@@ -53,8 +53,7 @@ def run(prev, cur):
 
         # save regions to data files
         for index, mat in enumerate(regions):
-            name = "{}.{}".format(index, read)
-            write = util.stage_data(name, cur)
+            write = util.stage_data(read, cur, index)
             np.savetxt(write, mat)
         # end for
 

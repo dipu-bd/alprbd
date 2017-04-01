@@ -38,3 +38,12 @@ MAX_ANGLE = 8       # in degrees
 
 BNW_THRESH = 0      # black and white threshold
 
+##########################################################################
+
+HOR_MINIMUM = 255 * 0.3
+HOR_MAXIMUM = 255 * 0.9
+CHAR_MIN_HEIGHT = 10
+
+VER_MINIMUM = 255 * 0.3
+VER_MAXIMUM = 255 * 0.9
+CHAR_MIN_WIDTH = 10
