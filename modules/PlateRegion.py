@@ -17,16 +17,16 @@ def locate(matched):
     regions = []
     for cnt in contours:
         # get bounding box
-        y, x, n, m = cv2.boundingRect(cnt)
+        y, x, col, row = cv2.boundingRect(cnt)
 
         # check image size and area
-        if m >= n or m < 30 or n < 85\
-                or m > 150 or n > 275:
+        if row >= col or row < 30 or col < 85\
+                or row > 150 or col > 275:
             continue
         # end if
 
         # store values
-        region = [x, x + n, y, y + m, n, m]
+        region = [x, x + row, y, y + col, row, col]
         regions.append(region)
     # end for
 
