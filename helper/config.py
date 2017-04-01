@@ -41,7 +41,5 @@ MIN_ASPECT = 0.3    # contour_height / contour_width
 MAX_ASPECT = 0.6    # contour_height / contour_width
 MAX_ANGLE = 8       # in degrees
 
-BNW_MEAN = 75       # minimum average white color
-BNW_THRESH = 60     # black and white
-
+BNW_THRESH = 0      # black and white threshold
 

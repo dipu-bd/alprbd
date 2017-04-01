@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+import numpy as np
 from helper import *
 
 
-def apply(img, offset=127):
+def apply(img, offset=50):
     """
     Apply a truncate-to-zero threshold
     :param img: input image 
@@ -18,27 +19,31 @@ def apply(img, offset=127):
 # end function
 
 
-def run(stage):
+def run(prev, cur, thresh=0):
     """
     Run stage task
-    :param stage: Stage number 
-    :param stage: Threshold amount 
-    :return: 
+    :param prev: Previous stage number
+    :param cur: Current stage number
+    :param thresh: Threshold value to apply
     """
-    util.log("Stage", stage, "Applying threshold")
-    for read in util.get_images(stage):
+    runtime = []
+    util.log("Stage", cur, "Applying threshold")
+    for read in util.get_images(prev):
         # open image
-        file = util.stage_image(read, stage)
+        file = util.stage_image(read, prev)
         img = cv2.imread(file, cv2.CV_8UC1)
 
-        # apply
-        out = apply(img)
+        # get result
+        out, time = util.execute_module(apply, img, thresh)
+        runtime.append(time)
 
         # save to file
-        write = util.stage_image(read, stage + 1)
+        write = util.stage_image(read, cur)
         cv2.imwrite(write, out)
 
         # log
-        util.log("Converted", read, stage=stage)
+        util.log("Converted", read, "| %.3f s" % time, stage=cur)
     # end for
+
+    return np.average(runtime)
 # end function
