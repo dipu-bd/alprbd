@@ -41,20 +41,22 @@ def calculate(img):
     right = img[:, col-20:col]
     img = apply_flood_fill(img, right, 0, col-20)
 
-    # contour de-noising
-    contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
-    for cnt in contours:
-        y, x, n, m = cv2.boundingRect(cnt)
-        if n < 50 or m < 50:
-            img[x:x+m, y:y+n] = 0
-        # end if
-    # end for
-
     # remove remaining noise
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
     # img = cv2.morphologyEx(img, cv2.MORPH_ELLIPSE, kernel)
     img = cv2.dilate(img, kernel)
     img = cv2.erode(img, kernel)
+
+    # contour de-noising
+    contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
+    for cnt in contours:
+        y, x, n, m = cv2.boundingRect(cnt)
+        if n < 50 or m < 50:
+            rect = cv2.minAreaRect(cnt)
+            box = np.int32(cv2.boxPoints(rect))
+            cv2.fillConvexPoly(img, box, 0)
+        # end if
+    # end for
 
     return img
 # end function
