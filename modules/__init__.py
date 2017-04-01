@@ -6,8 +6,8 @@ from modules import BlackWhite
 from modules import Closing
 from modules import Dilation
 from modules import Erosion
-from modules import Extract
 from modules import ExtractPlate
+from modules import LocatePlate
 from modules import Features
 from modules import Gaussian
 from modules import Grayscale

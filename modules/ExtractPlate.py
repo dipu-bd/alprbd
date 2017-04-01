@@ -5,56 +5,65 @@ import numpy as np
 from helper import *
 
 
-def process(img, region):
+def process(img, region1, region2):
     """
-    Extract plate regions    
-    :param img: input image
-    :param region: region data
+    Extract original plate     
+    :param img: original plate image
+    :param region1: position relative to scaled
+    :param region2: position relative to region1
+    :return original plate image and region 
     """
+    # translate to scaled region
+    x1, x2, y1, y2 = np.uint(region2)
+    x = int(region1[0])
+    y = int(region1[2])
 
-    row, col = cfg.SCALE_DIM
-    height, width = img.shape
+    x1 += x
+    x2 += x
+    y1 += y
+    y2 += y
 
-    region = np.uint(region)
+    # translate scaled to original
+    row, col = img.shape
+    height, width = cfg.SCALE_DIM
 
-    x1 = region[0]
-    x2 = region[1]
-    y1 = region[2]
-    y2 = region[3]
+    x1 = int(x1 * row / height)
+    x2 = int(x2 * row / height)
+    y1 = int(y1 * col / width)
+    y2 = int(y2 * col / width)
 
-    x1 = x1 * height // row
-    x2 = x2 * height // row
-    y1 = y1 * width // col
-    y2 = y2 * width // col
+    # extract plate and regions
+    plate = img[x1:x2, y1:y2]
+    region = [x1, x2, y1, y2]
 
-    return img[x1:x2, y1:y2]
+    return plate, region
 # end function
 
 
-def run(prev, cur, full):
+def run(prev, cur, plate):
     """
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
-    :param full: Stage number of full scaled gray image
+    :param plate: Stage number of plate image
     """
     runtime = []
-    util.log("Stage", cur, "Extracting plates")
+    util.log("Stage", cur, "Extracting the plate image")
     for read in util.get_data(prev):
-        # processed image from last stage
+        # region data from the previous stage
         region = util.stage_data(read, prev)
         region = np.loadtxt(region)
 
-        # scaled image from 2nd stage
+        # get original image
         name = ".".join(read.split(".")[1:])
-        img = util.stage_image(name, full)
+        img = util.stage_image(name, plate)
         img = cv2.imread(img, cv2.CV_8UC1)
 
         # get result
         plate, time = util.execute_module(process, img, region)
         runtime.append(time)
 
-        # save plate
+        # save plates to image file
         write = util.stage_image(read, cur)
         cv2.imwrite(write, plate)
 

@@ -39,15 +39,6 @@ MIN_WIDTH = 75      # in pixels
 MIN_AREA = 0.1      # contour_area / image_area
 MIN_ASPECT = 0.3    # contour_height / contour_width
 MAX_ASPECT = 0.6    # contour_height / contour_width
-MAX_ANGLE = 5      # in degrees
-
-MORPH_RECT_SIZE = (10, 3)       # fixed. possible size of single character
-
-PLATE_THRESH = 175              # high value can erase text borders
-PLATE_OFFSET = 175              # high value can erase text borders
-
-BNW_THRESH = 40                 # high value can clear entire image
-
-CUTOFF_AVERAGE = 0.38           #
+MAX_ANGLE = 8      # in degrees
 
 

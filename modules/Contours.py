@@ -56,8 +56,10 @@ def process(img, matched):
         cv2.drawContours(img, [box], 0, 0, 2)
 
         # get region data
-        box = [x, x + row, y, y + col]
-        regions.append(box)
+        center = [rect[0][0], rect[0][1]]
+        size = [rect[1][0], rect[1][1]]
+        region = [[x, y], [row, col], center, size, [rect[2], 0]]
+        regions.append(region)
     # end for
 
     return regions
