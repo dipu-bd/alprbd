@@ -10,50 +10,30 @@ def calculate(img):
     Calculate the horizontal projections.
     :param img: plate image 
     """
-    row, col = img.shape
-    tmp = img.copy()
-    tmp[tmp > 0] = 1
+    # calculate horizontal projections
+    hor = horizontal(img)
 
-    row_sum = np.sum(tmp, axis=1)
-    offset_min = np.mean(row_sum) / 2
-    min_size = row // 10
-
-    hor = []
-    plate = None
-    for r, v in enumerate(row_sum):
-        if v > offset_min:
-            if plate is None:
-                plate = img[r:r+1, :]
-            else:
-                plate = np.vstack((plate, img[r:r+1, :]))
-            # end if
-        else:
-            if plate is not None and plate.shape[0] > min_size:
-                hor.append(plate)
-                plate = None
-            # end if
-        # end if
+    # calculate vertical projections
+    segments = []
+    for x in hor:
+        segments.extend(vertical(x))
     # end for
-    if plate is not None:
-        hor.append(plate)
-    # end if
 
-    return hor
+    return segments
 # end function
 
 
-def horizontal_segments(img):
+def horizontal(img):
     """
     Calculate the horizontal segments.
     :param img: plate image 
     """
-    row, col = img.shape
     tmp = img.copy()
     tmp[tmp > 0] = 1
 
     row_sum = np.sum(tmp, axis=1)
     offset_min = np.mean(row_sum) / 2
-    min_size = row // 10
+    min_size = img.shape[0] // 10
 
     hor = []
     plate = None
@@ -63,19 +43,80 @@ def horizontal_segments(img):
                 plate = img[r:r + 1, :]
             else:
                 plate = np.vstack((plate, img[r:r + 1, :]))
-                # end if
+            # end if
         else:
-            if plate is not None and plate.shape[0] > min_size:
+            if isvalid(plate):
                 hor.append(plate)
                 plate = None
-                # end if
-                # end if
+            # end if
+        # end if
     # end for
-    if plate is not None:
+    if isvalid(plate):
         hor.append(plate)
     # end if
 
     return hor
+# end if
+
+
+def vertical(img):
+    """
+    Calculate the horizontal segments.
+    :param img: plate image 
+    """
+    tmp = img.copy()
+    tmp[tmp > 0] = 1
+
+    col_sum = np.sum(tmp, axis=0)
+    offset_min = 2 * np.mean(col_sum) / 5
+    min_size = 15
+
+    ver = []
+    plate = None
+    for c, v in enumerate(col_sum):
+        if v > offset_min:
+            if plate is None:
+                plate = img[:, c:c+1]
+            else:
+                plate = np.hstack((plate, img[:, c:c+1]))
+            # end if
+        else:
+            if isvalid(plate):
+                ver.append(plate)
+                plate = None
+            # end if
+        # end if
+    # end for
+    if isvalid(plate):
+        ver.append(plate)
+    # end if
+
+    return ver
+# end if
+
+
+def isvalid(plate):
+    """
+    Checks whether the plate is valid
+    :param plate: 
+    :return: 
+    """
+    if plate is None:
+        return False
+    # end if
+
+    row, col = plate.shape
+    if row < 20 or col < 20:
+        return False
+    # end if
+
+    if np.count_nonzero(plate) < 100:
+        return False
+    # end if
+
+    return True
+# end if
+
 
 def run(prev, cur):
     """
