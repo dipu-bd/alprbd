@@ -24,24 +24,34 @@ def calculate(img):
     Remove borders.
     :param img: plate image 
     """
-    # remove borders
-    d = 10
-    row, col = img.shape
+    # resize plate
+    row, col = (400, 800)
+    img = cv2.resize(img, (col, row), interpolation=cv2.INTER_CUBIC)
 
-    upper = img[0:d, :]
+    # remove borders
+    upper = img[0:30, :]
     img = apply_flood_fill(img, upper, 0, 0)
 
-    lower = img[row-d:row, :]
-    img = apply_flood_fill(img, lower, row-d, 0)
+    lower = img[row-20:row, :]
+    img = apply_flood_fill(img, lower, row-20, 0)
 
-    left = img[:, 0:d]
+    left = img[:, 0:20]
     img = apply_flood_fill(img, left, 0, 0)
 
-    right = img[:, col-d:col]
-    img = apply_flood_fill(img, right, 0, col-d)
+    right = img[:, col-20:col]
+    img = apply_flood_fill(img, right, 0, col-20)
+
+    # contour de-noising
+    contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
+    for cnt in contours:
+        y, x, n, m = cv2.boundingRect(cnt)
+        if n < 50 or m < 50:
+            img[x:x+m, y:y+n] = 0
+        # end if
+    # end for
 
     # remove remaining noise
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
     # img = cv2.morphologyEx(img, cv2.MORPH_ELLIPSE, kernel)
     img = cv2.dilate(img, kernel)
     img = cv2.erode(img, kernel)
