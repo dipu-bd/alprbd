@@ -21,12 +21,14 @@ STAGE_MAP = [
     [Canny.run, 9, 10],             # 10 *
     [Contours.run, 10, 11, 9],      # 11 **
     [ExtractPlate.run, 11, 12, 9],  # 12 **
-    [BlackWhite.run, 12, 13],       # 13 **
 
     # character segmentation     # STEP-C #
-    [ProjectionX.run, 13, 14],      # 14 ***
-    [ProjectionY.run, 14, 15],      # 15 ****
+    [BlackWhite.run, 12, 13],       # 13 **
+    [Projections.run, 13, 14],      # 14 ***
 
+    # character recognition      # STEP-D #
+
+    # combining result           # STEP-E #
 ]
 
 

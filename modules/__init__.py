@@ -9,7 +9,7 @@ from modules import Grayscale
 from modules import Intensify
 from modules import PlateRegion
 from modules import MatchFilter
-from modules import ProjectionX
+from modules import Projections
 from modules import ProjectionY
 from modules import Rescale
 from modules import Sobel
