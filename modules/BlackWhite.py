@@ -10,20 +10,26 @@ def apply(img):
     Converts to black and white    
     :param img: plate image 
     """
+    # normal binary threshold
+    bnw1 = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255,
+                         cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 
-    # which type of threshold to apply
-    _type = cv2.THRESH_BINARY_INV
-    if np.mean(img) < 80:
-        _type = cv2.THRESH_BINARY
+    # inverse binary threshold
+    bnw2 = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255,
+                         cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
+    # calculate ratio of non-zero pixels
+    row, col = img.shape
+    area = row * col
+    ratio1 = cv2.countNonZero(bnw1) / area
+    ratio2 = cv2.countNonZero(bnw2) / area
+
+    # return image with lower ratio
+    if ratio1 < ratio2:
+        return bnw1
+    else:
+        return bnw2
     # end if
-
-    # also apply Otsu's threshold
-    _type = _type | cv2.THRESH_OTSU
-
-    # applying threshold mixture
-    bnw = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255, _type)[1]
-
-    return bnw
 # end function
 
 
