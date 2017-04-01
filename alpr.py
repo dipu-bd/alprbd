@@ -24,8 +24,8 @@ STAGE_MAP = [
 
     # character segmentation     # STEP-C #
     [BlackWhite.run, 12, 13],       # 13 **
-    [Borders.run, 13, 14],          # 14 **
-    [Projections.run, 14, 15],      # 15 ***
+    [Denoise.run, 13, 14],          # 14 **
+    [Segments.run, 14, 15],         # 15 ***
 
     # character recognition      # STEP-D #
 

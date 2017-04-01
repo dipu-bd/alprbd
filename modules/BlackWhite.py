@@ -25,11 +25,13 @@ def apply(img):
     ratio2 = cv2.countNonZero(bnw2) / area
 
     # return image with lower ratio
+    bnw = bnw2
     if ratio1 < ratio2:
-        return bnw1
-    else:
-        return bnw2
+        bnw = bnw1
     # end if
+    bnw[bnw <= 127] = 0
+    bnw[bnw > 127] = 255
+    return bnw
 # end function
 
 

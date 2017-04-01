@@ -9,8 +9,8 @@ from modules import Grayscale
 from modules import Intensify
 from modules import PlateRegion
 from modules import MatchFilter
-from modules import Projections
-from modules import Borders
+from modules import Segments
+from modules import Denoise
 from modules import Rescale
 from modules import Sobel
 from modules import Threshold
