@@ -5,47 +5,42 @@ import numpy as np
 from helper import *
 
 
-def process(img, region1, region2):
+def process(img, region):
     """
     Extract original plate     
     :param img: original plate image
-    :param region1: position relative to scaled
-    :param region2: position relative to region1
-    :return original plate image and region 
+    :param region: region information
     """
-    # translate to scaled region
-    x1, x2, y1, y2 = np.uint(region2)
-    x = int(region1[0])
-    y = int(region1[2])
-
-    x1 += x
-    x2 += x
-    y1 += y
-    y2 += y
-
-    # translate scaled to original
-    row, col = img.shape
-    height, width = cfg.SCALE_DIM
-
-    x1 = int(x1 * row / height)
-    x2 = int(x2 * row / height)
-    y1 = int(y1 * col / width)
-    y2 = int(y2 * col / width)
-
-    # extract plate and regions
+    # extract plate
+    x1, y1 = np.uint(region[0])
+    x2, y2 = np.uint(region[1])
     plate = img[x1:x2, y1:y2]
-    region = [x1, x2, y1, y2]
 
-    return plate, region
+    # calculate rotation angle
+    angle = abs(region[4][0])
+    if angle < 45:
+        angle = -angle
+    else:
+        angle = 90 - angle
+    # end if
+
+    # rotate plate
+    cy, cx = region[2]
+    cols = y2 - y1 + 15
+    rows = x2 - x1 + 10
+    rot_mat = cv2.getRotationMatrix2D((cy, cx), angle, 1)
+    out = cv2.warpAffine(plate, rot_mat, (cols, rows))
+
+    return out
 # end function
 
 
-def run(prev, cur, plate):
+def run(prev, cur, original):
     """
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
-    :param plate: Stage number of plate image
+    :param original: Stage number of plate image
     """
     runtime = []
     util.log("Stage", cur, "Extracting the plate image")
@@ -56,7 +51,7 @@ def run(prev, cur, plate):
 
         # get original image
         name = ".".join(read.split(".")[1:])
-        img = util.stage_image(name, plate)
+        img = util.stage_image(name, original)
         img = cv2.imread(img, cv2.CV_8UC1)
 
         # get result

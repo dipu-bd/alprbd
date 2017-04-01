@@ -64,7 +64,7 @@ def stage_image(filename, stage):
     :return: Full path of the image file
     """
     name, ext = path.splitext(filename)
-    if ext in VALID_DATA:
+    if ext.lower() in VALID_DATA:
         filename = name
     # end if
     return path.join(stage_folder(stage), filename)
@@ -79,7 +79,7 @@ def stage_data(filename, stage):
     :return: Full path of the data file
     """
     name, ext = path.splitext(filename)
-    if ext not in VALID_DATA:
+    if ext.lower() not in VALID_DATA:
         filename += VALID_DATA[0]
     # end if
     return path.join(stage_folder(stage), filename)

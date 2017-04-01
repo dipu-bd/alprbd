@@ -58,7 +58,7 @@ def process(img, matched):
         # get region data
         center = [rect[0][0], rect[0][1]]
         size = [rect[1][0], rect[1][1]]
-        region = [[x, y], [row, col], center, size, [rect[2], 0]]
+        region = [[x, y], [x+row, y+col], center, size, [rect[2], 0]]
         regions.append(region)
     # end for
 
