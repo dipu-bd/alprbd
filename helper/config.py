@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from os import path
-
-# Define working directory
-WORK_PATH = path.abspath(path.join(path.curdir, "stages"))
-
 # Set True to show log messages
 DEBUG = True
 

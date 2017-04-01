@@ -50,7 +50,7 @@ def stage_folder(stage_no):
     :return: A valid folder
     """
     name = "stage.{}".format(stage_no)
-    folder = path.join(cfg.WORK_PATH, name)
+    folder = path.join(path.curdir, "stages", name)
     ensure_path(folder)
     return folder
 # end function

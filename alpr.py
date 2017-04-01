@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from helper import *
 from modules import *
 
 # Mapping of Stage to Action
@@ -12,34 +13,20 @@ STAGE_MAP = [
     [Gaussian.run, 3, 4],           # 4
     [Intensify.run, 4, 5, 2],       # 5
     [MatchFilter.run, 5, 6],        # 6
-    [PlateRegion.run, 6, 7],        # 7
-    [LocatePlate.run, 7, 8, 1],     # 8
+    [PlateRegion.run, 6, 7],        # 7 *
+    [LocatePlate.run, 7, 8, 1],     # 8 *
 
     # plate detection            # STEP-B #
-    [Threshold.run, 8, 9],          # 9
-    [Canny.run, 9, 10],             # 10
-    [Contours.run, 10, 11, 9],      # 11
-    [ExtractPlate.run, 11, 12, 9],  # 12
-    [BlackWhite.run, 12, 13],       # 13
+    [Threshold.run, 8, 9],          # 9 *
+    [Canny.run, 9, 10],             # 10 *
+    [Contours.run, 10, 11, 9],      # 11 **
+    [ExtractPlate.run, 11, 12, 9],  # 12 **
+    [BlackWhite.run, 12, 13],       # 13 **
 
+    # character segmentation     # STEP-C #
+    [ProjectionX.run, 13, 14],      # 14 ***
+    [ProjectionY.run, 14, 15],      # 15 ****
 
-    # cleaning plate             # STEP-D #
-    # [PlateNoise.run, 11, 12, 8],    # 12
-    # [LocatePlate.run, 12, 13],      # 13
-    # [Extract.run, 13, 14, 7, 1],    # 14
-    # [BlackWhite.run, 14, 15],       # 15
-
-    # segmentation
-
-    # character recognition
-    # [Features.run, 100, 101],
-
-    # rotate
-    # remove border
-    # HorizontalSegment.run,
-    # VerticalSegment.run,
-    # Features.run,
-    # neural network
 ]
 
 
