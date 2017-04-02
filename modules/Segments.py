@@ -12,12 +12,20 @@ def calculate(img):
     """
     # calculate horizontal projections
     hor = horizontal(img)
+    
+    if not 2 <= len(hor) <= 3:
+        return []
+    # end if
 
     # calculate vertical projections
     segments = []
     for x in hor:
         segments.extend(vertical(x))
     # end for
+
+    if len(segments) < 6:
+        return []
+    # end if
 
     return segments
 # end function
@@ -28,17 +36,11 @@ def horizontal(img):
     Calculate the horizontal segments.
     :param img: plate image 
     """
-    tmp = img.copy()
-    tmp[tmp > 0] = 1
-
-    row_sum = np.sum(tmp, axis=1)
-    offset_min = np.mean(row_sum) / 2
-    min_size = img.shape[0] // 10
-
     hor = []
     plate = None
+    row_sum = np.mean(img, axis=1)
     for r, v in enumerate(row_sum):
-        if v > offset_min:
+        if v > 1:
             if plate is None:
                 plate = img[r:r + 1, :]
             else:
@@ -64,17 +66,11 @@ def vertical(img):
     Calculate the horizontal segments.
     :param img: plate image 
     """
-    tmp = img.copy()
-    tmp[tmp > 0] = 1
-
-    col_sum = np.sum(tmp, axis=0)
-    offset_min = 2 * np.mean(col_sum) / 5
-    min_size = 15
-
     ver = []
     plate = None
+    col_sum = np.mean(img, axis=0)
     for c, v in enumerate(col_sum):
-        if v > offset_min:
+        if v > 1:
             if plate is None:
                 plate = img[:, c:c+1]
             else:
@@ -106,11 +102,11 @@ def isvalid(plate):
     # end if
 
     row, col = plate.shape
-    if row < 20 or col < 20:
+    if row < 12 or col < 12:
         return False
     # end if
 
-    if np.count_nonzero(plate) < 100:
+    if np.mean(plate) < 5:
         return False
     # end if
 
