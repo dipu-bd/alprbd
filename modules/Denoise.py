@@ -5,7 +5,7 @@ import numpy as np
 from helper import *
 
 
-def apply_flood_fill(img, region, tx, ty):
+def apply_flood_fill(img, region, tx=0, ty=0):
     row, col = img.shape
     mask = np.zeros((row + 2, col + 2), np.uint8)
     for x, _ in enumerate(region):
@@ -24,39 +24,37 @@ def calculate(img):
     Remove borders.
     :param img: plate image 
     """
-    # resize plate
-    row, col = (400, 800)
-    img = cv2.resize(img, (col, row), interpolation=cv2.INTER_CUBIC)
+    row, col = img.shape
 
     # remove borders
-    upper = img[0:30, :]
-    img = apply_flood_fill(img, upper, 0, 0)
+    upper = img[0:20, :]
+    lower = img[row-5:row, :]
+    left = img[:, 0:12]
+    right = img[:, col-12:col]
 
-    lower = img[row-20:row, :]
-    img = apply_flood_fill(img, lower, row-20, 0)
+    img = apply_flood_fill(img, upper)
+    img = apply_flood_fill(img, lower, tx=row-5)
+    img = apply_flood_fill(img, left)
+    img = apply_flood_fill(img, right, ty=col-12)
 
-    left = img[:, 0:20]
-    img = apply_flood_fill(img, left, 0, 0)
-
-    right = img[:, col-20:col]
-    img = apply_flood_fill(img, right, 0, col-20)
-
-    # remove remaining noise
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
-    # img = cv2.morphologyEx(img, cv2.MORPH_ELLIPSE, kernel)
-    img = cv2.dilate(img, kernel)
-    img = cv2.erode(img, kernel)
-
-    # contour de-noising
-    contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
+    # de-noise using contours
+    contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)[1]
     for cnt in contours:
         y, x, n, m = cv2.boundingRect(cnt)
-        if n < 50 or m < 50:
-            rect = cv2.minAreaRect(cnt)
-            box = np.int32(cv2.boxPoints(rect))
-            cv2.fillConvexPoly(img, box, 0)
+        if 30 < m < row - 30 and 30 < n < col - 30:
+            continue
         # end if
+
+        # cv2.fillConvexPoly(img, cnt, 0)
+        rect = cv2.minAreaRect(cnt)
+        box = np.int32(cv2.boxPoints(rect))
+        cv2.fillConvexPoly(img, box, 0)
     # end for
+
+    # check mean white pixels
+    if np.mean(img) < 10:
+        return None
+    # end if
 
     return img
 # end function
@@ -80,8 +78,10 @@ def run(prev, cur):
         runtime.append(time)
 
         # save output image
-        write = util.stage_image(read, cur)
-        cv2.imwrite(write, out)
+        if out is not None:
+            write = util.stage_image(read, cur)
+            cv2.imwrite(write, out)
+        # end if
 
         # log
         util.log("Converted", read, "| %.3f s" % time, stage=cur)

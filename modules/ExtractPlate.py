@@ -31,6 +31,10 @@ def process(img, region):
     rot_mat = cv2.getRotationMatrix2D((cy, cx), angle, 1)
     out = cv2.warpAffine(plate, rot_mat, (cols, rows))
 
+    # resize plate
+    row, col = cfg.PLATE_DIM
+    out = cv2.resize(out, (col, row))
+
     return out
 # end function
 

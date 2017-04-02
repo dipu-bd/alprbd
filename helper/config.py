@@ -36,9 +36,12 @@ MIN_ASPECT = 0.3    # contour_height / contour_width
 MAX_ASPECT = 0.6    # contour_height / contour_width
 MAX_ANGLE = 8       # in degrees
 
+PLATE_DIM = (250, 500)
+
 BNW_THRESH = 0      # black and white threshold
 
 ##########################################################################
+
 
 HOR_MINIMUM = 255 * 0.3
 HOR_MAXIMUM = 255 * 0.9
