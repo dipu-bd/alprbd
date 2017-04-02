@@ -10,6 +10,8 @@ def locate(matched):
     Locate plate regions
     :param matched: image after matched filter is applied
     """
+    height, width = matched.shape
+
     # map all contours -- http://stackoverflow.com/a/41322331/1583052
     contours = cv2.findContours(matched, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
 
@@ -25,8 +27,14 @@ def locate(matched):
             continue
         # end if
 
+        # inflate -- TODO:turned off
+        x1 = max(0, x)
+        x2 = min(height, x + row)
+        y1 = max(0, y)
+        y2 = min(width, y + col)
+
         # store values
-        region = [x, x + row, y, y + col, row, col]
+        region = [x1, x2, y1, y2]
         regions.append(region)
     # end for
 

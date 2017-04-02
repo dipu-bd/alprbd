@@ -41,7 +41,7 @@ def calculate(img):
     contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)[1]
     for cnt in contours:
         y, x, n, m = cv2.boundingRect(cnt)
-        if 30 < m < row - 30 and 30 < n < col - 30:
+        if 35 < m < row - 25 and 35 < n < col - 25:
             continue
         # end if
 
@@ -52,7 +52,7 @@ def calculate(img):
     # end for
 
     # check mean white pixels
-    if np.mean(img) < 10:
+    if np.mean(img) < 8:
         return None
     # end if
 

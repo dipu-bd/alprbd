@@ -12,8 +12,8 @@ def calculate(img):
     """
     # calculate horizontal projections
     hor = horizontal(img)
-    
-    if not 2 <= len(hor) <= 3:
+
+    if len(hor) != 2:
         return []
     # end if
 
@@ -23,7 +23,7 @@ def calculate(img):
         segments.extend(vertical(x))
     # end for
 
-    if len(segments) < 6:
+    if len(segments) < 4:
         return []
     # end if
 
@@ -70,7 +70,7 @@ def vertical(img):
     plate = None
     col_sum = np.mean(img, axis=0)
     for c, v in enumerate(col_sum):
-        if v > 1:
+        if v > 2:
             if plate is None:
                 plate = img[:, c:c+1]
             else:
