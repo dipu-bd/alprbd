@@ -32,7 +32,7 @@ def run(prev, cur):
     for read in util.get_images(prev):
         # open image
         file = util.stage_image(read, prev)
-        img = cv2.imread(file, cv2.CV_8UC1)
+        img = cv2.imread(file)
 
         # get result
         out, time = util.execute_module(apply, img)

@@ -7,8 +7,8 @@ from modules import *
 # Elements: [function reference, previous stage, current stage, other arguments...]
 STAGE_MAP = [
     # pre-processing             # STEP-A #
-    [Grayscale.run, 0, 1],          # 1
-    [Rescale.run, 1, 2],            # 2
+    [Rescale.run, 0, 1],            # 1
+    [Grayscale.run, 1, 2],          # 2
     [Sobel.run, 2, 3],              # 3
     [Gaussian.run, 3, 4],           # 4
     [Intensify.run, 4, 5, 2],       # 5
@@ -17,15 +17,17 @@ STAGE_MAP = [
     [LocatePlate.run, 7, 8, 1],     # 8 *
 
     # plate detection            # STEP-B #
-    [Threshold.run, 8, 9],          # 9 *
-    [Canny.run, 9, 10],             # 10 *
-    [Contours.run, 10, 11, 9],      # 11 **
-    [ExtractPlate.run, 11, 12, 9],  # 12 **
+    [Grayscale.run, 8, 9],           # 9
+    [Threshold.run, 9, 10],          # 10 *
+    [Canny.run, 10, 11],             # 11 *
+    [Contours.run, 11, 12, 10],      # 12 **
+    [ExtractPlate.run, 12, 13, 10],  # 13 **
 
     # character segmentation     # STEP-C #
-    [BlackWhite.run, 12, 13],       # 13 **
-    [Denoise.run, 13, 14],          # 14 **
-    [Segments.run, 14, 15],         # 15 ***
+    [BlackWhite.run, 13, 14],        # 14 **
+    [BorderRemoval.run, 14, 15],     # 15 **
+    [Denoise.run, 15, 16],           # 16 **
+    [Segments.run, 16, 17],          # 17 ***
 
     # character recognition      # STEP-D #
 

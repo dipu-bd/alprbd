@@ -16,3 +16,4 @@ from modules import Sobel
 from modules import Threshold
 from modules import Contours
 from modules import Canny
+from modules import BorderRemoval

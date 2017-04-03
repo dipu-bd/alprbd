@@ -13,7 +13,7 @@ def process(img, region):
     """
 
     row, col = cfg.SCALE_DIM
-    height, width = img.shape
+    height, width, _ = img.shape
 
     region = np.uint(region)
 
@@ -36,7 +36,7 @@ def run(prev, cur, full):
     Run stage task
     :param prev: Previous stage number
     :param cur: Current stage number
-    :param full: Stage number of full scaled gray image
+    :param full: Stage number of full scaled color image
     """
     runtime = []
     util.log("Stage", cur, "Extracting plates")
@@ -45,10 +45,10 @@ def run(prev, cur, full):
         region = util.stage_data(read, prev)
         region = np.loadtxt(region)
 
-        # scaled image from 2nd stage
+        # color image from 1st stage
         name = ".".join(read.split(".")[1:])
         img = util.stage_image(name, full)
-        img = cv2.imread(img, cv2.CV_8UC1)
+        img = cv2.imread(img)
 
         # get result
         plate, time = util.execute_module(process, img, region)
