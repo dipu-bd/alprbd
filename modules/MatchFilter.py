@@ -21,7 +21,7 @@ def apply(img, _all=False):
     sobel = Sobel.apply(img)
 
     # apply matched filter
-    kernel = _mixture_model()
+    kernel = mixture_model()
     matched = cv2.filter2D(sobel, cv2.CV_64F, kernel)
     matched = util.normalize(matched)
 
@@ -40,7 +40,7 @@ def apply(img, _all=False):
 # end function
 
 
-def _mixture_model():
+def mixture_model():
     """
     Builds a gaussian kernel for mixture model
     """

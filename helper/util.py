@@ -43,6 +43,17 @@ def ensure_path(directory):
 # end function
 
 
+def output_path():
+    """
+    Path to store all output artifacts
+    :return: The output path
+    """
+    folder = path.join(path.curdir, "stages")
+    ensure_path(folder)
+    return folder
+# end function
+
+
 def stage_folder(stage_no):
     """
     Get stage folder from stage number
@@ -50,7 +61,7 @@ def stage_folder(stage_no):
     :return: A valid folder
     """
     name = "stage.{}".format(stage_no)
-    folder = path.join(path.curdir, "stages", name)
+    folder = path.join(output_path(), name)
     ensure_path(folder)
     return folder
 # end function

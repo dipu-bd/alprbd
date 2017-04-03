@@ -16,7 +16,7 @@ def apply(img):
     # cv2 thresh -- https://goo.gl/OHjx6d
 
     # get the kernel
-    kernel = build_blur_kernel()
+    kernel = blur_kernel()
 
     # apply 2D Gaussian filter -- https://goo.gl/jfuzjO
     gauss = cv2.filter2D(img, cv2.CV_64F, kernel)
@@ -25,7 +25,7 @@ def apply(img):
 # end function
 
 
-def build_blur_kernel():
+def blur_kernel():
     """
     Build 2D Gaussian kernel 
     """
