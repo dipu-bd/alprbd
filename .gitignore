@@ -1,6 +1,7 @@
 stages/
 __pycache__/
 *.pyc
+.ipnyb_checkpoints/
 
 
 ### JetBrains template
