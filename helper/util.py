@@ -40,6 +40,7 @@ def ensure_path(directory):
     if not path.exists(directory):
         os.makedirs(directory)
     # end if
+    return directory
 # end function
 
 
@@ -49,8 +50,8 @@ def output_path():
     :return: The output path
     """
     folder = path.join(path.curdir, "stages")
-    ensure_path(folder)
-    return folder
+    folder = path.abspath(folder)
+    return ensure_path(folder)
 # end function
 
 
@@ -62,8 +63,7 @@ def stage_folder(stage_no):
     """
     name = "stage.{}".format(stage_no)
     folder = path.join(output_path(), name)
-    ensure_path(folder)
-    return folder
+    return ensure_path(folder)
 # end function
 
 

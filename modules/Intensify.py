@@ -16,7 +16,7 @@ def process(img, gauss):
     mean, sdev = _calculate(img.shape[0], img.shape[1], gauss)
 
     # apply intensify
-    f = np.vectorize(_weight)
+    f = np.vectorize(weight)
     ret = f(sdev) * (img - mean) + mean
 
     # normalize and return
@@ -96,7 +96,7 @@ def _mean_std(img, i, j, p, q):
 # end function
 
 
-def _weight(rho):
+def weight(rho):
     """The weighting function
 
     Parameter:

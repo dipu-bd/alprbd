@@ -1,10 +1,8 @@
+import numpy as np
 from os import path
 
-from matplotlib import cm
-from matplotlib import pyplot as plt
-from matplotlib.figure import Figure
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import plotly.offline as py
+import plotly.graph_objs as go
 
 from helper import *
 from modules import Gaussian
@@ -20,87 +18,44 @@ def save_all():
 
     print("Saving gaussian kernel...")
     gauss = Gaussian.blur_kernel()
-    save_kernel(path.join(out, "gaussian.png"), gauss)
+    save_kernel("Gaussian Kernel", gauss)
 
     print("Saving matched filter...")
     mixture = MatchFilter.mixture_model()
-    save_kernel(path.join(out, "mixture.png"), mixture)
+    save_kernel("Mixture Model", mixture)
 
     print("Saving weight function...")
-    save_weight_function(path.join(out, "weight.png"))
+    save_weight_function("Weight Distribution")
 
     print("Saved all plots!\n")
 # end function
 
 
-def save_plot(X, Y, Z, fileName):
-    """    
-    :param X: 
-    :param Y: 
-    :param Z: 
-    :param fileName: 
-    :return: 
-    """
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    ax.view_init(20, 45)
+def save_kernel(title, kernel):
+    py.init_notebook_mode()
+    data = [
+        go.Surface(
+            z=kernel
+        )
+    ]
+    layout = go.Layout(
+        title=title,
+    )
+    fig = go.Figure(data=data, layout=layout)
 
-    surf = ax.plot_surface(X, Y, Z,
-                           rstride=1,
-                           cstride=1,
-                           color='w',
-                           linewidth=0.02)
-                           #cmap = cm.coolwarm,
-                           #antialiased=False)
-
-    #fig.colorbar(surf, shrink=0.5, aspect=5)
-
-    ax.set_xlabel('Width')
-    ax.set_ylabel('Height')
-    ax.set_zlabel('Value')
-
-    plt.savefig(fileName)
-    plt.clf()
-    plt.close()
+    py.iplot(fig)
 # end function
 
 
-def save_kernel(fileName, kernel):
-    """    
-    :param fileName: 
-    :param kernel: 
-    :return: 
-    """
-    m, n = cfg.BLUR_SIZE
-
-    X = np.arange(m)
-    Y = np.arange(n)
-    X, Y = np.meshgrid(X, Y)
-    Z = kernel
-
-    save_plot(X, Y, Z, fileName)
-# end function
-
-
-def save_weight_function(fileName):
-    """    
-    :param fileName: 
-    :return: 
-    """
-    wfunc = np.vectorize(tools.weight)
+def save_weight_function(title):
+    wfunc = np.vectorize(Intensify.weight)
     x = np.arange(0, 1, 0.001, dtype=np.float64)
     y = wfunc(x)
 
-    plt.plot(x, y)
-    plt.xlim(0, 1)
-    plt.ylim(0, 3)
 
-    plt.savefig(fileName)
-    plt.clf()
-    plt.close()
 # end function
 
 
 if __name__ == '__main__':
-    saveAll()
+    save_all()
 # end if

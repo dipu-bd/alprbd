@@ -7,7 +7,7 @@ from modules import Gaussian
 from modules import Sobel
 from modules import Threshold
 
-mixture_model = np.array([])
+KERNEL = np.array([])
 
 
 def apply(img, _all=False):
@@ -45,11 +45,11 @@ def mixture_model():
     Builds a gaussian kernel for mixture model
     """
 
-    global mixture_model
+    global KERNEL
 
     # check if it has already been calculated
-    if mixture_model.shape == cfg.MIXTURE_SIZE:
-        return mixture_model
+    if KERNEL.shape == cfg.MIXTURE_SIZE:
+        return KERNEL
     # end if
 
     # formula -- see paper
@@ -81,8 +81,8 @@ def mixture_model():
     H3 = A * np.exp(-X3 / 0.2)
     H = np.hstack((H1, H2, H3))
 
-    _, mixture_model = np.meshgrid(Y, H)
-    return mixture_model
+    _, KERNEL = np.meshgrid(Y, H)
+    return KERNEL
 # end function
 
 

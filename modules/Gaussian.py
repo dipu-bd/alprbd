@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from helper import *
 
-blur_kernel = np.array([])
+BLUR_KERNEL = np.array([])
 
 
 def apply(img):
@@ -30,11 +30,11 @@ def blur_kernel():
     Build 2D Gaussian kernel 
     """
 
-    global blur_kernel
+    global BLUR_KERNEL
 
     # check if it has already been calculated
-    if blur_kernel.shape == cfg.BLUR_SIZE:
-        return blur_kernel
+    if BLUR_KERNEL.shape == cfg.BLUR_SIZE:
+        return BLUR_KERNEL
     # end if
 
     # formula -- https://goo.gl/3AmmaE
@@ -53,9 +53,9 @@ def blur_kernel():
     Y = np.square((Y - y0) / sy)
 
     Y, X = np.meshgrid(Y, X)
-    blur_kernel = A * np.exp(-(X + Y) / 2)
+    BLUR_KERNEL = A * np.exp(-(X + Y) / 2)
 
-    return blur_kernel
+    return BLUR_KERNEL
 # end function
 
 
