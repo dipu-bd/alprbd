@@ -11,7 +11,7 @@ def apply(img):
     :param img: plate image 
     """
     row, col = img.shape
-    
+
     # de-noise using contours
     contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)[1]
     for cnt in contours:

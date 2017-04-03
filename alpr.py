@@ -14,7 +14,7 @@ STAGE_MAP = [
     [Intensify.run, 4, 5, 2],       # 5
     [MatchFilter.run, 5, 6],        # 6
     [PlateRegion.run, 6, 7],        # 7 *
-    [LocatePlate.run, 7, 8, 1],     # 8 *
+    [LocatePlate.run, 7, 8, 0],     # 8 *
 
     # plate detection            # STEP-B #
     [Grayscale.run, 8, 9],           # 9
