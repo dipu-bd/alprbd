@@ -25,17 +25,19 @@ def calculate(img):
     :param img: plate image 
     """
     row, col = img.shape
+    img[img < 128] = 0
+    img[img > 0] = 255
 
     # remove borders
-    upper = img[0:20, :]
+    upper = img[0:10, :]
     lower = img[row-5:row, :]
-    left = img[:, 0:12]
-    right = img[:, col-12:col]
+    left = img[:, 0:5]
+    right = img[:, col-5:col]
 
     img = apply_flood_fill(img, upper)
     img = apply_flood_fill(img, lower, tx=row-5)
     img = apply_flood_fill(img, left)
-    img = apply_flood_fill(img, right, ty=col-12)
+    img = apply_flood_fill(img, right, ty=col-5)
 
     return img
 # end function
@@ -48,7 +50,7 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     runtime = []
-    util.log("Stage", cur, "Remove Border noise")
+    util.log("Stage", cur, "Border removal")
     for read in util.get_images(prev):
         # get plate from last stage
         plate = util.stage_image(read, prev)
