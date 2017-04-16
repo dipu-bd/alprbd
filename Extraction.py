@@ -7,15 +7,15 @@ import config as cfg
 
 
 def extract(img):
-	# necessary constants
-	col, row = cfg.SCALE_DIM
-	height, width, _ = img.shape
+    # necessary constants
+    col, row = cfg.SCALE_DIM
+    height, width, _ = img.shape
 
-	# enhance
-	enhanced = enhance(img)
+    # enhance
+    enhanced = enhance(img)
 
-	# matched filter
-	matched = matched_filter(enhanced)
+    # matched filter
+    matched = matched_filter(enhanced)
 
     # locate all contours -- http://stackoverflow.com/a/41322331/1583052
     contours = cv2.findContours(matched, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
@@ -32,24 +32,23 @@ def extract(img):
         # end if
 
         # translate points
-	    x1 = x * height // row
-	    x2 = (x + r) * height // row
-	    y1 = y * width // col
-	    y2 = (y + c) * width // col
+        x1 = x * height // row
+        x2 = (x + r) * height // row
+        y1 = y * width // col
+        y2 = (y + c) * width // col
 
         # original ROI
-        roi = img[x1:x2, y1:y2]
-        edges = detect_edges(roi)
-		regions = check_contours(roi, edges)
+        roi = grayscale(img[x1:x2, y1:y2])
+        regions = check_contours(roi)
 
-		for bound in regions: 
-			plate = get_plate(bound)
-			binary = get_binary(plate)
-			clean = denoise(binary)
-			if clean is not None:
-				plates.append(clean)
-			# end if 
-		# end for
+        for bound in regions: 
+            plate = get_plate(roi, bound)
+            binary = get_binary(plate)
+            clean = denoise(binary)
+            if clean is not None:
+                plates.append(clean)
+            # end if 
+        # end for
     # end for
 
     return plates
@@ -62,18 +61,18 @@ def extract(img):
 
 def grayscale(img):
     # grayscale 
-    b, g, r = cv2.split(scaled)
+    b, g, r = cv2.split(img)
     gray = cfg.GRAY_RATIO[0] * r + cfg.GRAY_RATIO[1] * g + cfg.GRAY_RATIO[2] * b    
-    return np.uint8(gray)
+    return normalize(gray)
 # end function
 
 
 def enhance(img):
-	# rescale
+    # rescale
     scaled = cv2.resize(img, cfg.SCALE_DIM, interpolation=cv2.INTER_AREA)
 
     # to grayscale
-	gray = grayscale(scaled)
+    gray = grayscale(scaled)
 
     # vertical Sobel operator -- https://goo.gl/3fQnc9
     sobel = cv2.Sobel(gray, cv2.CV_8UC1, 1, 0, ksize=3)
@@ -83,7 +82,7 @@ def enhance(img):
 
     # apply gaussian blur
     kernel = blur_kernel()
-	gauss = cv2.filter2D(thresh, cv2.CV_64F, kernel)
+    gauss = cv2.filter2D(thresh, cv2.CV_64F, kernel)
 
     # calculate mean intensity and standard deviation
     row, col = thresh.shape
@@ -91,12 +90,10 @@ def enhance(img):
 
     # intensify image
     f = np.vectorize(weight)
-    ret = f(sdev) * (img - mean) + mean
+    ret = f(sdev) * (gray - mean) + mean
 
-    # normalize and return
-    ret[ret < 0] = 0
-    ret[ret > 255] = 255
-    return np.uint8(ret)
+    # normalize and return 
+    return normalize(ret)
 # end function
 
 
@@ -114,26 +111,59 @@ def matched_filter(img):
 
     # apply gaussian blur
     kernel = blur_kernel()
-	blur = cv2.filter2D(matched, cv2.CV_64F, kernel)
+    blur = cv2.filter2D(matched, cv2.CV_64F, kernel)
 
     # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(blur, cfg.SMOOTH_CUTOFF, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(np.uint8(blur), cfg.SMOOTH_CUTOFF, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     return thresh
 # end function
 
 
+def get_binary(img):
+    """
+    Converts to black and white / binary image   
+    :param img: plate image 
+    """
+    # normal binary threshold
+    bnw1 = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255,
+                         cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+
+    # inverse binary threshold
+    bnw2 = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255,
+                         cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
+    # calculate ratio of non-zero pixels
+    row, col = img.shape
+    area = row * col
+    ratio1 = cv2.countNonZero(bnw1) / area
+    ratio2 = cv2.countNonZero(bnw2) / area
+
+    # return image with lower ratio    
+    if ratio1 < ratio2:
+        return bnw1
+    else:
+        return bnw2
+    # end if 
+    
+# end function
+
 #####################################################################################
 
 
-def check_contours(img, canny):
+def check_contours(img):
     """
     Locate plate regions
     :param img: scaled image 
-    :param canny: image after canny edge detection algorithm is applied
     """
     height, width = img.shape
     img_area = height * width
+
+    # Otsu's thresholding -- https://goo.gl/6n5Kgn
+    _, thresh = cv2.threshold(np.uint8(img), cfg.SMOOTH_CUTOFF, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Canny edge detection
+    canny = cv2.Canny(thresh, 100, 200, L2gradient=True)
 
     # map all contours -- http://stackoverflow.com/a/41322331/1583052
     contours = cv2.findContours(canny, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
@@ -163,7 +193,6 @@ def check_contours(img, canny):
 
         # minimum area box
         rect = cv2.minAreaRect(cnt)
-        box = cv2.boxPoints(rect)
 
         # check rotation
         angle = abs(rect[2])
@@ -172,25 +201,11 @@ def check_contours(img, canny):
         # end if
 
         # get region data
-        region = [[x, x+row, y, y+col], box]
+        region = [[x, x+row, y, y+col], rect]
         regions.append(region)
     # end for
 
     return regions
-# end function
-
-
-def detect_edges(plate):
-    # grayscale 
-    gray = grayscale(plate)
-
-    # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(gray, cfg.SMOOTH_CUTOFF, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-
-    # Canny edge detection
-    canny = cv2.Canny(thresh, 100, 200, L2gradient=True)
-
-    return canny
 # end function
 
 
@@ -225,39 +240,7 @@ def get_plate(img, region):
     return scaled
 # end function
 
-
 #####################################################################################
-
-def get_binary(img):
-    """
-    Converts to black and white / binary image   
-    :param img: plate image 
-    """
-    # normal binary threshold
-    bnw1 = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255,
-                         cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
-
-    # inverse binary threshold
-    bnw2 = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255,
-                         cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-
-    # calculate ratio of non-zero pixels
-    row, col = img.shape
-    area = row * col
-    ratio1 = cv2.countNonZero(bnw1) / area
-    ratio2 = cv2.countNonZero(bnw2) / area
-
-    # return image with lower ratio
-    bnw = bnw2
-    if ratio1 < ratio2:
-        bnw = bnw1
-    # end if
-
-    # normalize
-    bnw[bnw <= 127] = 0
-    bnw[bnw > 127] = 255
-    return bnw
-# end function
 
 
 def denoise(img):
@@ -266,23 +249,29 @@ def denoise(img):
     :param img: plate image 
     """
     row, col = img.shape
-    img[img < 128] = 0
-    img[img > 0] = 255
+    #img[img < 150] = 0
+    #img[img > 0] = 255
 
     # de-noise using contours
-    contours = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
-
-    for cnt in contours:
-        y, x, n, m = cv2.boundingRect(cnt)
-        if 35 < m < row - 25 and 35 < n < col - 25:
-            continue
-        # end if
-
-        cv2.fillConvexPoly(img, cnt, 0)
-        # rect = cv2.minAreaRect(cnt)
-        # box = np.int32(cv2.boxPoints(rect))
-        # cv2.fillConvexPoly(img, box, 0)
+    for i in  range(0):
+        for cnt in cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]:
+            y, x, c, r = cv2.boundingRect(cnt)
+            if not (35 < r < row - 25 and 35 < c < col - 25):
+                cv2.fillConvexPoly(img, cnt, 0)
+            # end if            
+        # end for
     # end for
+
+    # remove borders    
+    upper = img[0:1, :]
+    lower = img[row-1:row, :]
+    left = img[:, 0:1]
+    right = img[:, col-1:col]
+
+    #img = apply_flood_fill(img, upper)
+    #img = apply_flood_fill(img, lower, tx=row-1)
+    #img = apply_flood_fill(img, left)
+    #mg = apply_flood_fill(img, right, ty=col-1)
 
     # check mean white pixels
     if np.mean(img) < 8:
@@ -291,6 +280,7 @@ def denoise(img):
 
     return img
 # end function
+
 
 #####################################################################################
 # --------------------------- 2nd Level Functions --------------------------------- #
@@ -471,6 +461,20 @@ def mixture_model():
 
     _, kernel = np.meshgrid(Y, H)
     return kernel
+# end function
+
+
+def apply_flood_fill(img, region, tx=0, ty=0):
+    row, col = img.shape
+    mask = np.zeros((row + 2, col + 2), np.uint8)
+    for x, _ in enumerate(region):
+        for y, c in enumerate(_):
+            if c > 0:
+                cv2.floodFill(img, mask, (ty+y, tx+x), 0)
+            # end if
+        # end if
+    # end if
+    return img
 # end function
 
 

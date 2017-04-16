@@ -3,6 +3,7 @@
 import os
 from os import path
 
+import cv2
 import Segments
 from Extraction import extract
 
@@ -12,22 +13,24 @@ def execute(file):
     Execute the ALPR process
     :param stage: Stage number
     """ 
-    save_dir = path.dirname(file)
-    img = cv2.imread(file)
     total_time = 0
 
+    # open file
+    img = cv2.imread(file)    
+    save_dir, _ = path.splitext(file)    
+    save_image(img, save_dir, 'main.jpg') # save original
+
     # execute extraction
-    print("Extracting all plate like regions...")
+    print(file)
+    print("   Extracting all plate like regions...")
     plates, time = execute_module(extract, img)
     total_time += time
 
+    print("   Segmenting %d extracted plates..." % len(plates))
     for i, plate in enumerate(plates):
-        plate_dir = path.join(save_dir, 'plates', str(i))
-        os.mkdirs(plate_dir)
-
         # save plate
-        fname = path.join(plate_dir, 'plate.jpg')
-        cv2.imwrite(fname, plate)
+        plate_dir = path.join(save_dir, 'plate_{:02}'.format(i+1))
+        save_image(plate, plate_dir, 'plate.jpg')
 
         # segmentation
         segments, time = execute_module(Segments.do, plate)
@@ -35,12 +38,27 @@ def execute(file):
 
         # save all segments
         for j, seg in enumerate(segments):
-            fname = path.join(plate_dir, 'seg'+ str(j) + '.jpg')
-            cv2.imwrite(fname, seg)
+            save_image(seg, plate_dir, 'seg_{:02}.jpg'.format(j+1))
         # end for
     # end for
-
+        
     return total_time
+# end function
+
+def save_image(img, *file):
+    # gather names
+    fname = path.join(*file)
+    plate_dir = path.dirname(fname)
+    
+    if not path.exists(plate_dir):
+        os.makedirs(plate_dir)
+    # end oif
+
+    if path.exists(fname):
+        os.remove(fname)
+    # end if
+
+    cv2.imwrite(fname, img)
 # end function
 
 

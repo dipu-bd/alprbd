@@ -9,7 +9,7 @@ SCALE_DIM = (640, 480)           # fixed
 GRAY_RATIO = [0.59, 0.30, 0.11]  # fixed
 
 # edge density
-SOBEL_CUTOFF = 75                # keep it low
+SOBEL_CUTOFF = 50                # keep it low
 
 # gaussian blur
 BLUR_SIZE = (60, 60)             # fixed. the kernel size
@@ -34,11 +34,11 @@ MIN_WIDTH = 75      # in pixels
 MIN_AREA = 0.1      # contour_area / image_area
 MIN_ASPECT = 0.3    # contour_height / contour_width
 MAX_ASPECT = 0.6    # contour_height / contour_width
-MAX_ANGLE = 25       # in degrees
+MAX_ANGLE = 20      # in degrees
 
 PLATE_DIM = (500, 250)
 
-BNW_THRESH = 0      # black and white threshold
+BNW_THRESH = 85     # black and white threshold
 
 ##########################################################################
 
