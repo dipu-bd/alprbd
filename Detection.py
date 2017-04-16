@@ -27,18 +27,18 @@ def detect(img):
         y, x, c, r = cv2.boundingRect(cnt)
 
         # check image size 
-        if not (r < c and 30 < r < 150 and 100 < c < 350):
+        if not (r < c and 30 < r < 150 and 80 < c < 350):
             continue
         # end if
 
         # translate points
-        x1 = x * height // row
-        x2 = (x + r) * height // row
-        y1 = y * width // col
-        y2 = (y + c) * width // col
+        x1 = (x * height) // row
+        x2 = ((x + r) * height) // row
+        y1 = (y * width) // col
+        y2 = ((y + c) * width) // col
 
         # original ROI
-        plate = grayscale(img[x1:x2, y1:y2])        
+        plate = grayscale(img[x1:x2, y1:y2])
         plates.append(plate)
     # end for
 

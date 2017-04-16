@@ -150,8 +150,6 @@ def denoise(img):
     :param img: plate image 
     """
     row, col = img.shape
-    #img[img < 150] = 0
-    #img[img > 0] = 255
 
     # remove borders    
     upper = img[0:1, :]
@@ -175,8 +173,8 @@ def denoise(img):
     # end for
 
     # check mean white pixels
-    #if np.mean(img) < 5:
-        #return None
+    if np.mean(img) < 4:
+        return None
     # end if
 
     return img
