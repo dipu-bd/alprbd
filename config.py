@@ -24,7 +24,7 @@ WEIGHT_DIST = (0.3, 0.5)         # fixed.
 MIXTURE_SIZE = (30, 80)          # fixed. mixture kernel size
 MIXTURE_SIGMA = 3.2      		 # variance of main lobe towards x axis (keep it low)
 MIXTURE_CO = (-0.2, 0.1)         # A < 0, B > 0. (A ~ 2B)
-SMOOTH_CUTOFF = 200              # high value removes more noise
+SMOOTH_CUTOFF = 175              # high value removes more noise
 
 ##########################################################################
 
@@ -38,7 +38,7 @@ MAX_ANGLE = 20      # in degrees
 
 PLATE_DIM = (500, 250)
 
-BNW_THRESH = 85     # black and white threshold
+BNW_THRESH = 50     # black and white threshold
 
 ##########################################################################
 
