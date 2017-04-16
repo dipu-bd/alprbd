@@ -5,6 +5,7 @@ from os import path
 
 import cv2
 import Segments
+from Detection import detect
 from Extraction import extract
 
 
@@ -22,11 +23,24 @@ def execute(file):
 
     # execute extraction
     print(file)
-    print("   Extracting all plate like regions...")
-    plates, time = execute_module(extract, img)
+    print("   Detecting regions of interest...")
+    detected, time = execute_module(detect, img)
     total_time += time
 
-    print("   Segmenting %d extracted plates..." % len(plates))
+    print("   %d detected. Extracting..." % len(detected))
+    plates = []
+    for i, roi in enumerate(detected):
+        # save plate
+        save_image(roi, save_dir, 'roi_{:02}.jpg'.format(i+1))
+
+        # extracted clean plates
+        cleaned, time = execute_module(extract, roi)
+        total_time += time
+
+        plates.extend(cleaned)
+    # end for
+
+    print("   %d extracted. Segmenting..." % len(plates))
     for i, plate in enumerate(plates):
         # save plate
         plate_dir = path.join(save_dir, 'plate_{:02}'.format(i+1))
@@ -41,7 +55,7 @@ def execute(file):
             save_image(seg, plate_dir, 'seg_{:02}.jpg'.format(j+1))
         # end for
     # end for
-        
+
     return total_time
 # end function
 
