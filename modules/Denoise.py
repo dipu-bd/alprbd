@@ -11,19 +11,22 @@ def apply(img):
     :param img: plate image 
     """
     row, col = img.shape
+    img[img < 128] = 0
+    img[img > 0] = 255
 
     # de-noise using contours
-    contours = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_KCOS)[1]
+    contours = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
+
     for cnt in contours:
         y, x, n, m = cv2.boundingRect(cnt)
         if 35 < m < row - 25 and 35 < n < col - 25:
             continue
         # end if
 
-        # cv2.fillConvexPoly(img, cnt, 0)
-        rect = cv2.minAreaRect(cnt)
-        box = np.int32(cv2.boxPoints(rect))
-        cv2.fillConvexPoly(img, box, 0)
+        cv2.fillConvexPoly(img, cnt, 0)
+        # rect = cv2.minAreaRect(cnt)
+        # box = np.int32(cv2.boxPoints(rect))
+        # cv2.fillConvexPoly(img, box, 0)
     # end for
 
     # check mean white pixels
@@ -42,7 +45,7 @@ def run(prev, cur):
     :param cur: Current stage number
     """
     runtime = []
-    util.log("Stage", cur, "Removing noise")
+    util.log("Stage", cur, "Contour de-noising")
     for read in util.get_images(prev):
         # get plate from last stage
         plate = util.stage_image(read, prev)
