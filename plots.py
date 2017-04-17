@@ -27,7 +27,11 @@ def save_all():
     save_weight_function()
 
     print("Saving segments function...") 
-    save_segment_graph(path.join("stages","stage.16","01.00.wnb.jpg"))
+    save_hor_segment(path.join("samples", "hor.jpg"))
+    save_ver_segment(path.join("samples", "ver.jpg"))
+
+    print("Saving segment heatmap...") 
+    heat_map(path.join("samples", "heat.jpg"))
 
     print("Saved all plots!\n")
 # end function
@@ -79,7 +83,7 @@ def save_weight_function():
 # end function
 
 
-def save_segment_graph(file):    
+def save_hor_segment(file):    
     img = cv2.imread(file, cv2.CV_8UC1)
     height, width = img.shape
     
@@ -100,11 +104,16 @@ def save_segment_graph(file):
     print("Horizontal plot")
     py.init_notebook_mode()
     py.iplot(row)
+# end function
 
+def save_ver_segment(file):  
+    img = cv2.imread(file, cv2.CV_8UC1)
+    height, width = img.shape
+    
     # vertical
     c_x = np.linspace(0, width, width)
     c_y = np.mean(img, axis=0)    
-    c_l = np.mean(r_y) / 2
+    c_l = np.mean(c_y) / 2
 
     col = [
         go.Scatter(
@@ -119,6 +128,23 @@ def save_segment_graph(file):
     print("Vertical plot")
     py.init_notebook_mode()
     py.iplot(col)
+# end function
+
+
+def heat_map(filename):
+    img = cv2.imread(filename, cv2.CV_8UC1)
+    img[img < 127] = 0
+    img[img > 0] = 1    
+    row, col = img.shape
+
+    trace = go.Heatmap(
+        z = np.flipud(img),
+        x = np.linspace(0, row, row),
+        y = np.linspace(0, col, col)
+    )
+
+    py.init_notebook_mode()
+    py.iplot([trace])
 # end function
 
 if __name__ == '__main__':
