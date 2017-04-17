@@ -11,12 +11,18 @@ def do(img):
     :param img: plate image 
     """
     # calculate horizontal projections
-    hor = horizontal(img)
+    hors = horizontal(img)
 
     # calculate vertical projections
+    vers = []
+    for x in hors:
+        vers.extend(vertical(x))
+    # end for
+
+    # final trimming
     segments = []
-    for x in hor:
-        segments.extend(vertical(x))
+    for x in vers:
+        segments.extend(horizontal(x))
     # end for
 
     return segments

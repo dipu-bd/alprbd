@@ -11,8 +11,14 @@ def detect(img):
     col, row = cfg.SCALE_DIM
     height, width, _ = img.shape
 
+    # rescale
+    scaled = cv2.resize(img, cfg.SCALE_DIM, interpolation=cv2.INTER_AREA)
+
+    # to grayscale
+    gray = grayscale(scaled)
+
     # enhance
-    enhanced = enhance(img)
+    enhanced = enhance(gray)
 
     # matched filter
     matched = matched_filter(enhanced)
@@ -60,29 +66,22 @@ def grayscale(img):
 
 
 def enhance(img):
-    # rescale
-    scaled = cv2.resize(img, cfg.SCALE_DIM, interpolation=cv2.INTER_AREA)
-
-    # to grayscale
-    gray = grayscale(scaled)
+    row, col = img.shape
 
     # vertical Sobel operator -- https://goo.gl/3fQnc9
-    sobel = cv2.Sobel(gray, cv2.CV_8UC1, 1, 0, ksize=3)
-
-    # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(sobel, cfg.SOBEL_CUTOFF, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    sobel = cv2.Sobel(img, cv2.CV_8UC1, 1, 0, ksize=3)
+    _, thresh = cv2.threshold(sobel, 50, 255, cv2.THRESH_TOZERO)
 
     # apply gaussian blur
     kernel = blur_kernel()
     gauss = cv2.filter2D(thresh, cv2.CV_64F, kernel)
 
     # calculate mean intensity and standard deviation
-    row, col = thresh.shape
     mean, sdev = intensity_calculate(row, col, gauss)
 
     # intensify image
     f = np.vectorize(weight)
-    ret = f(sdev) * (gray - mean) + mean
+    ret = f(sdev) * (img - mean) + mean
 
     # normalize and return 
     return normalize(ret)
@@ -94,7 +93,7 @@ def matched_filter(img):
     sobel = cv2.Sobel(img, cv2.CV_8UC1, 1, 0, ksize=3)
 
     # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(sobel, cfg.SOBEL_CUTOFF, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(sobel, 50, 255, cv2.THRESH_TOZERO)
 
     # apply matched filter
     kernel = mixture_model()
@@ -107,7 +106,7 @@ def matched_filter(img):
     blur = normalize(blur)
 
     # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(np.uint8(blur), cfg.SMOOTH_CUTOFF, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(np.uint8(blur), 180, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     return thresh
 # end function

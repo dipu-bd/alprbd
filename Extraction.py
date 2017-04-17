@@ -34,7 +34,7 @@ def check_contours(img):
     img_area = height * width
 
     # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(np.uint8(img), cfg.SMOOTH_CUTOFF, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(np.uint8(img), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # Canny edge detection
     canny = cv2.Canny(thresh, 100, 200, L2gradient=True)
@@ -119,14 +119,12 @@ def get_binary(img):
     """
     Converts to black and white / binary image   
     :param img: plate image 
-    """
+    """    
     # normal binary threshold
-    bnw1 = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255,
-                         cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+    bnw1 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1]
 
     # inverse binary threshold
-    bnw2 = cv2.threshold(np.uint8(img), cfg.BNW_THRESH, 255,
-                         cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    bnw2 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)[1]
 
     # calculate ratio of non-zero pixels
     row, col = img.shape
@@ -139,8 +137,7 @@ def get_binary(img):
         return bnw1
     else:
         return bnw2
-    # end if 
-    
+    # end if    
 # end function
  
 
