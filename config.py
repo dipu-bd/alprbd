@@ -5,11 +5,9 @@ DEBUG = True
 
 ##########################################################################
 
-GRAY_RATIO = [0.59, 0.30, 0.11]  # fixed
-SCALE_DIM = (480, 640)           # fixed
+SCALE_DIM = (640, 480)           # fixed
 
-# edge density
-SOBEL_CUTOFF = 75                # keep it low
+GRAY_RATIO = [0.59, 0.30, 0.11]  # fixed
 
 # gaussian blur
 BLUR_SIZE = (60, 60)             # fixed. the kernel size
@@ -22,11 +20,12 @@ WEIGHT_DIST = (0.3, 0.5)         # fixed.
 
 # mixture model
 MIXTURE_SIZE = (30, 80)          # fixed. mixture kernel size
-MIXTURE_SIGMA = 3.2      		 # variance of main lobe towards x axis (keep it low)
-MIXTURE_CO = (-0.2, 0.1)         # A < 0, B > 0. (A ~ 2B)
-SMOOTH_CUTOFF = 200              # high value removes more noise
+MIXTURE_SIGMA = 3.0      		 # variance of main lobe towards x axis (keep it low)
+MIXTURE_CO = (-1.2, 0.75)         # A < 0, B > 0. (A ~ 2B)
 
 ##########################################################################
+
+PLATE_DIM = (500, 250)
 
 # plate constraints
 MIN_HEIGHT = 30     # in pixels
@@ -34,11 +33,7 @@ MIN_WIDTH = 75      # in pixels
 MIN_AREA = 0.1      # contour_area / image_area
 MIN_ASPECT = 0.3    # contour_height / contour_width
 MAX_ASPECT = 0.6    # contour_height / contour_width
-MAX_ANGLE = 25       # in degrees
-
-PLATE_DIM = (250, 500)
-
-BNW_THRESH = 0      # black and white threshold
+MAX_ANGLE = 20      # in degrees
 
 ##########################################################################
 

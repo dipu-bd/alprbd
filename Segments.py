@@ -1,35 +1,34 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-import numpy as np
-from helper import *
+import numpy as np 
 
+#####################################################################################
 
-def calculate(img):
+def do(img):
     """
     Calculate the horizontal projections.
     :param img: plate image 
     """
     # calculate horizontal projections
-    hor = horizontal(img)
-
-    if len(hor) != 2:
-        return []
-    # end if
+    hors = horizontal(img)
 
     # calculate vertical projections
-    segments = []
-    for x in hor:
-        segments.extend(vertical(x))
+    vers = []
+    for x in hors:
+        vers.extend(vertical(x))
     # end for
 
-    if len(segments) < 4:
-        return []
-    # end if
+    # final trimming
+    segments = []
+    for x in vers:
+        segments.extend(horizontal(x))
+    # end for
 
     return segments
 # end function
 
+#####################################################################################
 
 def horizontal(img):
     """
@@ -42,9 +41,9 @@ def horizontal(img):
     for r, v in enumerate(row_sum):
         if v > 1:
             if plate is None:
-                plate = img[r:r + 1, :]
+                plate = img[r:r+1, :]
             else:
-                plate = np.vstack((plate, img[r:r + 1, :]))
+                plate = np.vstack((plate, img[r:r+1, :]))
             # end if
         else:
             if isvalid(plate):
@@ -90,6 +89,7 @@ def vertical(img):
     return ver
 # end if
 
+#####################################################################################
 
 def isvalid(plate):
     """
@@ -112,34 +112,3 @@ def isvalid(plate):
 
     return True
 # end if
-
-
-def run(prev, cur):
-    """
-    Run stage task
-    :param prev: Previous stage number
-    :param cur: Current stage number
-    """
-    runtime = []
-    util.log("Stage", cur, "Converts to black and white")
-    for read in util.get_images(prev):
-        # get plate from last stage
-        plate = util.stage_image(read, prev)
-        plate = cv2.imread(plate, cv2.CV_8UC1)
-
-        # get result
-        segments, time = util.execute_module(calculate, plate)
-        runtime.append(time)
-
-        # save all segments
-        for idx, seg in enumerate(segments):
-            write = util.stage_image(read, cur, idx)
-            cv2.imwrite(write, seg)
-        # end for
-
-        # log
-        util.log("Converted", read, "| %.3f s" % time, stage=cur)
-    # end for
-
-    return np.average(runtime)
-# end function
