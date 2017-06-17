@@ -1,4 +1,4 @@
-stages/
+output/
 __pycache__/
 *.pyc
 .ipnyb_checkpoints/
