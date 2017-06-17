@@ -17,9 +17,6 @@ strings = [
   u"বরিশাল" 
 ]
 
-# Generator configuration
-frame_size = (100, 200)
-
 # fonts - [(location, size)]
 fonts = [
   ("fonts/bangla.ttf", 72),

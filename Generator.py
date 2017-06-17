@@ -8,13 +8,21 @@ from PIL import ImageDraw
 
 # Necessary variables
 index = 0
-frame = np.zeros(cfg.frame_size, dtype=np.uint8)
+frame = np.zeros([100, 1000], dtype=np.uint8)
 
 # Create output path
 outputPath = os.path.join('output', 'generated')
 if not os.path.exists(outputPath):
   os.makedirs(outputPath)
 #end if
+
+def trim(img):
+  img_arr = np.array(img)
+  nzx, nzy = np.nonzero(img_arr)
+  y2 = np.max(nzy) + 5
+  cropped = img_arr[:, :y2]
+  return Image.fromarray(cropped)
+# end function
 
 def generate(array, font):
   """
@@ -33,6 +41,8 @@ def generate(array, font):
     # get graphics
     draw = ImageDraw.Draw(img)
     draw.text((5, 5), letter, 255, font=font)
+    # trim image
+    img = trim(img)
     # save image
     name = '{:05d}.jpg'.format(index)
     savePath = os.path.join(outputPath, name)
@@ -48,5 +58,6 @@ def run():
   for font in cfg.fonts:
     generate(cfg.letters, font)
     generate(cfg.numerals, font)
-  # end for 
+    generate(cfg.strings, font)
+  # end for
 # end if
