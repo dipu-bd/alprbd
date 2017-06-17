@@ -8,7 +8,7 @@ from PIL import ImageDraw
 
 # Necessary variables
 index = 0
-frame = np.zeros([100, 1000], dtype=np.uint8)
+frame = np.zeros([100, 300], dtype=np.uint8)
 
 # Create output path
 outputPath = os.path.join('output', 'generated')
@@ -59,9 +59,11 @@ def run():
   """
   To generate the image from the texts
   """
-  for font in cfg.fonts:
+  for font in cfg.unicode_fonts:
     generate(cfg.letters, font)
     generate(cfg.numerals, font)
-    generate(cfg.strings, font)
   # end for
+  for font in cfg.bijoy_fonts:
+    generate(cfg.strings, font)
+  #end for
 # end if
