@@ -13,10 +13,10 @@ strings = [
   u'‡g‡U«v',
   u'Lyjbv',
   u'h‡kvi',
-  u'ewikvj',
-  u'iscyi',
-  u'ivRkvnx',
-  u'w`bvRcyi'
+  #u'ewikvj',
+  #u'iscyi',
+  #u'ivRkvnx',
+  #u'w`bvRcyi'
 ]
 
 """
@@ -26,10 +26,10 @@ strings = [
   u'মেট্রো',
   u'খুলনা',
   u'যশোর',
-  u'বরিশাল',
-  u'রংপুর',
-  u'রাজশাহী',
-  u'দিনাজপুর'
+  #u'বরিশাল',
+  #u'রংপুর',
+  #u'রাজশাহী',
+  #u'দিনাজপুর'
 ]
 """
 
