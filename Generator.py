@@ -18,9 +18,13 @@ if not os.path.exists(outputPath):
 
 def trim(img):
   img_arr = np.array(img)
+  rows, cols = img_arr.shape
   nzx, nzy = np.nonzero(img_arr)
-  y2 = np.max(nzy) + 5
-  cropped = img_arr[:, :y2]
+  x1 = max(0, np.min(nzx) - 5)
+  x2 = min(rows, np.max(nzx) + 5)
+  y1 = max(0, np.min(nzy) - 5)
+  y2 = min(cols, np.max(nzy) + 5)
+  cropped = img_arr[x1:x2, y1:y2]
   return Image.fromarray(cropped)
 # end function
 
@@ -44,7 +48,7 @@ def generate(array, font):
     # trim image
     img = trim(img)
     # save image
-    name = '{:05d}.jpg'.format(index)
+    name = '{:05d}.png'.format(index)
     savePath = os.path.join(outputPath, name)
     img.save(savePath)
   # end for
