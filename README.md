@@ -2,10 +2,10 @@
 
 ***Thesis**: Automated Bangla License Plate Recognition.*
 
-This branch was created to generated dataset for OCR. 
+This is a branch to review papers on our topic.
 
-## Setup 
-- Install `anaconda3`
-- Install `opencv3`: `conda install -c menpo opencv3` 
-- Clone this repository: `git clone git@github.com:dipu-bd/ALPR-Bangladesh.git`
+The reviews are separated into three folders by their usability.
+- [Important.md](Important.md) contains reviews that we deem important and highly usable.
+- [Usable.md](Usable.md) has reviews that are worth mentioning.
+- [Unusable.md](Unusable.md) is just a waste of time. The paper we deemed as failures or completely unnecessary in our research, but has some good informations.
 
