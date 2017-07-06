@@ -1,7 +1,6 @@
 ## Bangla License Plate Reader for Metropolitan Cities of Bangladesh Using Template Matching
 
-    Accuracy: Not Specified 
-    Rank: Unusable
+    Accuracy: Not Specified
 
 They focused on metropolitan areas only. The extraction was done by measuring the distribution of connected components. The segmentation process depends on the word: `Metro`. They claimed to have used the `matra` for recognition, but the process was not clearly described.
 
