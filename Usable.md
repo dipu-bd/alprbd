@@ -10,3 +10,19 @@ They provided a generalized method for the task excluding embassy and military c
 
 > The classes include private vehicle and commercial vehicles. Other categories of vehicles, such as embassy cars and military cars are not addressed since they are rarely seen.
 
+
+## [List_of_districts_of_Bangladesh](https://www.wikiwand.com/en/List_of_districts_of_Bangladesh#/List_of_districts)
+
+Found names of all districts of bangladesh here.
+
+## [Vehicle_registration_plates_of_Bangladesh](https://www.wikiwand.com/en/Vehicle_registration_plates_of_Bangladesh)
+
+The letters permitted in the vehicle registration plate are listed here.
+
+## [vehicle-digital-number-plate-in-bangladesh](http://www.bikebd.com/vehicle-digital-number-plate-in-bangladesh/)
+
+An article on standard license plate extraction.
+ 
+## A License Plate-Recognition Algorithm for Intelligent Transportation System Applications
+
+

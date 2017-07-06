@@ -6,13 +6,3 @@ They researched on two major areas: to enhance image contrast in plate-like regi
 
 ![accuracy](img/0001.png)
 
-## [List_of_districts_of_Bangladesh](https://www.wikiwand.com/en/List_of_districts_of_Bangladesh#/List_of_districts)
-
-Found names of all districts of bangladesh here.
-
-## [Vehicle_registration_plates_of_Bangladesh](https://www.wikiwand.com/en/Vehicle_registration_plates_of_Bangladesh)
-
-The letters permitted in the vehicle registration plate are listed here.
-
-
- 
