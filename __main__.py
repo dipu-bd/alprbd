@@ -1,3 +1,1 @@
-import Generator
-
-Generator.run()
+print("Not yet implemented")
