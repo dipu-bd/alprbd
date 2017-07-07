@@ -66,3 +66,6 @@ UNICODE_FONTS = [
 BIJOY_FONTS = [
     ("fonts/sutonnymj.ttf", 48),
 ]
+
+# dimension of each image
+IMAGE_DIM = (28, 28)

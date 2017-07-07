@@ -4,6 +4,7 @@ Generates basic dataset
 # -*- coding: utf-8 -*-
 
 import os
+import cv2
 import numpy as np
 import config as cfg
 
@@ -29,19 +30,25 @@ def check_path(output):
 # end function
 
 
-def trim_image(img):
+def trim_image(img_file):
     """
     Trims the image
     """
-    img_arr = np.array(img)
-    rows, cols = img_arr.shape
-    nzx, nzy = np.nonzero(img_arr)
+    # open
+    img = cv2.imread(img_file, 0)
+    rows, cols = img.shape
+    # find area
+    nzx, nzy = np.nonzero(img)
     x1 = max(0, np.min(nzx))
-    x2 = min(rows, np.max(nzx))
+    x2 = min(rows, np.max(nzx) + 2)
     y1 = max(0, np.min(nzy))
-    y2 = min(cols, np.max(nzy))
-    cropped = img_arr[x1:x2, y1:y2]
-    return Image.fromarray(cropped)
+    y2 = min(cols, np.max(nzy) + 2)
+    # crop
+    cropped = img[x1:x2, y1:y2]
+    # resize
+    resized = cv2.resize(cropped, cfg.IMAGE_DIM)
+    # save
+    cv2.imwrite(img_file, resized)
 # end function
 
 
@@ -58,13 +65,14 @@ def generate(data, font):
         # get graphics
         draw = ImageDraw.Draw(img)
         draw.text((5, 5), letter, 255, font=font)
-        # trim image
-        img = trim_image(img)
         # save image
-        name = '{:05d}.png'.format(INDEX)
+        name = '{:03d}.bmp'.format(INDEX)
         save_to = os.path.join(OUTPUT_PATH, label)
         check_path(save_to)
-        img.save(os.path.join(save_to, name))
+        save_to = os.path.join(save_to, name)
+        img.save(save_to)
+        # trim image
+        trim_image(save_to)
     # end for
 # end function
 
