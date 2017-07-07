@@ -4,4 +4,5 @@ Generates and formats the entire dataset
 
 import Generator
 
-Generator.run()
+index = 0
+index = Generator.run(index)

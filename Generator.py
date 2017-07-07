@@ -13,7 +13,6 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 # Necessary variables
-INDEX = 0
 FRAME = np.zeros([100, 300], dtype=np.uint8)
 
 # Create output path
@@ -46,27 +45,25 @@ def trim_image(img_file):
     # crop
     cropped = img[x1:x2, y1:y2]
     # resize
-    resized = cv2.resize(cropped, cfg.IMAGE_DIM)
+    resized = cv2.resize(cropped, cfg.IMAGE_DIM)    
     # save
     cv2.imwrite(img_file, resized)
 # end function
 
 
-def generate(data, font):
+def generate(data, font, index):
     """
     Generates images for every letters given in the array
-    """
-    global INDEX
-
+    """    
     for letter, label in data.items():
-        INDEX += 1
+        index += 1
         # create a grayscale image
         img = Image.fromarray(FRAME)
         # get graphics
         draw = ImageDraw.Draw(img)
         draw.text((5, 5), letter, 255, font=font)
         # save image
-        name = '{:03d}.bmp'.format(INDEX)
+        name = '{:03d}.bmp'.format(index)
         save_to = os.path.join(OUTPUT_PATH, label)
         check_path(save_to)
         save_to = os.path.join(save_to, name)
@@ -74,16 +71,18 @@ def generate(data, font):
         # trim image
         trim_image(save_to)
     # end for
+    return index
 # end function
 
 
-def run():
+def run(index):
     """
     To generate the image from the texts
     """
     for font_path, font_size in cfg.UNICODE_FONTS:
         font = ImageFont.truetype(font_path, font_size)
-        generate(cfg.LETTER_LABELS, font)
-        generate(cfg.NUMERAL_LABELS, font)
+        index = generate(cfg.LETTER_LABELS, font, index)
+        index = generate(cfg.NUMERAL_LABELS, font, index)
     # end for
+    return index
 # end if
