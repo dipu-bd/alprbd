@@ -69,3 +69,6 @@ BIJOY_FONTS = [
 
 # dimension of each image
 IMAGE_DIM = (28, 28)
+
+# ratio between training and testing data
+DATASET_RATIO = 0.85  # training data
