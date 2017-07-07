@@ -114,20 +114,16 @@ def transform(file, index):
         tophat4,
     ] 
 
-    # original units
     for fT in functions:
+        # original units 
         index += 1
         out = get_name(folder, index)
-        fT(file, out)
-    # end for
-
-    # mixture units
-    for fT in functions:
+        fT(file, out)        
+        # mixture units
         for fT2 in functions:
             index += 1
-            out = get_name(folder, index)
-            fT(file, out)
-            fT2(out, out)
+            out2 = get_name(folder, index)            
+            fT2(out, out2)
         #end for
     # end for
 
