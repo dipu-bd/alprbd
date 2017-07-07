@@ -100,6 +100,18 @@ def affine2(infile, outfile):
 # end function
 
 
+def affine3(infile, outfile):
+    img = cv2.imread(infile, 0)
+    rows, cols = img.shape
+
+    pts1 = np.float32([[5, 5], [10, 5], [5, 20]])
+    pts2 = np.float32([[4, 7], [10, 5], [4, 20]])
+
+    M = cv2.getAffineTransform(pts1, pts2)
+    dst = cv2.warpAffine(img, M, (cols, rows))
+    cv2.imwrite(outfile, normalize_image(dst))
+# end function
+
 def transform(file, index):
     """
     Uses various transformation on image
@@ -112,6 +124,7 @@ def transform(file, index):
         median,
         affine1,
         affine2,
+        affine3,
         dilate,
         erode,
         tophat1,
@@ -124,7 +137,8 @@ def transform(file, index):
         # original units 
         index += 1
         out = get_name(folder, index)
-        fT(file, out)        
+        fT(file, out)
+        #continue 
         # mixture units
         for fT2 in functions:
             index += 1
