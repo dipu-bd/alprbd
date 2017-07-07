@@ -23,6 +23,3 @@ The letters permitted in the vehicle registration plate are listed here.
 
 An article on standard license plate extraction.
  
-## A License Plate-Recognition Algorithm for Intelligent Transportation System Applications
-
-
