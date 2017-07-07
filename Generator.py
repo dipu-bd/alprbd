@@ -7,6 +7,7 @@ import os
 import cv2
 import numpy as np
 import config as cfg
+from Transformer import transform
 
 from PIL import Image
 from PIL import ImageFont
@@ -63,13 +64,15 @@ def generate(data, font, index):
         draw = ImageDraw.Draw(img)
         draw.text((5, 5), letter, 255, font=font)
         # save image
-        name = '{:03d}.bmp'.format(index)
-        save_to = os.path.join(OUTPUT_PATH, label)
-        check_path(save_to)
-        save_to = os.path.join(save_to, name)
-        img.save(save_to)
+        name = '{:04d}.bmp'.format(index)
+        image_folder = os.path.join(OUTPUT_PATH, label)
+        check_path(image_folder)
+        image_file = os.path.join(image_folder, name)
+        img.save(image_file)
         # trim image
-        trim_image(save_to)
+        trim_image(image_file)
+        # transform image
+        index = transform(image_file, index)
     # end for
     return index
 # end function
