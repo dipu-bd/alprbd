@@ -47,12 +47,10 @@ def format_docs():
     testing = images[pos:]
     # a little printout
     print("Total images: ", len(images))
-    print("Training: ", len(training), "Testing", len(testing))
+    print("Training: ", len(training))
+    print("Testing: ", len(testing))
     # separate labels and image data
     save_separated(training, TRAIN_DATA, TRAIN_LABELS)
     save_separated(testing, TEST_DATA, TEST_LABELS)
     print("Formatting done.")
 # end if
-
-format_docs()
-

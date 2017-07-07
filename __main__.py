@@ -3,8 +3,7 @@ Generates and formats the entire dataset
 """
 
 import Generator
+import Formatter
 
-index = 0
-index = Generator.run(index)
-
-print("Successfully created %d images" % index)
+Generator.run()
+Formatter.format_docs()

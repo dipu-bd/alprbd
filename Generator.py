@@ -78,15 +78,16 @@ def generate(data, font, index):
 # end function
 
 
-def run(index):
+def run():
     """
     To generate the image from the texts
     """
+    index = 0
     print("Generating numbers and letters...")
     for font_path, font_size in cfg.UNICODE_FONTS:
         font = ImageFont.truetype(font_path, font_size)
         index = generate(cfg.NUMERAL_LABELS, font, index)
         index = generate(cfg.LETTER_LABELS, font, index)
-    # end for    
-    return index
+    # end for
+    print("Successfully created %d images" % index)
 # end if
