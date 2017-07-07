@@ -36,6 +36,38 @@ def save_separated(images, data_file, label_file):
 # end function
 
 
+def test_integrity():
+    # training labels
+    labels = np.load(TRAIN_LABELS);
+    train = dict()
+    for x in labels:
+        if x in train:
+            train[x] += 1
+        else:
+            train[x] = 1
+    # end for
+    print("Training labels:", len(train.keys()))
+
+    # testing labels
+    labels = np.load(TEST_LABELS);
+    test = dict()
+    for x in labels:
+        if x in test:
+            test[x] += 1
+        else:
+            test[x] = 1
+    # end for
+    print("Testing labels:", len(test.keys()))
+
+    # check
+    if len(train.keys()) == len(test.keys()):
+        print("Integrity check OK.")
+    else: 
+        print("Integrity check FAILED.")
+    # end if
+# end function
+
+
 def format_docs():
     # get all image files
     images = np.array(read_images())
@@ -46,11 +78,12 @@ def format_docs():
     training = images[:pos]
     testing = images[pos:]
     # a little printout
-    print("Total images: ", len(images))
-    print("Training: ", len(training))
-    print("Testing: ", len(testing))
+    print("Total images:", len(images))
+    print("Training:", len(training))
+    print("Testing:", len(testing))
     # separate labels and image data
     save_separated(training, TRAIN_DATA, TRAIN_LABELS)
     save_separated(testing, TEST_DATA, TEST_LABELS)
     print("Formatting done.")
+    test_integrity();
 # end if
