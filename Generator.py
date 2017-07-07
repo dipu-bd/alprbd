@@ -30,6 +30,14 @@ def check_path(output):
 # end function
 
 
+def get_name(index, label):
+    name = '{:05d}.bmp'.format(index)
+    folder = os.path.join(OUTPUT_PATH, label)
+    check_path(folder)
+    return os.path.join(folder, name)
+# end function
+
+
 def trim_image(img_file):
     """
     Trims the image
@@ -64,10 +72,7 @@ def generate(data, font, index):
         draw = ImageDraw.Draw(img)
         draw.text((5, 5), letter, 255, font=font)
         # save image
-        name = '{:04d}.bmp'.format(index)
-        image_folder = os.path.join(OUTPUT_PATH, label)
-        check_path(image_folder)
-        image_file = os.path.join(image_folder, name)
+        image_file = get_name(index, label)
         img.save(image_file)
         # trim image
         trim_image(image_file)

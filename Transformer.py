@@ -9,7 +9,7 @@ import numpy as np
 
 
 def get_name(folder, index):
-    return os.path.join(folder, '{:04d}.bmp'.format(index))
+    return os.path.join(folder, '{:05d}.bmp'.format(index))
 # end function
 
 
