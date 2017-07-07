@@ -1,8 +1,8 @@
 # The letters permitted in the vehicle registration plate
 # Source: https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Bangladesh
-letters = u"অইউএকখগঘঙচছজঝতথঢডটঠদধনপফবভমযরলশসহ"
+LETTERS = u"অইউএকখগঘঙচছজঝতথঢডটঠদধনপফবভমযরলশসহ"
 
-letter_lables = {
+LETTER_LABELS = {
     u"অ": "O",
     u"ই": "E",
     u"উ": "U",
@@ -40,9 +40,9 @@ letter_lables = {
 
 # The numerals permitted in the vehicle registration plate
 # Source: https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Bangladesh
-numerals = u"০১২৩৪৫৬৭৮৯"
+NUMERALS = u"০১২৩৪৫৬৭৮৯"
 
-numeral_labels = {
+NUMERAL_LABELS = {
     u"০": "0",
     u"১": "1",
     u"২": "2",
@@ -56,13 +56,13 @@ numeral_labels = {
 }
 
 # fonts - [(location, size)]
-unicode_fonts = [
+UNICODE_FONTS = [
     #("fonts/bangla.ttf", 72),
     ("fonts/siyamrupali.ttf", 38),
     ("fonts/solaimanlipi.ttf", 46),
     ("fonts/sutonnyomj.ttf", 48)
 ]
 
-bijoy_fonts = [
+BIJOY_FONTS = [
     ("fonts/sutonnymj.ttf", 48),
 ]
