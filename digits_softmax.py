@@ -3,7 +3,7 @@ DIGIT classifier
 """
 import config as cfg
 from utils import get_digit_data
-from softmax_Nlayer import train
+from softmax_Nlayer_lrdecay import train
 
 # Import data
 def main():
@@ -28,7 +28,6 @@ def main():
           layers=layers,
           batch_size=100,
           iterations=3000,
-          learning_rate=0.001,
           model_file=cfg.DIGIT_MODEL)
 # end function
 

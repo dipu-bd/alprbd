@@ -48,6 +48,7 @@ def run(model_file, sample_folder, letters):
     
     graph = tf.get_default_graph()
     X = graph.get_tensor_by_name("X:0")
+    Y = graph.get_tensor_by_name("Y:0")
 
     files = read_images(sample_folder)
     for file in files:
@@ -56,12 +57,10 @@ def run(model_file, sample_folder, letters):
         image = trim_image(image)
         image = np.reshape(image, (1, 784))
         # predict outcome
-        YY = graph.get_tensor_by_name("YY:0")
-        Y = sess.run(YY, {X: image})        
-        Y = Y.flatten()
-        p = np.argmax(Y)
+        result = sess.run(Y, {X: image}).flatten()
+        p = np.argmax(result)   # predicted class
         # show result
         name = os.path.split(file)[-1]
-        print("%10s = %s (%.2f%% sure)" % (name, letters[p], Y[p] * 100))
+        print("%10s = %s (%.2f%% sure)" % (name, letters[p], result[p] * 100))
     # end for
 # end function
