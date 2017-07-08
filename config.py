@@ -78,5 +78,5 @@ IMAGE_DIM = (28, 28)
 DATASET_RATIO = 0.85  # training data
 
 # output directories
-DIGITS_PATH = os.path.join('output', 'digits')
-LETTERS_PATH = os.path.join('output', 'letters')
+DIGITS_PATH = os.path.join('dataset', 'digits')
+LETTERS_PATH = os.path.join('dataset', 'letters')

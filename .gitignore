@@ -1,5 +1,5 @@
-output/
 __pycache__/
+dataset/
 *.pyc
 .ipnyb_checkpoints/
 *.ipynb
