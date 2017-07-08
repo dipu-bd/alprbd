@@ -128,9 +128,9 @@ def transform(file, index):
         dilate,
         erode,
         tophat1,
-        tophat2,
-        tophat3,
-        tophat4,
+        #tophat2,
+        #tophat3,
+        #tophat4,
     ] 
 
     for fT in functions:
