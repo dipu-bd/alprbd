@@ -3,7 +3,7 @@ LETTER classifier
 """
 import config as cfg
 from utils import get_letter_data
-from softmax_Nlayer import train
+from softmax_Nlayer_lrdecay import train
 
 # Import data
 def main():
@@ -13,9 +13,9 @@ def main():
     data = get_letter_data()
     layers = [
         row * col,
-        512,
-        256,
+        212,
         128,
+        96,
         64,
         len(cfg.LETTERS),
     ]
@@ -28,7 +28,6 @@ def main():
           layers=layers,
           batch_size=100,
           iterations=10000,
-          learning_rate=0.001,
           model_file=cfg.LETTER_MODEL)
 # end function
 
