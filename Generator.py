@@ -16,10 +16,6 @@ from PIL import ImageDraw
 # Necessary variables
 FRAME = np.zeros([100, 300], dtype=np.uint8)
 
-# Create output path
-OUTPUT_PATH = os.path.join('output', 'generated')
-
-
 def check_path(output):
     """
     if a directory does not exists, creates it.
@@ -30,9 +26,9 @@ def check_path(output):
 # end function
 
 
-def get_name(index, label):
+def get_name(index, label, save_path):
     name = '{:05d}.bmp'.format(index)
-    folder = os.path.join(OUTPUT_PATH, label)
+    folder = os.path.join(save_path, label)
     check_path(folder)
     return os.path.join(folder, name)
 # end function
@@ -60,7 +56,7 @@ def trim_image(img_file):
 # end function
 
 
-def generate(data, font, index):
+def generate(data, font, index, save_path):
     """
     Generates images for every letters given in the array
     """    
@@ -72,7 +68,7 @@ def generate(data, font, index):
         draw = ImageDraw.Draw(img)
         draw.text((5, 5), letter, 255, font=font)
         # save image
-        image_file = get_name(index, letter)
+        image_file = get_name(index, letter, save_path)
         img.save(image_file)
         # trim image
         trim_image(image_file)
@@ -91,8 +87,12 @@ def run():
     print("Generating numbers and letters...")
     for font_path, font_size in cfg.UNICODE_FONTS:
         font = ImageFont.truetype(font_path, font_size)
-        index = generate(cfg.NUMERALS, font, index)
-        index = generate(cfg.LETTERS, font, index)
+        
+        save_path = os.path.join(cfg.DIGITS_PATH, 'generated')
+        index = generate(cfg.NUMERALS, font, index, save_path)
+
+        save_path = os.path.join(cfg.LETTERS_PATH, 'generated')
+        index = generate(cfg.LETTERS, font, index, save_path)
     # end for
     print("Generated %d images." % index)
 # end if

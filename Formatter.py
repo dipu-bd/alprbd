@@ -9,18 +9,23 @@ import cv2
 import numpy as np
 import config as cfg
 
-FOLDER = './output/generated'
-TRAIN_DATA = './output/training_data.npy'
-TRAIN_LABELS = './output/training_labels.npy'
-TEST_DATA = './output/testing_data.npy'
-TEST_LABELS = './output/testing_labels.npy'
-
-def read_images():
-    return [file for file in glob(FOLDER + '/**/*.bmp', recursive=True)]
+def read_images(folder):
+    return [file for file in glob(folder + '/**/*.bmp', recursive=True)]
 # end if
 
+def get_train_files(folder):
+    data_file = os.path.join(folder, 'training_data.npy')
+    label_file = os.path.join(folder, 'training_labels.npy')
+    return data_file, label_file
+# end function
 
-def save_separated(images, data_file, label_file):
+def get_test_files(folder):
+    data_file = os.path.join(folder, 'testing_data.npy')
+    label_file = os.path.join(folder, 'testing_labels.npy')
+    return data_file, label_file
+# end function
+
+def save_separated(images, files):
     data = []
     labels = []
     for img in images:
@@ -31,14 +36,19 @@ def save_separated(images, data_file, label_file):
         image = cv2.imread(img, 0)
         data.append(image.flatten())
     # end for
+
+    # save to file
+    (data_file, label_file) = files
     np.save(data_file, np.array(data))
     np.save(label_file, np.array(labels))
 # end function
 
 
-def test_integrity():
+def test_integrity(folder):    
+    _, train_labels = get_train_files(folder)
+    _, test_labels = get_test_files(folder)
     # training labels
-    labels = np.load(TRAIN_LABELS);
+    labels = np.load(train_labels);
     train = dict()
     for x in labels:
         if x in train:
@@ -49,7 +59,7 @@ def test_integrity():
     print("Training labels:", len(train.keys()))
 
     # testing labels
-    labels = np.load(TEST_LABELS);
+    labels = np.load(test_labels);
     test = dict()
     for x in labels:
         if x in test:
@@ -61,16 +71,17 @@ def test_integrity():
 
     # check
     if len(train.keys()) == len(test.keys()):
-        print("Integrity check OK.")
+        print("Integrity check: **OK**.")
     else: 
-        print("Integrity check FAILED.")
+        print("Integrity check !!FAILED!!.")
     # end if
 # end function
 
 
-def format_docs():
+def format_docs(folder):
+    print('\nFormatting', folder, '...')
     # get all image files
-    images = np.array(read_images())
+    images = np.array(read_images(folder))
     # suffle them
     np.random.shuffle(images)
     # separate training and testing
@@ -82,8 +93,8 @@ def format_docs():
     print("Training:", len(training))
     print("Testing:", len(testing))
     # separate labels and image data
-    save_separated(training, TRAIN_DATA, TRAIN_LABELS)
-    save_separated(testing, TEST_DATA, TEST_LABELS)
+    save_separated(training, get_train_files(folder))
+    save_separated(testing, get_test_files(folder))
     print("Formatting done.")
-    test_integrity();
+    test_integrity(folder);
 # end if

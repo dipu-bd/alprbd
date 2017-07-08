@@ -2,6 +2,8 @@
 Some configuration values used everywhere
 """
 
+import os
+
 # The numerals permitted in the vehicle registration plate
 NUMERALS = [
     u"০",
@@ -74,3 +76,7 @@ IMAGE_DIM = (28, 28)
 
 # ratio between training and testing data
 DATASET_RATIO = 0.85  # training data
+
+# output directories
+DIGITS_PATH = os.path.join('output', 'digits')
+LETTERS_PATH = os.path.join('output', 'letters')
