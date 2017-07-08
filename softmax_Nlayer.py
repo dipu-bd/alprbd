@@ -9,7 +9,7 @@ def train(ds,
           base_file,
           weights_file,
           layers,
-          learning_rate=0.3,
+          learning_rate=0.003,
           iterations=10000,
           batch_size=100):
     """
@@ -27,7 +27,7 @@ def train(ds,
     Y = [None] * num_layers  # output
 
     Y[0] = X
-    for i in range(1, num_layers)
+    for i in range(1, num_layers):
         # get random numbers between -0.2 and +0.2
         W[i] = tf.Variable(tf.truncated_normal([layers[i-1], layers[i]], stddev=0.1))
         B[i] = tf.Variable(tf.zeros([layers[i]]))
@@ -50,7 +50,7 @@ def train(ds,
     train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 
     # Accuracy measures
-    correct_prediction = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
+    correct_prediction = tf.equal(tf.argmax(YY, 1), tf.argmax(Y_, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     # Init session
