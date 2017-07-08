@@ -33,29 +33,6 @@ def get_name(index, label, save_path):
     return os.path.join(folder, name)
 # end function
 
-
-def trim_image(img_file):
-    """
-    Trims the image
-    """
-    # open
-    img = cv2.imread(img_file, 0)
-    rows, cols = img.shape
-    # find area
-    nzx, nzy = np.nonzero(img)
-    x1 = max(0, np.min(nzx))
-    x2 = min(rows, np.max(nzx) + 2)
-    y1 = max(0, np.min(nzy))
-    y2 = min(cols, np.max(nzy) + 2)
-    # crop
-    cropped = img[x1:x2, y1:y2]
-    # resize
-    resized = cv2.resize(cropped, cfg.IMAGE_DIM)    
-    # save
-    cv2.imwrite(img_file, resized)
-# end function
-
-
 def generate(data, font, index, save_path):
     """
     Generates images for every letters given in the array
@@ -70,8 +47,6 @@ def generate(data, font, index, save_path):
         # save image
         image_file = get_name(index, letter, save_path)
         img.save(image_file)
-        # trim image
-        trim_image(image_file)
         # transform image
         index = transform(image_file, index)
     # end for
