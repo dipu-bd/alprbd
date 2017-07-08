@@ -77,6 +77,16 @@ IMAGE_DIM = (28, 28)
 # ratio between training and testing data
 DATASET_RATIO = 0.85  # training data
 
-# output directories
+# dataset directories
 DIGITS_PATH = os.path.join('dataset', 'digits')
 LETTERS_PATH = os.path.join('dataset', 'letters')
+
+# output directories
+DIGIT_WEIGHTS = os.path.join('output', 'digit_weights.npy')
+DIGIT_BASES = os.path.join('output', 'digit_bases.npy')
+LETTER_WEIGHTS = os.path.join('output', 'letter_weights.npy')
+LETTER_BASES = os.path.join('output', 'letter_bases.npy')
+
+# sample directory
+DIGIT_SAMPLES = 'sample/digits'
+LETTER_SAMPLES = 'sample/letters'
