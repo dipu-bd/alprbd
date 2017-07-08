@@ -34,7 +34,7 @@ def train(ds,
     # end for
     
     Ylogits = tf.matmul(Y[-2], W[-1]) + B[-1]
-    YY = Y[-1] = tf.nn.softmax(Ylogits, name='Y'+str(num_layers))
+    YY = Y[-1] = tf.nn.softmax(Ylogits, name='YY')
     
     # cross-entropy loss function = -sum(Y_i * log(Yi))
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=Ylogits, labels=Y_)
@@ -54,32 +54,34 @@ def train(ds,
 
     # Init session
     init = tf.global_variables_initializer()
-    sess = tf.InteractiveSession()
+    sess = tf.Session()
     sess.run(init)
     print()
+
+    # Create saver
+    saver = tf.train.Saver()
 
     # Training loop
     pitstop = iterations // 25
     for i in range(iterations):
         batch_X, batch_Y = ds.train.next_batch(batch_size)
         sess.run(train_step, {X: batch_X, Y_: batch_Y})
-        
+
         if i % pitstop == 0:
-            a, c = sess.run([accuracy, cross_entropy],
-                            {X: ds.train.images, Y_: ds.train.labels})
+            feed_dict = {X: ds.train.images, Y_: ds.train.labels}
+            a, c = sess.run([accuracy, cross_entropy], feed_dict)
             print('step', i, '|', 'accuracy:', a, 'loss:', c)
         # end if
     # end for
     print()
 
     # Test accuracy
-    a, c = sess.run([accuracy, cross_entropy],
-                    {X: ds.test.images, Y_: ds.test.labels})
+    feed_dict = {X: ds.test.images, Y_: ds.test.labels}
+    a, c = sess.run([accuracy, cross_entropy], feed_dict)
     print('Training Complete.', '|', 'Accuracy:', a, 'Loss:', c)
     print()
 
-    # Save the model    
-    saver = tf.train.Saver()
+    # Save the model
     saver.save(sess, model_file)
-    print('Training result stored.\n')    
+    print('Training model stored.\n')
 # end function
