@@ -64,7 +64,7 @@ def generate(data, font, index):
     """
     Generates images for every letters given in the array
     """    
-    for letter, label in data.items():
+    for letter in data:
         index += 1
         # create a grayscale image
         img = Image.fromarray(FRAME)
@@ -72,7 +72,7 @@ def generate(data, font, index):
         draw = ImageDraw.Draw(img)
         draw.text((5, 5), letter, 255, font=font)
         # save image
-        image_file = get_name(index, label)
+        image_file = get_name(index, letter)
         img.save(image_file)
         # trim image
         trim_image(image_file)
@@ -91,8 +91,8 @@ def run():
     print("Generating numbers and letters...")
     for font_path, font_size in cfg.UNICODE_FONTS:
         font = ImageFont.truetype(font_path, font_size)
-        index = generate(cfg.NUMERAL_LABELS, font, index)
-        index = generate(cfg.LETTER_LABELS, font, index)
+        index = generate(cfg.NUMERALS, font, index)
+        index = generate(cfg.LETTERS, font, index)
     # end for
     print("Successfully created %d images" % index)
 # end if

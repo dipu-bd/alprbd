@@ -18,7 +18,7 @@ for line in lines:
     # end for
 # end for
 
-for ch in cfg.LETTER_LABELS.keys():
+for ch in cfg.LETTERS:
     if ch in letter:
         del letter[ch]
 # end for
