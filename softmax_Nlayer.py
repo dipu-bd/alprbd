@@ -32,10 +32,10 @@ def train(ds,
         B[i] = tf.Variable(tf.zeros([layers[i]]), name='B'+str(i))
         Y[i] = tf.nn.sigmoid(tf.matmul(Y[i-1], W[i]) + B[i], name='Y'+str(i))
     # end for
-    
+
     Ylogits = tf.matmul(Y[-2], W[-1]) + B[-1]
     YY = Y[-1] = tf.nn.softmax(Ylogits, name='YY')
-    
+
     # cross-entropy loss function = -sum(Y_i * log(Yi))
     cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=Ylogits, labels=Y_)
     # normalised for batches of images
@@ -82,6 +82,10 @@ def train(ds,
     print()
 
     # Save the model
+    folder = os.path.dirname(model_file)
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    # end if
     saver.save(sess, model_file)
     print('Training model stored.\n')
 # end function
