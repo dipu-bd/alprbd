@@ -49,6 +49,7 @@ def run(model_file, sample_folder, letters):
     graph = tf.get_default_graph()
     X = graph.get_tensor_by_name("X:0")
     Y = graph.get_tensor_by_name("Y:0")
+    pkeep = graph.get_tensor_by_name("pkeep:0")
 
     files = read_images(sample_folder)
     for file in files:
@@ -57,7 +58,7 @@ def run(model_file, sample_folder, letters):
         image = trim_image(image)
         image = np.reshape(image, (1, 784))
         # predict outcome
-        result = sess.run(Y, {X: image}).flatten()
+        result = sess.run(Y, {X: image, pkeep: 1.0}).flatten()
         p = np.argmax(result)   # predicted class
         # show result
         name = os.path.split(file)[-1]

@@ -21,9 +21,10 @@ def train(ds,
 
     # variable learning rate
     lr = tf.placeholder(tf.float32)
+    
     # Probability of keeping a node during dropout
     # = 1.0 at test time (no dropout) and 0.75 at training time
-    pkeep = tf.placeholder(tf.float32)
+    pkeep = tf.placeholder(tf.float32, name='pkeep')
 
     # Build the model
     num_layers = len(layers)
