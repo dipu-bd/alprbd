@@ -1,4 +1,5 @@
 dataset/
+OCRModels/
 __pycache__/
 *.pyc
 .ipnyb_checkpoints/
