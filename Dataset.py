@@ -13,7 +13,7 @@ class Dataset(object):
                  fake_data=False,
                  one_hot=False,
                  dtype=dtypes.float64,
-                 reshape=True):
+                 reshape=False):
         """Initialize the class."""
         if reshape:
             assert images.shape[3] == 1

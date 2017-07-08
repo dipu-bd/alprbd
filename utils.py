@@ -32,7 +32,7 @@ def get_data(folder, letters):
     train_labels = np.load(train_labels)
 
     # build validation set
-    num_validation = len(train_images) * VALIDATION_RATIO
+    num_validation = int(len(train_images) * VALIDATION_RATIO)
     validation_images = train_images[:num_validation]    
     validation_labels = train_labels[:num_validation]    
     train_images = train_images[num_validation:]
@@ -58,7 +58,7 @@ def get_data(folder, letters):
 # end function
 
 def get_digit_data():
-    return get_data(cfg.DIGITS_PATH, cfg.DIGITS)
+    return get_data(cfg.DIGITS_PATH, cfg.NUMERALS)
 # end function
 
 def get_letter_data():
