@@ -19,7 +19,7 @@ def get_data(folder):
     test_data = np.load(test_data)
     test_labels = np.load(test_labels)
 
-    return ((train_data, train_labels), (test_data, test_labels))
+    return [[train_data, train_labels], [test_data, test_labels]]
 # end function
 
 def get_digit_data():
