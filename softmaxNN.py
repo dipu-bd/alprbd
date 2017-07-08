@@ -13,13 +13,17 @@ def train(ds,
           iterations=10000,
           batch_size=100,
           model_file=None,
-          log_dir = None,
+          log_dir=None,
           max_learning_rate=0.003,
           min_learning_rate=0.0001):
     """
     Builds the model, trains it, and stores the final graph
     """
     tf.set_random_seed(0)
+
+    if (log_dir is not None) and (not os.path.exists(log_dir)):
+        os.makedirs(log_dir)
+    # end if
 
     L = layers
     num_L = len(L)
@@ -79,6 +83,36 @@ def train(ds,
     sess.run(init)
     print()
 
+    writer = None
+    # Summary writings
+    if log_dir is not None:
+        rows, cols = cfg.IMAGE_DIM
+        image_shaped_input = tf.reshape(X, [-1, rows, cols, 1])
+        tf.summary.image('input', image_shaped_input, L[-1])
+
+        for i in range(0, num_L):
+            if W[i] is not None:
+                variable_summaries(W[i])
+            # end if
+            if B[i] is not None:
+                variable_summaries(B[i])
+            # end if
+            if Y[i] is not None:
+                variable_summaries(Y[i])
+            # end if
+        # end for
+
+        tf.summary.histogram('YLogits', Ylogits)
+        tf.summary.scalar('dropout_keep_probability', pkeep)
+        tf.summary.scalar('cross_entropy', cross_entropy)
+        tf.summary.scalar('accuracy', accuracy)
+
+        writer = tf.summary.FileWriter(log_dir, sess.graph)
+    # end if
+
+    # Merge all the summaries
+    merged = tf.summary.merge_all()
+
     # Training loop
     log_amount = 25
     pitstop = 1 + (iterations // log_amount)
@@ -97,9 +131,12 @@ def train(ds,
         # print at each pitstop
         if i % pitstop == 0:
             feed_dict = {X: ds.test.images, Y_: ds.test.labels, pkeep: 1.0}
-            a, c = sess.run([accuracy, cross_entropy], feed_dict)
-            print("step %5d | accuracy = %6.2f%% | loss = %8.3f | LR = %f"
-                  % (i, a * 100, c, learning_rate))
+            a, c, summary = sess.run([accuracy, cross_entropy, merged], feed_dict)
+            if writer is not None:
+                writer.add_summary(summary, i)
+            # end if
+            out_str = "step %5d | accuracy = %6.2f%% | loss = %8.3f | LR = %f"
+            print(out_str % (i, a * 100, c, learning_rate))
         # end if
     # end for
     print('Training Complete.')
@@ -118,40 +155,9 @@ def train(ds,
         print('Training model stored.\n')
     # end if
 
-    # Summary writings
-    if log_dir is not None:
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
-        # end if
-
-        rows, cols = cfg.IMAGE_DIM
-        image_shaped_input = tf.reshape(X, [-1, rows, cols, 1])
-        tf.summary.image('input', image_shaped_input, L[-1])
-
-        for i in range(0, num_L):
-            if W[i] is not None:
-                variable_summaries(W[i])
-            # end if
-            if B[i] is not None:
-                variable_summaries(B[i])
-            # end if
-            if Y[i] is not None:
-                variable_summaries(Y[i])
-            # end if
-        # end for
-
-        tf.summary.histogram('YLogits', YLogits)
-        tf.summary.scalar('dropout_keep_probability', pkeep)
-        tf.summary.scalar('cross_entropy', cross_entropy)
-        tf.summary.scalar('accuracy', accuracy)
-
-        # Merge all the summaries and write them out to
-        merged = tf.summary.merge_all()
-        writer = tf.summary.FileWriter(log_dir, sess.graph)
-        writer.add_summary(sess.run(merged))
+    if writer is not None:
         writer.close()
     # end if
-
     sess.close()
 # end function
 
