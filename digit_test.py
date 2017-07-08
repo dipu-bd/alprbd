@@ -9,7 +9,7 @@ import config as cfg
 
 def read_images(folder):
     """Read all images from a directory recursively"""
-    return np.sort([file for file in glob(folder + '/**/*.bmp', recursive=True)])
+    return np.sort([file for file in glob(folder + '**/*.*', recursive=True)])
 # end if
 
 def main():
