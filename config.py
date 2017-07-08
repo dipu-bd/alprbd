@@ -1,10 +1,15 @@
-# The letters permitted in the vehicle registration plate
-# Source: https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Bangladesh
+"""
+Some configuration values used everywhere
+"""
+
+# The numerals permitted in the vehicle registration plate : 
+NUMERALS = u"০১২৩৪৫৬৭৮৯"
+
+# The letters permitted in the vehicle registration plate 
+# + Appended some letters from DistrictLetters.py
 LETTERS = u"অইউএকখগঘঙচছজঝতথঢডটঠদধনপফবভমযরলশসহণষঞও"
 
-# The numerals permitted in the vehicle registration plate
-# Source: https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Bangladesh
-NUMERALS = u"০১২৩৪৫৬৭৮৯"
+# Reference https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Bangladesh
 
 # fonts - [(location, size)]
 UNICODE_FONTS = [
@@ -12,10 +17,6 @@ UNICODE_FONTS = [
     ("fonts/siyamrupali.ttf", 38),
     ("fonts/solaimanlipi.ttf", 46),
     ("fonts/sutonnyomj.ttf", 48)
-]
-
-BIJOY_FONTS = [
-    ("fonts/sutonnymj.ttf", 48),
 ]
 
 # dimension of each image

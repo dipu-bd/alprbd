@@ -94,5 +94,5 @@ def run():
         index = generate(cfg.NUMERALS, font, index)
         index = generate(cfg.LETTERS, font, index)
     # end for
-    print("Successfully created %d images" % index)
+    print("Generated %d images." % index)
 # end if
