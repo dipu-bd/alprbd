@@ -52,5 +52,5 @@ def get_digit_data():
 # end function
 
 def get_letter_data():
-    return get_data(LETTERS_PATH, cfg.LETTERS)
+    return get_data(cfg.LETTERS_PATH, cfg.LETTERS)
 # end function

@@ -14,14 +14,14 @@ def read_images(folder):
 
 def main():
     """Main function"""
-    if not os.path.exists(cfg.DIGIT_SAMPLES):
+    if not os.path.exists(cfg.LETTER_SAMPLES):
         return print("Samples not found")
     # end if
 
-    W = np.load(cfg.DIGIT_WEIGHTS)
-    B = np.load(cfg.DIGIT_BASES)
+    W = np.load(cfg.LETTER_WEIGHTS)
+    B = np.load(cfg.LETTER_BASES)
     
-    files = read_images(cfg.DIGIT_SAMPLES)
+    files = read_images(cfg.LETTER_SAMPLES)
     for file in files:
         image = cv2.imread(file, 0)
         image = cv2.resize(image, (28, 28))
