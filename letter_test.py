@@ -28,7 +28,7 @@ def main():
         X = np.reshape(image, (1, 784))
         Y = np.matmul(X, W) + B
         p = np.argmax(Y)
-        print(file, cfg.NUMERALS[p])
+        print(file, cfg.LETTERS[p])
     # end for
 # end function
 
