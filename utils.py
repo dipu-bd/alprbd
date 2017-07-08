@@ -8,7 +8,6 @@ import numpy as np
 import config as cfg
 from Dataset import Dataset
 
-VALIDATION_RATIO = 0.1
 DIGIT_PATH = os.path.join('dataset', 'digits')
 LETTER_PATH = os.path.join('dataset', 'letters')
 
@@ -31,13 +30,6 @@ def get_data(folder, letters):
     train_images = np.load(train_images)
     train_labels = np.load(train_labels)
 
-    # build validation set
-    num_validation = int(len(train_images) * VALIDATION_RATIO)
-    validation_images = train_images[:num_validation]    
-    validation_labels = train_labels[:num_validation]    
-    train_images = train_images[num_validation:]
-    train_labels = train_labels[num_validation:]
-
     # get testing set
     test_images = os.path.join(folder, 'testing_data.npy')
     test_labels = os.path.join(folder, 'testing_labels.npy')
@@ -46,15 +38,13 @@ def get_data(folder, letters):
 
     # convert to one-hot
     train_labels = dense_to_one_hot(train_labels, letters)
-    validation_labels = dense_to_one_hot(validation_labels, letters)
     test_labels = dense_to_one_hot(test_labels, letters)
 
+    # build Dataset objects
     train = Dataset(train_images, train_labels)
-    validation = Dataset(validation_images, validation_labels)
     test = Dataset(test_images, test_labels)
-
-    ds = collections.namedtuple('Datasets', ['train', 'validation', 'test'])
-    return ds(train=train, validation=validation, test=test)
+    ds = collections.namedtuple('Datasets', ['train', 'test'])
+    return ds(train=train, test=test)
 # end function
 
 def get_digit_data():

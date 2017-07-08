@@ -16,9 +16,9 @@ class Dataset(object):
                  reshape=False):
         """Initialize the class."""
         if reshape:
-            assert images.shape[3] == 1
-            images = images.reshape(images.shape[0],
-                images.shape[1] * images.shape[2])
+            rows = images.shape[0]
+            images = numpy.reshape(images, (rows, 28, 28, 1))            
+        # end if
 
         self._images = images
         self._num_examples = images.shape[0]
