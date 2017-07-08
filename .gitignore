@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+=======
 output/
+>>>>>>> 5c25b349fee87d429b56c7efbe7a3cb5c1230b26
+dataset/
 __pycache__/
 *.pyc
 .ipnyb_checkpoints/
