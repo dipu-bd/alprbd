@@ -17,11 +17,10 @@ def main():
               25,
               len(cfg.NUMERALS),
           ],
-          learning_rate=0.003,
-          iterations=5000,
           batch_size=100,
-          base_file=cfg.DIGIT_BASES,
-          weights_file=cfg.DIGIT_WEIGHTS)
+          iterations=4000,
+          learning_rate=0.003,
+          model_file=cfg.DIGIT_MODEL)
 # end function
 
 if __name__ == '__main__':
