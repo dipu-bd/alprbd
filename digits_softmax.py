@@ -7,24 +7,30 @@ import os
 import numpy as np
 import tensorflow as tf
 from utils import get_digit_data
+import config as cfg
 
 # Import data
 mnist = get_digit_data()
 
+batch_size = 100
+image_dim = 28 * 28
+learning_rate = 0.3
+num_classes = len(cfg.NUMERALS)
+
 # Create the model
-X = tf.placeholder(tf.float32, [None, 784])
-W = tf.Variable(tf.zeros([784, 10]))
-B = tf.Variable(tf.zeros([10]))
+X = tf.placeholder(tf.float32, [None, image_dim])
+W = tf.Variable(tf.zeros([image_dim, num_classes]))
+B = tf.Variable(tf.zeros([num_classes]))
 Y = tf.matmul(X, W) + B
 
 # Define loss and optimizer
-Y_ = tf.placeholder(tf.float32, [None, 10])
+Y_ = tf.placeholder(tf.float32, [None, num_classes])
 
 # The formulation of cross-entropy
 cross_entropy = tf.reduce_mean(
     tf.nn.softmax_cross_entropy_with_logits(labels=Y_, logits=Y))
 
-train_step = tf.train.GradientDescentOptimizer(0.3).minimize(cross_entropy)
+train_step = tf.train.AdamOptimizer(learning_rate).minimize(cross_entropy)
 
 # Accuracy measure
 correct_prediction = tf.equal(tf.argmax(Y, 1), tf.argmax(Y_, 1))
@@ -35,7 +41,7 @@ sess = tf.InteractiveSession()
 tf.global_variables_initializer().run()
 
 def train_model(i):
-    batch_X, batch_Y = mnist.train.next_batch(100)
+    batch_X, batch_Y = mnist.train.next_batch(batch_size)
     sess.run(train_step, feed_dict={X: batch_X, Y_: batch_Y})
 
     if i % 1000 == 0:
@@ -62,11 +68,9 @@ def main(_):
     if not os.path.exists('output'):
         os.makedirs('output')
     # end if
-    weight_file = os.path.join('output', 'weight.npy')
-    base_file = os.path.join('output', 'base.npy')
-    weights, base = sess.run([W, B])
-    np.save(weight_file, weights)
-    np.save(base_file, base)
+    weight, base = sess.run([W, B])
+    np.save(cfg.DIGIT_WEIGHTS, weight)
+    np.save(cfg.DIGIT_BASES, base)
 # end function
 
 if __name__ == '__main__':

@@ -81,7 +81,7 @@ DATASET_RATIO = 0.85  # training data
 DIGITS_PATH = os.path.join('dataset', 'digits')
 LETTERS_PATH = os.path.join('dataset', 'letters')
 
-# output directories
+# output directories    
 DIGIT_WEIGHTS = os.path.join('output', 'digit_weights.npy')
 DIGIT_BASES = os.path.join('output', 'digit_bases.npy')
 LETTER_WEIGHTS = os.path.join('output', 'letter_weights.npy')
