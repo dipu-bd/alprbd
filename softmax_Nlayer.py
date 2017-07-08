@@ -1,5 +1,5 @@
 """
-1 layer Neural network classifier using softmax activation.
+N layer Neural network classifier using softmax activation.
 """
 import os
 import numpy as np

@@ -1,5 +1,6 @@
 """
-1 layer Neural network classifier using softmax activation.
+N layer Neural network classifier using softmax activation.
+It utilizes the decaying learning rate and dropouts of training sets.
 """
 import os
 import math
