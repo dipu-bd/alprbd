@@ -60,9 +60,11 @@ def train(ds,
     a, c = sess.run([accuracy, cross_entropy],
                     feed_dict={X: ds.test.images, Y_: ds.test.labels})
     print('Training Complete.', '|', 'Accuracy:', a, 'Loss:', c)
+    print()
 
     # Save the model
     base, weight = sess.run([B, W])
     np.save(base_file, base)
     np.save(weights_file, weight)
+    print('Training result stored.\n')    
 # end function
