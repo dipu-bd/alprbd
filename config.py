@@ -88,7 +88,7 @@ LETTER_WEIGHTS = os.path.join('output', 'letter_weights.npy')
 LETTER_BASES = os.path.join('output', 'letter_bases.npy')
 
 DIGIT_MODEL = os.path.join('output', 'digit', 'model')
-DIGIT_MODEL = os.path.join('output', 'letter', 'model')
+LETTER_MODEL = os.path.join('output', 'letter', 'model')
 
 # sample directory
 DIGIT_SAMPLES = 'sample/digits'
