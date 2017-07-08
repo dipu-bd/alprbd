@@ -28,7 +28,8 @@ def main():
           layers=layers,
           batch_size=100,
           iterations=3000,
-          model_file=cfg.DIGIT_MODEL)
+          model_file=cfg.DIGIT_MODEL,
+          log_dir=cfg.DIGIT_LOGS)
 # end function
 
 if __name__ == '__main__':

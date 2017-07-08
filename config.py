@@ -19,6 +19,10 @@ LETTER_MODEL = os.path.join('OCRModels', 'letter', 'model')
 DIGIT_SAMPLES = 'sample/digits'
 LETTER_SAMPLES = 'sample/letters'
 
+# log directory
+DIGIT_LOGS = 'logs/digits'
+LETTER_LOGS = 'logs/letters'
+
 # The numerals permitted in the vehicle registration plate
 NUMERALS = [
     u"০",

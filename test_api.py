@@ -64,4 +64,6 @@ def run(model_file, sample_folder, letters):
         name = os.path.split(file)[-1]
         print("%10s = %s (%.2f%% sure)" % (name, letters[p], result[p] * 100))
     # end for
+
+    sess.close()
 # end function

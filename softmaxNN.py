@@ -5,12 +5,17 @@ import os
 import math
 import numpy as np
 import tensorflow as tf
+import config as cfg
+
 
 def train(ds,
           layers,
           iterations=10000,
           batch_size=100,
-          model_file=None):
+          model_file=None,
+          log_dir = None,
+          max_learning_rate=0.003,
+          min_learning_rate=0.0001):
     """
     Builds the model, trains it, and stores the final graph
     """
@@ -23,7 +28,7 @@ def train(ds,
     X = tf.placeholder(tf.float32, [None, L[0]], name='X')
     # Correct output
     Y_ = tf.placeholder(tf.float32, [None, L[-1]], name='Y_')
-
+    
     # Decaying learning rate
     lr = tf.placeholder(tf.float32)
 
@@ -78,8 +83,8 @@ def train(ds,
     log_amount = 25
     pitstop = 1 + (iterations // log_amount)
     iterations = pitstop * log_amount
-    max_lr = 0.003
-    min_lr = 0.0001
+    max_lr = max_learning_rate
+    min_lr = min_learning_rate
     decay_speed = iterations
     for i in range(1, iterations + 1):
         # learning rate decay
@@ -112,4 +117,56 @@ def train(ds,
         saver.save(sess, model_file)
         print('Training model stored.\n')
     # end if
+
+    # Summary writings
+    if log_dir is not None:
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+        # end if
+
+        rows, cols = cfg.IMAGE_DIM
+        image_shaped_input = tf.reshape(X, [-1, rows, cols, 1])
+        tf.summary.image('input', image_shaped_input, L[-1])
+
+        for i in range(0, num_L):
+            if W[i] is not None:
+                variable_summaries(W[i])
+            # end if
+            if B[i] is not None:
+                variable_summaries(B[i])
+            # end if
+            if Y[i] is not None:
+                variable_summaries(Y[i])
+            # end if
+        # end for
+
+        tf.summary.histogram('YLogits', YLogits)
+        tf.summary.scalar('dropout_keep_probability', pkeep)
+        tf.summary.scalar('cross_entropy', cross_entropy)
+        tf.summary.scalar('accuracy', accuracy)
+
+        # Merge all the summaries and write them out to
+        merged = tf.summary.merge_all()
+        writer = tf.summary.FileWriter(log_dir, sess.graph)
+        writer.add_summary(sess.run(merged))
+        writer.close()
+    # end if
+
+    sess.close()
+# end function
+
+
+def variable_summaries(var):
+    """Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
+    with tf.name_scope('summaries'):
+        mean = tf.reduce_mean(var)
+        tf.summary.scalar('mean', mean)
+        with tf.name_scope('stddev'):
+            stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
+            tf.summary.scalar('stddev', stddev)
+            tf.summary.scalar('max', tf.reduce_max(var))
+            tf.summary.scalar('min', tf.reduce_min(var))
+            tf.summary.histogram('histogram', var)
+        # end with
+    # end with
 # end function
