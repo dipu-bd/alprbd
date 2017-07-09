@@ -8,7 +8,7 @@ This repository has the API for Automated Bangla License Plate Dectection.
 
 ### End-User's Api
 
-    USAGE:    
+    USAGE:
         alprbd [options] <image_file_name>
     
     OPTIONS:
@@ -38,6 +38,10 @@ This repository has the API for Automated Bangla License Plate Dectection.
       
       --crop <directory>
         Crop all plates and store them in given directory.
+
+      --dev
+        To use developer options.
+        For details see: alprbd --dev -h
     
     ALPR-BD COMMAND LINE UTILITY
 
@@ -45,9 +49,9 @@ This repository has the API for Automated Bangla License Plate Dectection.
 ### Developer's API
 
     USAGE:
-        alprbd-dev [options]
+        alprbd --dev [dev-options]
 
-    OPTIONS:
+    DEVLOPER OPTIONS:
       -h, --help
         Displays this message.
 
