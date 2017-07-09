@@ -36,7 +36,7 @@ This repository has the API for Automated Bangla License Plate Dectection.
       --mark <file_name>
         Highlight plate regions with most probable plate number.
       
-      --crop <directory>
+      --extract <directory>
         Crop all plates and store them in given directory.
 
       --dev
