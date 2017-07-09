@@ -1,1 +1,1 @@
-pyinstaller make.sh
+pyinstaller alprbd.py
