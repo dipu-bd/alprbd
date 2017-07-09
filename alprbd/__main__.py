@@ -1,9 +1,9 @@
 """
 ALPR-BD Command Line Utility.
 """
-__version__ = "1.0-alpha"
-
 from argparse import ArgumentParser
+
+__version__ = "1.0-alpha"
 
 def main():
     """Main function"""
@@ -28,15 +28,13 @@ def main():
         help="Maximum number of possible plate numbers. Default=10")
     parser.add_argument("-m", "--mark", action="store_true", \
         help="Highlight plate regions in the input image with most probable plate numbers")
-    
+
     parser.add_argument("--debug", action="store_true", \
         help="Output debug information. Default=False")
 
     # Process arguments and call necessary functions
     args = parser.parse_args()
-    if args.version:
-        print(config.version)
-    print(args)
+    #RecognizePlate(args)
 # end function
 
 if __name__ == '__main__':
