@@ -1,26 +1,25 @@
 """
 ALPR-BD Command Line Utility.
 """
-import json
-from argparse import ArgumentParser
+__version__ = "1.0-alpha"
 
-def get_config():
-    """Returns the configuration file"""
-    config_file = open('./app.config.json')
-    config = json.loads(config_file.read())
-    config_file.close()
-    return config
-# end fucntion
+from argparse import ArgumentParser
 
 def main():
     """Main function"""
-    # Load cofiguration
-    config = get_config()
+    # Create a parser
+    parser = ArgumentParser(description="ALPR-BD Command Line Utility: " + __version__)
 
-    parser = ArgumentParser(description=config['name'] + " Version: " + config['version'])
+    # Positional argument
+    parser.add_argument(dest="input_image", \
+        help="Image of a car to recognize license plate number.")
+
+    # Version information
+    parser.add_argument("-v", "--version", action="version", \
+        help="Displays the current version.", \
+        version='%(prog)s ' + __version__)
+
     # Optional arguments
-    parser.add_argument("-v", "--version", action="store_true", \
-        help="Displays the current version.")
     parser.add_argument("-j", "--json", action="store_true", \
         help="Output in json format. Default=False")
     parser.add_argument("-n", "--maxN", dest="number", default=10, type=int, \
@@ -29,19 +28,8 @@ def main():
         help="Highlight plate regions in the input image with most probable plate numbers")
     parser.add_argument("--extract", action="store_true", \
         help="Extracts all detected plates in current directory")
-    parser.add_argument("--debug", \
+    parser.add_argument("--debug", action="store_true", \
         help="Output debug information. Default=False")
-
-    # Positional argument
-    parser.add_argument("-i", "--input", dest="input_image", \
-        help="Image of a car to recognize license plate number.")
-
-    # Developer mode
-    subparsers = parser.add_subparsers(title='Developer',
-                                       description='Addition tool support',
-                                       help='developer mode')
-    dev_parser = subparsers.add_parser('dev')
-    dev_parser.add_argument('-t', action="count", help="just a test")
 
     # Process arguments and call necessary functions
     args = parser.parse_args()
