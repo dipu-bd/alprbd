@@ -17,8 +17,11 @@ class Image:
         Creates a new instance of Image
         :param image_file: image file path
         """
-        self._file = os.path.abspath(image_file)
-        self._image = cv2.imread(self._file)
+        self._file = os.path.abspath(image_file)    # private variable
+        self.image = cv2.imread(self._file)         # original image
+        self.gray = None                            # image in grayscale
+        self.roi = []                               # regions of interest
+        self.plates = []                            # all detected plates
     # end function
 
     @property
@@ -26,22 +29,8 @@ class Image:
         """image file path"""
         return self._file
 
-    @property
-    def image(self):
-        """original image"""
-        return self._image
-
-    @property
-    def gray_image(self):
-        """image converted to grayscale"""
-        return self['_gray']
-
     def save(self):
-        """Saves the image to the file"""
-        cv2.imwrite(self._file, self._image)
+        """saves the image to the file"""
+        cv2.imwrite(self._file, self.image)
 
 # end class
-
-
-img = Image("test.jpg")
-
