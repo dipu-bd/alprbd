@@ -10,7 +10,7 @@ class Region:
 
     def __init__(self, image, x, y, height, width):
         """
-        Creates new instances
+        Creates new instance of Region
         :param image: Image object this region belongs to
         :param x: start position
         :param y: start position
