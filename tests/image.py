@@ -1,10 +1,10 @@
 from unittest import TestCase
-from alprbd.models.image import Image
+import alprbd
 
 
 class TestImage(TestCase):
     def test_all(self):
-        img = Image('../samples/002.jpg')
+        img = alprbd.models.Image('../samples/002.jpg')
         assert img.file is not None
         assert img.image.shape[2] == 3
         assert img.height == 2448
