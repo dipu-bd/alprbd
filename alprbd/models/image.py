@@ -29,6 +29,16 @@ class Image:
         """image file path"""
         return self._file
 
+    @property
+    def height(self):
+        """height of the image"""
+        return self.image.shape[0]
+
+    @property
+    def width(self):
+        """width of the image"""
+        return self.image.shape[1]
+
     def save(self):
         """saves the image to the file"""
         cv2.imwrite(self._file, self.image)
