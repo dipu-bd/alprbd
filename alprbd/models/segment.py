@@ -21,6 +21,8 @@ class Segment:
     @property
     def value(self):
         """returns the top predicted value"""
+        if len(self.guess) == 0:
+            return None
         return self.guess[0][0]
 
     @property
