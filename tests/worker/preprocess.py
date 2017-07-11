@@ -1,5 +1,4 @@
 from unittest import TestCase
-import cv2
 import alprbd
 
 
@@ -15,7 +14,7 @@ class TestPreprocess(TestCase):
         self.assertIsNotNone(image.scaled, msg="scaling failed")
         self.assertEqual(image.scaled.shape[0], alprbd.config.SCALE_DIM[1], msg="scaled height mismatch")
         self.assertEqual(image.scaled.shape[1], alprbd.config.SCALE_DIM[0], msg="scaled width mismatch")
-        cv2.imshow("preprocess test: gray image", image.gray)
-        cv2.imshow("preprocess test: scaled image", image.scaled)
-        cv2.waitKey()
+        #cv2.imshow("preprocess test: gray image", image.gray)
+        #cv2.imshow("preprocess test: scaled image", image.scaled)
+        #cv2.waitKey()
 

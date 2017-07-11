@@ -3,12 +3,18 @@ import alprbd
 
 
 class TestImage(TestCase):
-    def test_all(self, file='samples/002.jpg'):
+    def test_all(self):
+        file = 'samples/002.jpg'
         img = alprbd.models.Image(file)
-        assert img.file is not None
-        assert img.original.shape[2] == 3
-        assert img.height == 2448
-        assert img.width == 3264
-        assert len(img.roi) == 0
-        assert len(img.plates) == 0
+        self.assertIsNotNone(img.file, msg="no file given")
+        print('>>>image test: file', img.file)
+        self.assertIsNotNone(img.original, msg="image load failure")
+        print('>>>image test: file', img.original.shape)
+        self.assertEqual(len(img.original.shape), 3, msg="not a color image")
+        self.assertEqual(img.original.shape[2], 3, msg="not 3 color image")
+        self.assertEqual(img.height, 2448, msg="height mismatch")
+        self.assertEqual(img.width, 3264, msg="width mismatch")
+        self.assertEqual(len(img.roi), 0, msg="error: region of interest array")
+        self.assertEqual(len(img.plates), 0, msg="error: plate array")
         img.save()
+
