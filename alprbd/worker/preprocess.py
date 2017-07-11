@@ -9,11 +9,11 @@ def process(img):
     """
     Process img in order to make alpr-task easier
     :param img: Image object
-    :return:
+    :return: Image object after processing
     """
     img.scaled = rescale(img.original)
     img.gray = convert_gray(img.scaled)
-    pass
+    return img
 
 
 def convert_gray(image):
