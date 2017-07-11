@@ -1,0 +1,4 @@
+"""
+Global configuration for ALPR
+"""
+
