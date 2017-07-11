@@ -2,6 +2,8 @@
 ALPR-BD Command Line Utility.
 """
 from argparse import ArgumentParser
+from alprbd.worker import ALPRWorker
+
 
 __version__ = "1.0-alpha"
 
@@ -11,12 +13,14 @@ def process_args(args):
     Process arguments
     :param args:
     """
-
-    print(args)
-    Namespace(extract=False, input_image='test', json=False, mark=False, top_n=10)
-
-
+    worker = ALPRWorker(args.input_image,
+                        extract=args.extract,
+                        json=args.json,
+                        mark=args.mark,
+                        top_n=args.top_n)
+    worker.start()
 # end function
+
 
 def main():
     """

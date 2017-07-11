@@ -44,4 +44,8 @@ class ALPRWorker:
         """get the number of predictions per plate"""
         return self._top_n
 
+    def start(self):
+        """starts the task"""
+        pass
+
 # end class
