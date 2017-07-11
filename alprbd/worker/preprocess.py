@@ -12,7 +12,7 @@ def process(image):
 
 
 def convert_gray(image):
-    b, g, r = cv2.split(image.image)
+    b, g, r = cv2.split(image.original)
     ratio = cfg.GRAY_RATIO
     gray = r * ratio.R + g * ratio.G + b * ratio.B
     image.gray = gray
@@ -20,7 +20,7 @@ def convert_gray(image):
 
 
 def rescale(image):
-    image.scaled = cv2.resize(image.image,
+    image.scaled = cv2.resize(image.gray,
                               cfg.SCALE_DIM,
                               interpolation=cv2.INTER_AREA)
     pass

@@ -18,7 +18,7 @@ class Image:
         :param image_file: image file path
         """
         self._file = os.path.abspath(image_file)    # private variable
-        self.image = cv2.imread(self._file)         # original image
+        self.original = cv2.imread(self._file)      # original image
         self.roi = []                               # regions of interest
         self.plates = []                            # all detected plates
     # end function
@@ -40,6 +40,6 @@ class Image:
 
     def save(self):
         """saves the image to the file"""
-        cv2.imwrite(self._file, self.image)
+        cv2.imwrite(self._file, self.original)
 
 # end class
