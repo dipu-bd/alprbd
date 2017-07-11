@@ -3,8 +3,8 @@ import alprbd
 
 
 class TestImage(TestCase):
-    def test_all(self):
-        img = alprbd.models.Image('../samples/002.jpg')
+    def test_all(self, file='samples/002.jpg'):
+        img = alprbd.models.Image(file)
         assert img.file is not None
         assert img.original.shape[2] == 3
         assert img.height == 2448

@@ -31,12 +31,12 @@ class Image:
     @property
     def height(self):
         """height of the image"""
-        return self.image.shape[0]
+        return self.original.shape[0]
 
     @property
     def width(self):
         """width of the image"""
-        return self.image.shape[1]
+        return self.original.shape[1]
 
     def save(self):
         """saves the image to the file"""
