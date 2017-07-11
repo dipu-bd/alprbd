@@ -59,8 +59,4 @@ class ALPRWorker:
         process(self.image)
         pass
 
-    def display_result(self):
-        """displays the results after the process"""
-        pass
-
 # end class
