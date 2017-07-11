@@ -14,7 +14,6 @@ def process(image):
     image.scaled = rescale(image.original)
     image.gray = convert_gray(image.scaled)
     image.enhanced = enhance(image.gray)
-
     return image
 
 
@@ -43,5 +42,5 @@ def enhance(img):
     :return: enhanced image
     """
     # http://docs.opencv.org/3.1.0/d5/daf/tutorial_py_histogram_equalization.html
-    clahe = cv2.createCLAHE(clipLimit=4.0, tileGridSize=(8, 8))
+    clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
     return clahe.apply(img)
