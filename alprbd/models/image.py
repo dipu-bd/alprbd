@@ -21,6 +21,11 @@ class Image:
         self.original = cv2.imread(self._file)      # original image
         self.roi = []                               # regions of interest
         self.plates = []                            # all detected plates
+
+        # artifacts: pre-process
+        self.gray = None
+        self.scaled = None
+
     # end function
 
     @property
