@@ -18,7 +18,7 @@ def process(img):
 
 def convert_gray(image):
     """converts image to gray-scale"""
-    return cv2.cvtColor(image.original, cv2.COLOR_BGR2GRAY)
+    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 
 def rescale(image):
