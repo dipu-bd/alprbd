@@ -1,15 +1,16 @@
 from unittest import TestCase
 import alprbd
+import logging
 
 
 class TestImage(TestCase):
-    def test_all(self):
+    def test_init(self):
         file = 'samples/002.jpg'
         img = alprbd.models.Image(file)
         self.assertIsNotNone(img.file, msg="no file given")
-        print('>>>image test: file', img.file)
+        logging.info('>>>image test: file ' + img.file)
         self.assertIsNotNone(img.original, msg="image load failure")
-        print('>>>image test: file', img.original.shape)
+        logging.info('>>>image test: file ' + str(img.original.shape))
         self.assertEqual(len(img.original.shape), 3, msg="not a color image")
         self.assertEqual(img.original.shape[2], 3, msg="not 3 color image")
         self.assertEqual(img.height, 2448, msg="height mismatch")
