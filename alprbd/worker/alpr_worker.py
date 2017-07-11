@@ -1,7 +1,7 @@
 """
 Declaration of ALPR Worker class
 """
-from alprbd.models import Image
+from ..models import Image
 from .preprocess import process
 
 
