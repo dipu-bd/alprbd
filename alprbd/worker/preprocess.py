@@ -2,27 +2,27 @@
 Pre-process image
 """
 import cv2
-from ..helper import config as cfg
+from alprbd import config as cfg
 
 
-def process(image):
-    convert_gray(image)
-    rescale(image)
+def process(img):
+    """
+    Process img in order to make alpr-task easier
+    :param img: Image object
+    :return:
+    """
+    img.scaled = rescale(img.original)
+    img.gray = convert_gray(img.scaled)
     pass
 
 
 def convert_gray(image):
-    b, g, r = cv2.split(image.original)
-    ratio = cfg.GRAY_RATIO
-    gray = r * ratio.R + g * ratio.G + b * ratio.B
-    image.gray = gray
-    pass
+    """converts image to gray-scale"""
+    return cv2.cvtColor(image.original, cv2.COLOR_BGR2GRAY)
 
 
 def rescale(image):
-    image.scaled = cv2.resize(image.gray,
-                              cfg.SCALE_DIM,
-                              interpolation=cv2.INTER_AREA)
-    pass
+    """resize image to a predefined dimension"""
+    return cv2.resize(image, cfg.SCALE_DIM, interpolation=cv2.INTER_AREA)
 
 
