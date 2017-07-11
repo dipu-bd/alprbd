@@ -2,6 +2,7 @@
 Declaration of ALPR Worker class
 """
 from alprbd.models import Image
+from .preprocess import process
 
 
 class ALPRWorker:
@@ -45,7 +46,21 @@ class ALPRWorker:
         return self._top_n
 
     def start(self):
-        """starts the task"""
+        """
+        Run the ALPR algorithms.
+        -----
+        1. pre-process image
+        2. detect regions of interest
+        3. detect actual plates
+        4. segment plate
+        5. recognize each segments
+        6. display output
+        """
+        process(self.image)
+        pass
+
+    def display_result(self):
+        """displays the results after the process"""
         pass
 
 # end class
