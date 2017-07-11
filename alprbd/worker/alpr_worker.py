@@ -50,9 +50,8 @@ class ALPRWorker:
         Run the ALPR algorithms.
         -----
         1. pre-process image
-        2. detect regions of interest
         3. detect actual plates
-        4. segment plate
+        4. segment plates
         5. recognize each segments
         6. display output
         """

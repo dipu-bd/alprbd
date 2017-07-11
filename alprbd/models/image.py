@@ -25,6 +25,7 @@ class Image:
         # artifacts: pre-process
         self.gray = None
         self.scaled = None
+        self.enhanced = None
 
     # end function
 
