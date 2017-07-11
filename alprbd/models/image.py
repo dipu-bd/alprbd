@@ -19,7 +19,6 @@ class Image:
         """
         self._file = os.path.abspath(image_file)    # private variable
         self.image = cv2.imread(self._file)         # original image
-        self.gray = None                            # image in grayscale
         self.roi = []                               # regions of interest
         self.plates = []                            # all detected plates
     # end function
