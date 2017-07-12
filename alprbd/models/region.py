@@ -28,14 +28,27 @@ class Region:
         """extract the image of the region"""
         return self._parent.original[self._x1:self._x2, self._y1:self._y2]
 
+    def bound(self):
+        return [self._y1, self._x1, self.width, self.height]
+
     @property
-    def width(self):
-        """get width of the region"""
-        return self._y2 - self._y1
+    def first_point(self):
+        """returns the top-left point of the region"""
+        return self._y1, self._x1
+
+    @property
+    def second_point(self):
+        """returns the bottom-right point of the region"""
+        return self._y2, self._x2
 
     @property
     def height(self):
         """get height of the region"""
         return self._x2 - self._x1
+
+    @property
+    def width(self):
+        """get width of the region"""
+        return self._y2 - self._y1
 
 # end class
