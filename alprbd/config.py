@@ -16,3 +16,6 @@ MIN_AREA = 0.1      # contour_area / image_area
 MIN_ASPECT = 0.3    # contour_height / contour_width
 MAX_ASPECT = 0.6    # contour_height / contour_width
 MAX_ANGLE = 25      # in degrees
+
+# Default plate size for processing
+PLATE_DIM = (500, 250)

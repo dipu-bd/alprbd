@@ -59,13 +59,12 @@ def apply_matching(img):
     # apply matched filter
     kernel = match_filter()
     matched = cv2.filter2D(thresh, -1, kernel)
-    #matched = cv2.equalizeHist(np.uint8(matched))
 
     # apply gaussian blur
     blur = cv2.GaussianBlur(matched, (15, 15), 0)
 
     # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(blur, 180, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(blur, 180, 255, cv2.THRESH_OTSU)
     return thresh
 # end function
 
