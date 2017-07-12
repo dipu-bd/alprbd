@@ -13,12 +13,10 @@ def main():
     data = get_digit_data()
     layers = [
         row * col,
-        512,
         256,
-        128,
         64,
         len(cfg.NUMERALS),
-    ]
+    ] # 3 layer network
 
     print('Training size =', data.train.labels.shape[0])
     print(' Testing size =', data.test.labels.shape[0])
@@ -27,9 +25,8 @@ def main():
     train(data,
           layers=layers,
           batch_size=100,
-          iterations=3000,
-          model_file=cfg.DIGIT_MODEL,
-          log_dir=cfg.DIGIT_LOGS)
+          iterations=1000,
+          model_file=cfg.DIGIT_MODEL)
 # end function
 
 if __name__ == '__main__':

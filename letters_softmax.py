@@ -27,9 +27,8 @@ def main():
     train(data,
           layers=layers,
           batch_size=100,
-          iterations=10000,
-          model_file=cfg.LETTER_MODEL,
-          log_dir=cfg.LETTER_LOGS)
+          iterations=9000,
+          model_file=cfg.LETTER_MODEL)
 # end function
 
 if __name__ == '__main__':

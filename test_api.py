@@ -45,7 +45,7 @@ def run(model_file, sample_folder, letters):
     folder = os.path.dirname(model_file)
     saver = tf.train.import_meta_graph(model_file + '.meta')
     saver.restore(sess, tf.train.latest_checkpoint(folder))
-    
+
     graph = tf.get_default_graph()
     X = graph.get_tensor_by_name("X:0")
     Y = graph.get_tensor_by_name("Y:0")
