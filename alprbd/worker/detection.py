@@ -9,7 +9,7 @@ from ..models import Region
 def detect_roi(frame):
     """
     Detects all regions of interest
-    :param image: Image object
+    :param frame: Image object
     :return: Image object with ROIs
     """
     # apply matching
@@ -26,7 +26,7 @@ def detect_roi(frame):
         y, x, c, r = cv2.boundingRect(cnt)
 
         # check image size
-        if not (r < c and 25 < r < 150 and 60 < c < 350):
+        if not (r < c and 20 < r < 150 and 60 < c < 350):
             continue
         # end if
 
@@ -54,7 +54,7 @@ def apply_matching(img):
     sobel = cv2.Sobel(img, -1, 1, 0, ksize=3)
 
     # thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(sobel, 150, 255, cv2.THRESH_TOZERO)
+    _, thresh = cv2.threshold(sobel, 100, 255, cv2.THRESH_TOZERO)
 
     # apply matched filter
     kernel = match_filter()
@@ -75,12 +75,12 @@ def match_filter():
     Builds a gaussian match filter
     """
     # formula -- @article(joarder2012bangla)
-    m, n = 30, 80
-    A, B = 0.003, -0.0012
-    sa, sb = 6.0, 10.0
+    m, n = 10, 20           # window size
+    A, B = 0.003, -0.001    # intensity
+    sa, sb = 15.0, 10.0     # spreading
 
-    a = m // 3
-    b = 4 * m // 9
+    a = 3  # 0 to a
+    b = 5  # b to m
 
     x1 = m // 6
     x2 = a + m // 6
