@@ -22,10 +22,10 @@ class TestDetection(TestCase):
         self.assertIsNotNone(matched, msg="mixture model build failure")
         self.assertLessEqual(np.max(matched), 255)
         self.assertGreaterEqual(np.min(matched), 0)
-        image.gray[matched < 250] = 0
-        out = np.hstack((image.enhanced, image.gray))
-        cv2.imshow(f, out)
-        cv2.waitKey()
+        #image.gray[matched < 250] = 0
+        #out = np.hstack((image.enhanced, image.gray))
+        #cv2.imshow(f, out)
+        #cv2.waitKey()
 
     def test_regions(self):
         for f in np.sort(os.listdir('samples')):
