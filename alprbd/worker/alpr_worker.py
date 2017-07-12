@@ -4,6 +4,7 @@ Declaration of ALPR Worker class
 from ..models import Frame
 from .preprocess import process
 from .detection import detect_roi
+from .segmentation import segment
 
 
 class ALPRWorker:
@@ -58,6 +59,7 @@ class ALPRWorker:
         """
         self.frame = process(self.frame)
         self.frame = detect_roi(self.frame)
+        self.frame = segment(frame)
         pass
 
 # end class

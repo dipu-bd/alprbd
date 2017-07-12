@@ -19,3 +19,6 @@ MAX_ANGLE = 25      # in degrees
 
 # Default plate size for processing
 PLATE_DIM = (500, 250)
+
+# Size of each segments
+SEGMENT_DIM = (28, 28)

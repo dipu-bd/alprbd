@@ -2,7 +2,7 @@
 Pre-process image
 """
 import cv2
-from alprbd import config as cfg
+import alprbd.config as cfg
 
 
 def process(frame):

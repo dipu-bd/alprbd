@@ -9,7 +9,6 @@ import numpy as np
 class TestExtraction(TestCase):
 
     def test_extraction(self):
-        return
         for f in np.sort(os.listdir('samples')):
             #f = '335.jpg'
             file = os.path.join('samples', f)
