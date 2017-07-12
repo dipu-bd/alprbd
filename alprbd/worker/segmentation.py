@@ -4,6 +4,7 @@ Contains methods used to segment the license plate
 import cv2
 import numpy as np
 import alprbd.config as cfg
+from ..models import Segment
 
 
 def segment(frame):
@@ -16,7 +17,11 @@ def segment(frame):
     for plate in frame.plates:
         segs = get_segments(plate.image)
         if 8 <= len(segs) <= 9:
-            plate.segments = segs
+            plate.segments = []
+            for idx, img in enumerate(segs):
+                seg = Segment(idx, img, plate)
+                plate.segments.append(seg)
+            # end for
             plates.append(plate)
         # end if
     # end for
