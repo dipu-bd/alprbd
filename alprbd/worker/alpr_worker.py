@@ -4,7 +4,9 @@ Declaration of ALPR Worker class
 from ..models import Frame
 from .preprocess import process
 from .detection import detect_roi
-from .segmentation import segment
+from .extraction import extract
+from .segments import segment
+from .recognize import recognize
 
 
 class ALPRWorker:
@@ -59,7 +61,14 @@ class ALPRWorker:
         """
         self.frame = process(self.frame)
         self.frame = detect_roi(self.frame)
-        self.frame = segment(frame)
+        self.frame = extract(self.frame)
+        self.frame = segment(self.frame)
+        self.frame = recognize(self.frame)
+
+        for plate in self.frame.plates:
+            if len(plate.guess) > 0:
+                print(self.frame.file, 'guess:', plate.guess[0][0], 'prob :', plate.guess[0][1])
+        # end for
         pass
 
 # end class

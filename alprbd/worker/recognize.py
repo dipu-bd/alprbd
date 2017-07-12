@@ -1,3 +1,4 @@
+from ..helper import recognize_digit, recognize_letter, recognize_city
 
 
 def recognize(frame):
@@ -8,11 +9,19 @@ def recognize(frame):
     """
 
     for plate in frame.plates:
+        g = ""
+        p = 1.0
         for seg in plate.segments:
-            process_segment(seg)
+            seg = process_segment(seg)
+            if len(seg.guess) > 0:
+                g = seg.guess[0][0] + g
+                p *= seg.guess[0][1]
         # end for
+        if len(g) > 0 and p > 0.75:
+            plate.guess = [(g, p)]
     # end for
 
+    return frame
 # end function
 
 
@@ -23,44 +32,14 @@ def process_segment(segment):
     :return: processed segment
     """
     g = []
-    g.extend(recognize_letter(segment.image))
-    g.extend(recognize_digit(segment.image))
-    g.extend(recognize_city(segment.image))
-    g = [(l, round(p * 100, 2)) for l, p in g]
-    segment.guess = sorted(g, key=lambda x: -int(x[1] * 100))
+    if segment.serial >= 2:
+        g.extend(recognize_digit(segment.image))
+    elif segment.serial == 1:
+        g.extend(recognize_letter(segment.image))
+    else:
+        g.extend(recognize_city(segment.image))
+    sorted(g, key=lambda x: -x[1])
+    segment.guess = g
     return segment
-# end function
-
-
-def recognize_digit(digit):
-    """
-    recognize the digit
-    :param digit: digit to recognize
-    :return: recognition with probabilities
-    """
-
-    return []
-# end function
-
-
-def recognize_letter(letter):
-    """
-    recognize the letter
-    :param letter: letter to recognize
-    :return: recognition with probabilities
-    """
-
-    return []
-# end function
-
-
-def recognize_city(image):
-    """
-    recognize the letter
-    :param image: letter to recognize
-    :return: recognition with probabilities
-    """
-
-    return []
 # end function
 
