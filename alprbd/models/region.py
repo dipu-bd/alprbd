@@ -26,7 +26,7 @@ class Region:
     @property
     def image(self):
         """extract the image of the region"""
-        return self._parent.image[self._x1:self._x2, self._y1:self._y2]
+        return self._parent.original[self._x1:self._x2, self._y1:self._y2]
 
     @property
     def width(self):
