@@ -6,9 +6,9 @@ import alprbd
 import numpy as np
 
 
-class TestExtraction(TestCase):
+class TestSegmentation(TestCase):
 
-    def test_extraction(self):
+    def test_segmentation(self):
         for f in np.sort(os.listdir('samples')):
             #f = '335.jpg'
             file = os.path.join('samples', f)
@@ -16,20 +16,26 @@ class TestExtraction(TestCase):
             frame = alprbd.worker.preprocess.process(frame)
             frame = alprbd.worker.detection.detect_roi(frame)
             frame = alprbd.worker.extraction.extract(frame)
+            frame = alprbd.worker.segmentation.segment(frame)
 
             self.assertIsNotNone(frame.roi)
-            self.assertNotEqual(len(frame.plates), 0)
 
-            img = frame.original
             for plate in frame.plates:
-                color = [255, 0, random.randint(0, 127)]
-                random.shuffle(color)
-                img[:180, :460, ] = 255
-                cv2.putText(img, f, (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 3, [0, 0, 0], thickness=10)
-                cv2.rectangle(img,
-                              plate.region.first_point,
-                              plate.region.second_point,
-                              color, thickness=20)
+                out = np.zeros((28, 1))
+                for seg in plate.segments:
+                    self.assertIsNotNone(seg)
+                    r, c = seg.shape
+                    img = cv2.resize(seg, (28 * c // r, 28))
+                    out = np.hstack((out, np.zeros((28, 5)) + 255, img))
+                # end for
+
+                r, c = plate.image.shape
+                x = out.shape[1]
+                org = cv2.resize(plate.image, (x, x * r // c))
+                cv2.imshow(f, np.vstack((org, np.zeros((5, x)) + 255, out)))
+                cv2.waitKey(2000)
             # end for
-            cv2.imshow("plates", alprbd.worker.preprocess.rescale(img))
-            cv2.waitKey(2000)
+
+        # end for
+    # end function
+# end class

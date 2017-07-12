@@ -39,15 +39,7 @@ def get_segments(img):
         vers.extend(vertical(x))
     # end for
 
-    # final trimming
-    segments = []
-    for x in vers:
-        s = horizontal(x)
-        s = trim_image(s)
-        segments.extend(s)
-    # end for
-
-    return segments
+    return vers
 # end function
 
 
@@ -74,6 +66,7 @@ def horizontal(img):
         # end if
     # end for
 
+    plate = trim_image(plate)
     if isvalid(plate):
         hor.append(plate)
     # end if
@@ -105,6 +98,7 @@ def vertical(img):
         # end if
     # end for
 
+    plate = trim_image(plate)
     if isvalid(plate):
         ver.append(plate)
     # end if
@@ -138,7 +132,10 @@ def isvalid(plate):
 
 def trim_image(img):
     """Keep only important part"""
-    # open
+    # check image
+    if img is None:
+        return None
+    # end if
     rows, cols = img.shape
     # find area
     nzx, nzy = np.nonzero(img)
@@ -147,8 +144,5 @@ def trim_image(img):
     y1 = max(0, np.min(nzy))
     y2 = min(cols, np.max(nzy) + 2)
     # crop
-    cropped = img[x1:x2, y1:y2]
-    # resize
-    resized = cv2.resize(cropped, cfg.SEGMENT_DIM)
-    return resized
+    return img[x1:x2, y1:y2]
 # end function
