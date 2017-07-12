@@ -6,14 +6,14 @@ import numpy as np
 from ..models import Region
 
 
-def detect_roi(image):
+def detect_roi(frame):
     """
     Detects all regions of interest
     :param image: Image object
     :return: Image object with ROIs
     """
     # apply matching
-    matched = apply_matching(image.enhanced)
+    matched = apply_matching(frame.enhanced)
     scaled_height, scaled_width = matched.shape
 
     # locate all contours -- http://stackoverflow.com/a/41322331/1583052
@@ -31,16 +31,16 @@ def detect_roi(image):
         # end if
 
         # translate points
-        x = (x * image.height) // scaled_height
-        y = (y * image.width) // scaled_width
-        r = (r * image.height) // scaled_height
-        c = (c * image.width) // scaled_width
+        x = (x * frame.height) // scaled_height
+        y = (y * frame.width) // scaled_width
+        r = (r * frame.height) // scaled_height
+        c = (c * frame.width) // scaled_width
 
         # original ROI
-        image.roi.append(Region(image, x, y, r, c))
+        frame.roi.append(Region(image, x, y, r, c))
     # end for
 
-    return image
+    return frame
 # end function
 
 
@@ -79,8 +79,8 @@ def match_filter():
     A, B = 0.003, -0.0012
     sa, sb = 6.0, 8.0
 
-    a = 3 * m // 10
-    b = 5 * m // 10
+    a = m // 3
+    b = 4 * m // 9
 
     x1 = m // 6
     x2 = a + m // 6
