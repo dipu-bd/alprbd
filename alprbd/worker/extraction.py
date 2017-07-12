@@ -186,7 +186,7 @@ def denoise(img):
         return None
     # end if
 
-    return img
+    return auto_crop(img)
 # end function
 
 

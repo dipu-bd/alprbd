@@ -20,9 +20,11 @@ class TestSegmentation(TestCase):
 
             for plate in frame.plates:
                 out = np.zeros((28, 1))
-                for seg in plate.segments:
+                for S in plate.segments:
+                    seg = S.image
                     self.assertIsNotNone(seg)
-                    r, c = seg.shape
+                    r, c = seg.\
+                        shape
                     img = cv2.resize(seg, (28 * c // r, 28))
                     out = np.hstack((out, np.zeros((28, 5)) + 255, img))
                 # end for

@@ -16,10 +16,12 @@ def segment(frame):
     plates = []
     for plate in frame.plates:
         segs = get_segments(plate.image)
-        if 8 <= len(segs) <= 9:
+        if 8 <= len(segs):
+            serial = 8
             plate.segments = []
-            for idx, img in enumerate(segs):
-                seg = Segment(idx, img, plate)
+            for img in reversed(segs):
+                serial = max(0, serial - 1)
+                seg = Segment(serial, img, plate)
                 plate.segments.append(seg)
             # end for
             plates.append(plate)
