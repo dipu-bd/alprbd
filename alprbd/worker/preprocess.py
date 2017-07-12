@@ -3,6 +3,7 @@ Pre-process image
 """
 import cv2
 import alprbd.config as cfg
+from ..helper.image_util import rescale
 
 
 def process(frame):
@@ -11,7 +12,7 @@ def process(frame):
     :param frame: Image object
     :return: Image object after processing
     """
-    frame.scaled = rescale(frame.original)
+    frame.scaled = rescale(frame.original, cfg.SCALE_DIM)
     frame.gray = convert_gray(frame.scaled)
     frame.enhanced = enhance(frame.gray)
     return frame
@@ -25,26 +26,6 @@ def convert_gray(img):
     :return: grayscale image
     """
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-# end function
-
-
-def rescale(img):
-    """
-    resize image to a predefined dimension
-    :param img: original image
-    :return: rescaled image
-    """
-    height = img.shape[0]
-    width = img.shape[1]
-    dst_width, dst_height = cfg.SCALE_DIM
-    if height < width:
-        width = (width * dst_height) // height
-        height = dst_height
-    else:
-        height = (height * dst_width) // width
-        width = dst_width
-    # end if
-    return cv2.resize(img, (width, height), interpolation=cv2.INTER_AREA)
 # end function
 
 

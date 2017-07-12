@@ -15,7 +15,7 @@ def segment(frame):
     plates = []
     for plate in frame.plates:
         segs = get_segments(plate.image)
-        if len(segs) >= 8:
+        if 8 <= len(segs) <= 9:
             plate.segments = segs
             plates.append(plate)
         # end if
@@ -52,7 +52,7 @@ def horizontal(img):
     plate = None
     row_sum = np.mean(img, axis=1)
     for r, v in enumerate(row_sum):
-        if v > 1:
+        if v >= 1:
             if plate is None:
                 plate = img[r:r+1, :]
             else:
@@ -84,7 +84,7 @@ def vertical(img):
     plate = None
     col_sum = np.mean(img, axis=0)
     for c, v in enumerate(col_sum):
-        if v > 2:
+        if v >= 1:
             if plate is None:
                 plate = img[:, c:c+1]
             else:

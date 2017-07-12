@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from alprbd import config as cfg
 from ..models import Plate, Region
+from ..helper.image_util import rescale
 
 
 def extract(frame):
@@ -18,7 +19,7 @@ def extract(frame):
     for region in frame.roi:
         # process image
         img = region.image
-        img = cv2.resize(img, cfg.PLATE_DIM)
+        img = rescale(img, cfg.PLATE_DIM)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = clahe.apply(img)
 

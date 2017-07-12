@@ -30,7 +30,7 @@ class TestPreprocess(TestCase):
         file = 'samples/002.jpg'
         img = cv2.imread(file)
         self.assertIsNotNone(img, msg="img load failed")
-        scaled = alprbd.worker.preprocess.rescale(img)
+        scaled = alprbd.helper.image_util.rescale(img, (640, 480))
         self.assertIsNotNone(scaled, msg="rescaling failed")
         self.assertEqual(len(scaled.shape), len(img.shape), msg="shape mismatch")
         w, h = alprbd.config.SCALE_DIM
@@ -40,13 +40,13 @@ class TestPreprocess(TestCase):
     def test_enhance(self, file = 'samples/002.jpg'):
         img = cv2.imread(file, 0)
         self.assertIsNotNone(img, msg="img load failed")
-        img = alprbd.worker.preprocess.rescale(img)
+        img = alprbd.helper.image_util.rescale(img, (640, 480))
         self.assertIsNotNone(img, msg="img scaling failed")
         out = alprbd.worker.preprocess.enhance(img)
         self.assertIsNotNone(out, msg="enhancement failed")
         self.assertEqual(len(out.shape), len(img.shape), msg="shape mismatch")
-        #cv2.imshow('enhanced: ' + file, np.hstack((img, out)))
-        #cv2.waitKey()
+        cv2.imshow('enhanced: ' + file, np.hstack((img, out)))
+        cv2.waitKey(2000)
 
     def test_all_files(self):
         for f in np.sort(os.listdir('samples')):
