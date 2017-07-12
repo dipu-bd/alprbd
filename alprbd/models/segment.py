@@ -8,16 +8,16 @@ class Segment:
     Single segment of plate number
     """
 
-    def __init__(self, id, image, plate):
-        self._id = id           # segment id
+    def __init__(self, serial, image, plate):
+        self._serial = serial   # segment id
         self._image = image     # segment image
         self._plate = plate     # plate
         self.guess = []         # list of (prediction, probability), in descending order
 
     @property
-    def id(self):
+    def serial(self):
         """id of the segment"""
-        return self._id
+        return self._serial
 
     @property
     def image(self):
