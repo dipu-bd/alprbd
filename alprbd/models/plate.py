@@ -19,12 +19,12 @@ class Plate:
         self.guess = []         # list of (prediction, probability), in descending order
 
     @property
-    def plate_image(self):
+    def image(self):
         """the image of the plate"""
         return self._image
 
     @property
-    def plate_region(self):
+    def region(self):
         """the image of the plate"""
         return self._region
 

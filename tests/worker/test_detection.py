@@ -28,14 +28,14 @@ class TestDetection(TestCase):
         #cv2.waitKey()
 
     def test_regions(self):
-        for f in np.sort(os.listdir('samples')):
-            #f = '335.jpg'
-            file = os.path.join('samples', f)
-            image = alprbd.models.Frame(file)
-            image = alprbd.worker.preprocess.process(image)
-            image = alprbd.worker.detection.detect_roi(image)
-            self.assertIsNotNone(image.roi)
-            self.assertGreater(len(image.roi), 0)
-            #for region in reversed(image.roi):
-            #    cv2.imshow(f, cv2.resize(region.image, (350, 150)))
-            #    cv2.waitKey(500)
+        #for f in np.sort(os.listdir('samples')):
+        f = '335.jpg'
+        file = os.path.join('samples', f)
+        image = alprbd.models.Frame(file)
+        image = alprbd.worker.preprocess.process(image)
+        image = alprbd.worker.detection.detect_roi(image)
+        self.assertIsNotNone(image.roi)
+        self.assertGreater(len(image.roi), 0)
+        #for region in reversed(image.roi):
+        #    cv2.imshow(f, cv2.resize(region.image, (350, 150)))
+        #    cv2.waitKey(500)

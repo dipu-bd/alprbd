@@ -55,6 +55,6 @@ def enhance(img):
     :return: enhanced image
     """
     # http://docs.opencv.org/3.1.0/d5/daf/tutorial_py_histogram_equalization.html
-    clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
+    clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(20, 40))
     return clahe.apply(img)
 # end function

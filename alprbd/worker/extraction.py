@@ -14,19 +14,35 @@ def extract(frame):
     :return: Image frame after processing
     """
     frame.plates = []
+    clahe = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(10, 10))
     for region in frame.roi:
+        # process image
         img = region.image
-        for bound in check_contours(img):
-            extracted = get_plate(img, bound)
-            binary = get_binary(extracted)
+        img = cv2.resize(img, cfg.PLATE_DIM)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = clahe.apply(img)
+
+        _, binary1 = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)
+        _, binary2 = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY_INV)
+
+        for binary in [binary1, binary2]:
+            # clean and add img
             clean = denoise(binary)
             if clean is not None:
-                x1, x2, y1, y2 = bound[0]
-                plate = Plate(clean, Region(frame, x1, y1, x2 - x1, y2 - y1))
-                frame.plates.append(plate)
+                frame.plates.append(Plate(clean, region))
             # end if
+
+            # check contours
+            for bound in check_contours(binary):
+                extracted = get_plate(binary, bound)
+                clean = denoise(extracted)
+                if clean is not None:
+                    x1, x2, y1, y2 = bound[0]
+                    reg = Region(frame, x1, y1, x2 - x1, y2 - y1)
+                    frame.plates.append(Plate(clean, reg))
+                # end if
+            # end for
         # end for
-    # end for
     return frame
 # end function
 
@@ -146,7 +162,7 @@ def get_binary(img):
 # end function
 
 
-def de_noise(img):
+def denoise(img):
     """
     Remove noise.
     :param img: plate image
@@ -162,7 +178,7 @@ def de_noise(img):
     img = apply_flood_fill(img, upper)
     img = apply_flood_fill(img, lower, tx=row - 1)
     img = apply_flood_fill(img, left)
-    mg = apply_flood_fill(img, right, ty=col - 1)
+    img = apply_flood_fill(img, right, ty=col - 1)
 
     # de-noise using contours
     for i in range(1):
