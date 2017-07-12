@@ -20,13 +20,13 @@ def detect_roi(frame):
     contours = cv2.findContours(matched, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[1]
 
     # extract clean plates
-    image.roi = []
+    frame.roi = []
     for cnt in contours:
         # get bounding box
         y, x, c, r = cv2.boundingRect(cnt)
 
         # check image size
-        if not (r < c and 30 < r < 150 and 80 < c < 350):
+        if not (r < c and 25 < r < 150 and 60 < c < 350):
             continue
         # end if
 
@@ -37,7 +37,7 @@ def detect_roi(frame):
         c = (c * frame.width) // scaled_width
 
         # original ROI
-        frame.roi.append(Region(image, x, y, r, c))
+        frame.roi.append(Region(frame, x, y, r, c))
     # end for
 
     return frame
@@ -62,10 +62,10 @@ def apply_matching(img):
     #matched = cv2.equalizeHist(np.uint8(matched))
 
     # apply gaussian blur
-    #blur = cv2.GaussianBlur(matched, (11, 11), 0)
+    blur = cv2.GaussianBlur(matched, (15, 15), 0)
 
     # Otsu's thresholding -- https://goo.gl/6n5Kgn
-    _, thresh = cv2.threshold(matched, 180, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(blur, 180, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     return thresh
 # end function
 
@@ -77,7 +77,7 @@ def match_filter():
     # formula -- @article(joarder2012bangla)
     m, n = 30, 80
     A, B = 0.003, -0.0012
-    sa, sb = 6.0, 8.0
+    sa, sb = 6.0, 10.0
 
     a = m // 3
     b = 4 * m // 9

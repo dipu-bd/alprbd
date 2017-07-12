@@ -7,7 +7,7 @@ import os
 import cv2
 
 
-class Image:
+class Frame:
     """
     Image object that is used for recognition process.
     """

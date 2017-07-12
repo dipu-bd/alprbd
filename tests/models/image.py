@@ -6,7 +6,7 @@ import logging
 class TestImage(TestCase):
     def test_init(self):
         file = 'samples/002.jpg'
-        img = alprbd.models.Image(file)
+        img = alprbd.models.Frame(file)
         self.assertIsNotNone(img.file, msg="no file given")
         logging.info('>>>image test: file ' + img.file)
         self.assertIsNotNone(img.original, msg="image load failure")

@@ -14,25 +14,26 @@ class TestDetection(TestCase):
 
     def test_apply_matching(self):
         #for f in np.sort(os.listdir('samples')):
-        f = '335.jpg'
+        f = '337.jpg'
         file = os.path.join('samples', f)
-        image = alprbd.models.Image(file)
+        image = alprbd.models.Frame(file)
         image = alprbd.worker.preprocess.process(image)
         matched = alprbd.worker.detection.apply_matching(image.enhanced)
         self.assertIsNotNone(matched, msg="mixture model build failure")
         self.assertLessEqual(np.max(matched), 255)
         self.assertGreaterEqual(np.min(matched), 0)
-        out = np.hstack((image.enhanced, matched))
+        image.gray[matched < 250] = 0
+        out = np.hstack((image.enhanced, image.gray))
         cv2.imshow('matched: ' + f, out)
         cv2.waitKey()
 
     def test_regions(self):
-        #for f in np.sort(os.listdir('samples')):
-        f = '335.jpg'
-        file = os.path.join('samples', f)
-        image = alprbd.models.Image(file)
-        image = alprbd.worker.preprocess.process(image)
-        image = alprbd.worker.detection.detect_roi(image)
-        for region in image.roi:
-            cv2.imshow(f, cv2.resize(region.image, (350, 150)))
-            cv2.waitKey(500)
+        for f in np.sort(os.listdir('samples')):
+            #f = '335.jpg'
+            file = os.path.join('samples', f)
+            image = alprbd.models.Frame(file)
+            image = alprbd.worker.preprocess.process(image)
+            image = alprbd.worker.detection.detect_roi(image)
+            for region in reversed(image.roi):
+                cv2.imshow(f, cv2.resize(region.image, (350, 150)))
+                cv2.waitKey(700)

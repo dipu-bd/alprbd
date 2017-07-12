@@ -34,16 +34,17 @@ def rescale(img):
     :param img: original image
     :return: rescaled image
     """
-    h, w = img.shape
-    d_w, d_h = cfg.SCALE_DIM
-    if h < w:
-        w = w * d_h / h
-        h = d_h
+    height = img.shape[0]
+    width = img.shape[1]
+    dst_width, dst_height = cfg.SCALE_DIM
+    if height < width:
+        width = (width * dst_height) // height
+        height = dst_height
     else:
-        h = h * d_w / w
-        w = d_w
+        height = (height * dst_width) // width
+        width = dst_width
     # end if
-    return cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA)
+    return cv2.resize(img, (width, height), interpolation=cv2.INTER_AREA)
 # end function
 
 

@@ -1,8 +1,9 @@
 """
 Declaration of ALPR Worker class
 """
-from ..models import Image
+from ..models import Frame
 from .preprocess import process
+from .detection import detect_roi
 
 
 class ALPRWorker:
@@ -19,7 +20,7 @@ class ALPRWorker:
         :param mark: True to mark plate regions in the input image.
         :param top_n: Number of predictions per plate image.
         """
-        self.image = Image(input_image)
+        self.frame = Frame(input_image)
         self._extract = extract
         self._json = json
         self._mark = mark
@@ -55,7 +56,8 @@ class ALPRWorker:
         5. recognize each segments
         6. display output
         """
-        process(self.image)
+        self.frame = process(self.frame)
+        self.frame = detect_roi(self.frame)
         pass
 
 # end class

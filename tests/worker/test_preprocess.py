@@ -8,7 +8,7 @@ import numpy as np
 class TestPreprocess(TestCase):
     def test_process(self):
         file = 'samples/002.jpg'
-        image = alprbd.models.Image(file)
+        image = alprbd.models.Frame(file)
         self.assertIsNotNone(image.original, msg="image load failed")
         alprbd.worker.preprocess.process(image)
         self.assertIsNotNone(image.gray, msg="no gray image")
@@ -33,8 +33,9 @@ class TestPreprocess(TestCase):
         scaled = alprbd.worker.preprocess.rescale(img)
         self.assertIsNotNone(scaled, msg="rescaling failed")
         self.assertEqual(len(scaled.shape), len(img.shape), msg="shape mismatch")
-        self.assertEqual(scaled.shape[0], alprbd.config.SCALE_DIM[1], msg="scaled height mismatch")
-        self.assertEqual(scaled.shape[1], alprbd.config.SCALE_DIM[0], msg="scaled width mismatch")
+        w, h = alprbd.config.SCALE_DIM
+        p, q, _ = scaled.shape
+        self.assertEqual(w * p, h * q, msg="aspect ratio mismatch")
 
     def test_enhance(self, file = 'samples/002.jpg'):
         img = cv2.imread(file, 0)
