@@ -1,4 +1,8 @@
 stages/
+dataset/
+OCRModels/
+logs/
+samples/
 __pycache__/
 *.pyc
 .ipnyb_checkpoints/
