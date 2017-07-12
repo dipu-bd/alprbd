@@ -12,8 +12,8 @@ DIGITS_PATH = os.path.join('dataset', 'digits')
 LETTERS_PATH = os.path.join('dataset', 'letters')
 
 # model directories
-DIGIT_MODEL = os.path.join('OCRModels', 'digit', 'model')
-LETTER_MODEL = os.path.join('OCRModels', 'letter', 'model')
+DIGIT_MODEL = os.path.join('trained', 'digit.npz')
+LETTER_MODEL = os.path.join('trained', 'letter.npz')
 
 # sample directory
 DIGIT_SAMPLES = 'sample/digits'

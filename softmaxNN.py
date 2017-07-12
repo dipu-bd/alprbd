@@ -10,7 +10,7 @@ import config as cfg
 
 def train(ds,
           layers,
-          iterations=10000,
+          iterations=1000,
           batch_size=100,
           model_file=None,
           max_learning_rate=0.003,
@@ -36,22 +36,22 @@ def train(ds,
     pkeep = tf.placeholder(tf.float32, name='pkeep')
 
     # Intialize the weights and bases
-    B = [None] * num_L  # bases
-    W = [None] * num_L  # weights
-    for i in range(1, num_L):
+    B = [None] * (num_L - 1)    # bases
+    W = [None] * (num_L - 1)    # weights
+    for i in range(num_L - 1):
         # get random numbers between -0.2 and +0.2
-        W[i] = tf.Variable(tf.truncated_normal([L[i - 1], L[i]], stddev=0.1))
+        W[i] = tf.Variable(tf.truncated_normal([L[i], L[i + 1]], stddev=0.1))
         # intermediate bases should be ones
-        B[i] = tf.Variable(tf.ones([L[i]]))
+        B[i] = tf.Variable(tf.ones([L[i + 1]]))
     # end for
-    B[-1] = tf.Variable(tf.zeros([L[i]]))   # last base is zeros
+    B[-1] = tf.Variable(tf.zeros([L[-1]]))   # last base is zeros
 
-    # Connect the layers
+    # Build the model
     Y = [None] * num_L  # output
     Y[0] = X
-    for i in range(1, num_L - 1):
+    for i in range(num_L - 1):
         # output including dropouts
-        Y[i] = tf.nn.dropout(tf.nn.relu(tf.matmul(Y[i - 1], W[i]) + B[i]), pkeep)
+        Y[i + 1] = tf.nn.dropout(tf.nn.relu(tf.matmul(Y[i], W[i]) + B[i]), pkeep)
     # end for
     Ylogits = tf.matmul(Y[-2], W[-1]) + B[-1]
     YY = Y[-1] = tf.nn.softmax(Ylogits, name='Y')
@@ -104,7 +104,8 @@ def train(ds,
     print('Training Complete.')
     print()
 
-    # Save the model
+    # Save the model using saver
+    """
     if model_file:
         folder = os.path.dirname(model_file)
         if not os.path.exists(folder):
@@ -115,6 +116,17 @@ def train(ds,
         saver = tf.train.Saver()
         saver.save(sess, model_file)
         print('Training model stored.\n')
+    # end if
+    """
+
+    # Save the model normally
+    if model_file:
+        folder = os.path.dirname(model_file)
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        # end if
+        w, b = sess.run([W, B])
+        np.savez_compressed(model_file, weights=w, bases=b, layers=layers)
     # end if
 
     sess.close()
