@@ -9,8 +9,8 @@ class TestDetection(TestCase):
     def test_mixture_model(self):
         kernel = alprbd.worker.detection.match_filter()
         self.assertIsNotNone(kernel, msg="mixture model build failure")
-        cv2.imshow('kernel', cv2.resize(kernel * 100, (400, 150)))
-        cv2.waitKey(1000)
+        #cv2.imshow('kernel', cv2.resize(kernel * 100, (400, 150)))
+        #cv2.waitKey(1000)
 
     def test_apply_matching(self):
         #for f in np.sort(os.listdir('samples')):
@@ -34,6 +34,8 @@ class TestDetection(TestCase):
             image = alprbd.models.Frame(file)
             image = alprbd.worker.preprocess.process(image)
             image = alprbd.worker.detection.detect_roi(image)
-            for region in reversed(image.roi):
-                cv2.imshow(f, cv2.resize(region.image, (350, 150)))
-                cv2.waitKey(500)
+            self.assertIsNotNone(image.roi)
+            self.assertGreater(len(image.roi), 0)
+            #for region in reversed(image.roi):
+            #    cv2.imshow(f, cv2.resize(region.image, (350, 150)))
+            #    cv2.waitKey(500)

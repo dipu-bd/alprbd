@@ -4,6 +4,7 @@ Declaration of methods used of plate extraction.
 import cv2
 import numpy as np
 from alprbd import config as cfg
+from ..models import Plate, Region
 
 
 def extract(frame):
@@ -16,11 +17,13 @@ def extract(frame):
     for region in frame.roi:
         img = region.image
         for bound in check_contours(img):
-            plate = get_plate(img, bound)
-            binary = get_binary(plate)
+            extracted = get_plate(img, bound)
+            binary = get_binary(extracted)
             clean = denoise(binary)
             if clean is not None:
-                frame.plates.append(clean)
+                x1, x2, y1, y2 = bound[0]
+                plate = Plate(clean, Region(frame, x1, y1, x2 - x1, y2 - y1))
+                frame.plates.append(plate)
             # end if
         # end for
     # end for
@@ -113,10 +116,7 @@ def get_plate(img, region):
 
     # resize plate
     scaled = cv2.resize(out, cfg.PLATE_DIM)
-
     return scaled
-
-
 # end function
 
 
@@ -126,10 +126,10 @@ def get_binary(img):
     :param img: plate image
     """
     # normal binary threshold
-    bnw1 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    bnw1 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU)[1]
 
     # inverse binary threshold
-    bnw2 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
+    bnw2 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU)[1]
 
     # calculate ratio of non-zero pixels
     row, col = img.shape
@@ -142,13 +142,11 @@ def get_binary(img):
         return bnw1
     else:
         return bnw2
-        # end if
-
-
+    # end if
 # end function
 
 
-def denoise(img):
+def de_noise(img):
     """
     Remove noise.
     :param img: plate image
@@ -172,8 +170,8 @@ def denoise(img):
             y, x, c, r = cv2.boundingRect(cnt)
             if not (35 < r < row - 25 and 35 < c < col - 25):
                 cv2.fillConvexPoly(img, cnt, 0)
-                # end if
-                # end for
+            # end if
+        # end for
     # end for
 
     # check mean white pixels
@@ -192,8 +190,8 @@ def apply_flood_fill(img, region, tx=0, ty=0):
         for y, c in enumerate(_):
             if c > 0:
                 cv2.floodFill(img, mask, (ty + y, tx + x), 0)
-                # end if
-                # end if
-    # end if
+            # end if
+        # end for
+    # end for
     return img
 # end function
