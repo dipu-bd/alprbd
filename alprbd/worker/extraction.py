@@ -5,8 +5,10 @@ import cv2
 import numpy as np
 from alprbd import config as cfg
 from ..models import Plate, Region
-from ..helper.image_util import rescale
+from .preprocess import get_binaries
 
+# Clip Limited Adaptive Histogram Enhancement
+CLAHE = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(10, 10))
 
 def extract(frame):
     """
@@ -15,18 +17,8 @@ def extract(frame):
     :return: Image frame after processing
     """
     frame.plates = []
-    clahe = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(10, 10))
     for region in frame.roi:
-        # process image
-        img = region.image
-        img = rescale(img, cfg.PLATE_DIM)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = clahe.apply(img)
-
-        _, binary1 = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)
-        _, binary2 = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY_INV)
-
-        for binary in [binary1, binary2]:
+        for binary in get_binaries(region):
             # clean and add img
             clean = denoise(binary)
             if clean is not None:
