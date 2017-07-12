@@ -5,10 +5,8 @@ import cv2
 import numpy as np
 from alprbd import config as cfg
 from ..models import Plate, Region
-from .preprocess import get_binaries
+from .preprocess import get_binaries, auto_crop
 
-# Clip Limited Adaptive Histogram Enhancement
-CLAHE = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(10, 10))
 
 def extract(frame):
     """
@@ -18,11 +16,11 @@ def extract(frame):
     """
     frame.plates = []
     for region in frame.roi:
-        for binary in get_binaries(region):
+        for binary in get_binaries(region.image):
             # clean and add img
             clean = denoise(binary)
             if clean is not None:
-                frame.plates.append(Plate(clean, region))
+                frame.plates.append(Plate(region, clean))
             # end if
 
             # check contours
@@ -32,7 +30,7 @@ def extract(frame):
                 if clean is not None:
                     x1, x2, y1, y2 = bound[0]
                     reg = Region(frame, x1, y1, x2 - x1, y2 - y1)
-                    frame.plates.append(Plate(clean, reg))
+                    frame.plates.append(Plate(reg, clean))
                 # end if
             # end for
         # end for
@@ -168,10 +166,10 @@ def denoise(img):
     left = img[:, 0:1]
     right = img[:, col - 1:col]
 
-    img = apply_flood_fill(img, upper)
-    img = apply_flood_fill(img, lower, tx=row - 1)
-    img = apply_flood_fill(img, left)
-    img = apply_flood_fill(img, right, ty=col - 1)
+    apply_flood_fill(img, upper)
+    apply_flood_fill(img, lower, tx=row - 1)
+    apply_flood_fill(img, left)
+    apply_flood_fill(img, right, ty=col - 1)
 
     # de-noise using contours
     for i in range(1):

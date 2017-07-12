@@ -8,7 +8,6 @@ import numpy as np
 class TestSegmentation(TestCase):
 
     def test_segmentation(self):
-        return
         for f in np.sort(os.listdir('samples')):
             file = os.path.join('samples', f)
             frame = alprbd.models.Frame(file)

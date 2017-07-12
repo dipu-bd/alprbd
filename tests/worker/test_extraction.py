@@ -9,7 +9,7 @@ import numpy as np
 class TestExtraction(TestCase):
 
     def test_extraction(self):
-        return
+        return None
         for f in np.sort(os.listdir('samples')):
             #f = '335.jpg'
             file = os.path.join('samples', f)
@@ -19,18 +19,19 @@ class TestExtraction(TestCase):
             frame = alprbd.worker.extraction.extract(frame)
 
             self.assertIsNotNone(frame.roi)
-            self.assertNotEqual(len(frame.plates), 0)
 
             img = frame.original
             for plate in frame.plates:
                 color = [255, 0, random.randint(0, 127)]
                 random.shuffle(color)
-                img[:180, :460, ] = 255
                 cv2.putText(img, f, (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 3, [0, 0, 0], thickness=10)
+                img[:480, :180] = 255
                 cv2.rectangle(img,
                               plate.region.first_point,
                               plate.region.second_point,
                               color, thickness=20)
             # end for
-            cv2.imshow("plates", alprbd.worker.preprocess.rescale(img))
-            cv2.waitKey(2000)
+            cv2.imshow("marked", alprbd.worker.preprocess.rescale(img, (800, 600)))
+            for plate in frame.plates:
+                cv2.imshow('plate', plate.image)
+                cv2.waitKey(2000)

@@ -2,11 +2,14 @@
 Pre-process image
 """
 import cv2
+import numpy as np
 import alprbd.config as cfg
+from ..models import Region
 
 # ---------- Clip Limited Adaptive Histogram Enhancement Function -----------
 # http://docs.opencv.org/3.1.0/d5/daf/tutorial_py_histogram_equalization.html
-CLAHE = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(20, 40))
+CLAHE = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(30, 60))       # for image
+ROI_CLAHE = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(8, 8))   # for ROIs
 
 
 def process(frame):
@@ -32,13 +35,13 @@ def auto_crop(img):
     if img is None:
         return None
     # end if
-    rows, cols = img.shape
+    row, col = img.shape
     # find area
     nzx, nzy = np.nonzero(img)
     x1 = max(0, np.min(nzx))
-    x2 = min(rows, np.max(nzx))
+    x2 = min(row, np.max(nzx))
     y1 = max(0, np.min(nzy))
-    y2 = min(cols, np.max(nzy))
+    y2 = min(col, np.max(nzy))
     # crop
     return img[x1:x2, y1:y2]
 # end function
@@ -62,20 +65,37 @@ def rescale(img, dst_size):
 # end function
 
 
-def get_binaries(region):
+def get_binaries(img):
     """
-    gets two binary images from the given region
-    :param region: Region object
-    :return: binary, and inverse binary image array
+    gets two binary images of given image
+    :param img: image to convert
+    :return: array of [binary, inverse binary] image
     """
     # process image
-    img = region.image
     img = rescale(img, cfg.PLATE_DIM)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    img = CLAHE.apply(img)
+    if len(img.shape) == 3:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img = ROI_CLAHE.apply(img)
 
-    _, binary1 = cv2.threshold(img, 100, 255, cv2.THRESH_BINARY)
-    _, binary2 = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY_INV)
+    _, binary1 = cv2.threshold(img, 120, 255, cv2.THRESH_BINARY)
+    _, binary2 = cv2.threshold(img, 130, 255, cv2.THRESH_BINARY_INV)
 
     return [binary1, binary2]
+# end function
+
+
+def box2region(box, region):
+    """
+    convert one region to another
+    :param box: current region
+    :param region: destination region
+    :return: converted region
+    """
+    [[x1, x2, y1, y2], [row, col]] = box
+    height, width = region.height, region.width
+    w = (y2 - y1) * col // width
+    h = (x2 - x1) * row // height
+    x = x1 * row // height + region.x
+    y = y1 * col // width + region.y
+    return Region(region.parent, x, y, h, w)
 # end function

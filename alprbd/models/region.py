@@ -17,38 +17,37 @@ class Region:
         :param height: region height
         :param width: region width
         """
-        self._x1 = x
-        self._x2 = x + height
-        self._y1 = y
-        self._y2 = y + width
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
         self._parent = image
+
+    @property
+    def parent(self):
+        """gets the Image object this region belongs to"""
+        return self._parent
 
     @property
     def image(self):
         """extract the image of the region"""
-        return self._parent.original[self._x1:self._x2, self._y1:self._y2]
+        x1, y1 = self.x, self.y
+        x2 = self.x + self.height
+        y2 = self.y + self.width
+        return self._parent.original[x1:x2, y1:y2]
 
     def bound(self):
-        return [self._y1, self._x1, self.width, self.height]
+        return [self.x, self.y, self.width, self.height]
 
     @property
     def first_point(self):
         """returns the top-left point of the region"""
-        return self._y1, self._x1
+        return self.y, self.x
 
     @property
     def second_point(self):
         """returns the bottom-right point of the region"""
-        return self._y2, self._x2
-
-    @property
-    def height(self):
-        """get height of the region"""
-        return self._x2 - self._x1
-
-    @property
-    def width(self):
-        """get width of the region"""
-        return self._y2 - self._y1
+        return self.y + self.width, self.x + self.height
 
 # end class
+
