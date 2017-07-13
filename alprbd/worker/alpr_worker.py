@@ -64,10 +64,11 @@ class ALPRWorker:
         self.frame = extract(self.frame)
         self.frame = segment(self.frame)
         self.frame = recognize(self.frame)
-
+	
+        print(self.frame.file)
         for plate in self.frame.plates:
             if len(plate.guess) > 0:
-                print(self.frame.file, 'guess:', plate.guess[0][0], 'prob :', plate.guess[0][1])
+                print('\tguess:', plate.guess[0][0], 'prob :', plate.guess[0][1])
         # end for
         pass
 

@@ -20,10 +20,10 @@ def recognize(frame):
         for seg in plate.segments:
             seg = process_segment(seg)
             if len(seg.guess) > 0:
-                g = seg.guess[0][0] + g
+                g = seg.guess[0][0] + ' ' + g
                 p *= seg.guess[0][1]
         # end for
-        if len(g) > 0 and p > 0.75:
+        if len(g) > 0:
             plate.guess = [(g, p)]
     # end for
 
