@@ -1,4 +1,10 @@
-from ..helper import recognize_digit, recognize_letter, recognize_city
+"""
+Defines function to predict letters and digits
+"""
+from ..helper import TensorFlowApi
+
+# initializes the api
+api = TensorFlowApi()
 
 
 def recognize(frame):
@@ -33,12 +39,13 @@ def process_segment(segment):
     """
     g = []
     if segment.serial >= 2:
-        g.extend(recognize_digit(segment.image))
+        g.extend(api.recognize_digit(segment.image))
     elif segment.serial == 1:
-        g.extend(recognize_letter(segment.image))
+        g.extend(api.recognize_letter(segment.image))
     else:
-        g.extend(recognize_city(segment.image))
-    sorted(g, key=lambda x: -x[1])
+        g.extend(api.recognize_city(segment.image))
+    # end if
+    sorted(g, key=lambda x: -x[1])  # sort
     segment.guess = g
     return segment
 # end function
