@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 import config as cfg
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def read_images(folder):
     """Read all images from a directory recursively"""
@@ -37,19 +38,8 @@ def run(model_file, sample_folder, letters):
         return print("Samples not found")
     # end if
 
-    # Create session
-    sess = tf.Session()
-    print()
-
-    # Restore model
-    folder = os.path.dirname(model_file)
-    saver = tf.train.import_meta_graph(model_file + '.meta')
-    saver.restore(sess, tf.train.latest_checkpoint(folder))
-
-    graph = tf.get_default_graph()
-    X = graph.get_tensor_by_name("X:0")
-    Y = graph.get_tensor_by_name("Y:0")
-    pkeep = graph.get_tensor_by_name("pkeep:0")
+    # Build model
+    model = np.load(model_file)
 
     files = read_images(sample_folder)
     for file in files:
@@ -58,12 +48,34 @@ def run(model_file, sample_folder, letters):
         image = trim_image(image)
         image = np.reshape(image, (1, 784))
         # predict outcome
-        result = sess.run(Y, {X: image, pkeep: 1.0}).flatten()
-        p = np.argmax(result)   # predicted class
+        result = predict(model, image).flatten()
+        p = np.argmax(result)           # predicted class
         # show result
         name = os.path.split(file)[-1]
         print("%10s = %s (%.2f%% sure)" % (name, letters[p], result[p] * 100))
     # end for
+# end function
 
-    sess.close()
+def predict(model, input):
+    """predicts outcome of the given input"""
+    W = model['weights']
+    B = model['bases']
+    num = W.shape[0]
+
+    X = tf.placeholder(tf.float64)
+    for i in range(num):
+        W[i] = tf.Variable(W[i], tf.float64)
+        B[i] = tf.Variable(B[i], tf.float64)
+
+    # for each inner layers
+    Y = X
+    for i in range(0, num - 1):
+        Y = tf.nn.relu(tf.matmul(Y, W[i]) + B[i])
+
+    # for the final layer
+    Y = tf.nn.softmax(tf.matmul(Y, W[-1]) + B[-1])
+    
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        return sess.run(Y, { X: input })
 # end function

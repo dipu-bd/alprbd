@@ -126,7 +126,7 @@ def train(ds,
             os.makedirs(folder)
         # end if
         w, b = sess.run([W, B])
-        np.savez_compressed(model_file, weights=w, bases=b, layers=layers)
+        np.savez_compressed(model_file, weights=w, bases=b)
     # end if
 
     sess.close()
