@@ -3,7 +3,6 @@ Some configuration values used everywhere
 """
 
 import os
-from glob import glob
 
 # The numerals permitted in the vehicle registration plate
 NUMERALS = [
@@ -62,11 +61,6 @@ LETTERS = [
     u"ও",
 ]
 
-# all city name images
-CITIES = [
-    file for file in glob('city' + '/**/*.bmp')
-]
-
 # Reference https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Bangladesh
 
 # fonts - [(location, size)]
@@ -76,9 +70,6 @@ UNICODE_FONTS = [
     ("fonts/solaimanlipi.ttf", 46),
     ("fonts/sutonnyomj.ttf", 48)
 ]
-
-# dimension of each image
-IMAGE_DIM = (28, 28)
 
 # ratio between training and testing data
 DATASET_RATIO = 0.85  # training data
