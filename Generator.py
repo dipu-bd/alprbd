@@ -5,6 +5,7 @@ Generates basic dataset
 
 import os
 import cv2
+import shutil
 import numpy as np
 import config as cfg
 from Transformer import transform
@@ -26,9 +27,11 @@ def check_path(output):
 # end function
 
 
-def get_name(index, label, save_path):
+def get_name(index, save_path, label=None):
     name = '{:05d}.bmp'.format(index)
-    folder = os.path.join(save_path, label)
+    if label is not None:
+        folder = os.path.join(save_path, label)
+    # end if
     check_path(folder)
     return os.path.join(folder, name)
 # end function
@@ -45,10 +48,27 @@ def generate(data, font, index, save_path):
         draw = ImageDraw.Draw(img)
         draw.text((5, 5), letter, 255, font=font)
         # save image
-        image_file = get_name(index, letter, save_path)
+        image_file = get_name(index, save_path, letter)
         img.save(image_file)
         # transform image
         index = transform(image_file, index)
+    # end for
+    return index
+# end function
+
+
+def copyfiles(files, index, save_path):
+    """
+    Copy all files to save_path and apply transformation
+    """
+    for file in files:
+        index += 1
+        # copy
+        folder = os.path.splitext(file)[0]
+        dst = get_name(index, folder)
+        shutil.copyfile(file, dst)
+        # transform
+        index = transform(dst, index)
     # end for
     return index
 # end function
@@ -68,6 +88,9 @@ def run():
 
         save_path = os.path.join(cfg.LETTERS_PATH, 'generated')
         index = generate(cfg.LETTERS, font, index, save_path)
+
+        save_path = os.path.join(cfg.CITY_PATH, 'generated')
+        index = copyfiles(cfg.CITIES, index, save_path)
     # end for
     print("Generated %d images." % index)
 # end if

@@ -3,6 +3,7 @@ Some configuration values used everywhere
 """
 
 import os
+from glob import glob
 
 # The numerals permitted in the vehicle registration plate
 NUMERALS = [
@@ -61,6 +62,11 @@ LETTERS = [
     u"ও",
 ]
 
+# all city name images
+CITIES = [
+    file for file in glob('city' + '/**/*.bmp')
+]
+
 # Reference https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Bangladesh
 
 # fonts - [(location, size)]
@@ -80,3 +86,4 @@ DATASET_RATIO = 0.85  # training data
 # output directories
 DIGITS_PATH = os.path.join('dataset', 'digits')
 LETTERS_PATH = os.path.join('dataset', 'letters')
+CITY_PATH = os.path.join('dataset', 'city')
