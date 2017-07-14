@@ -4,32 +4,72 @@ Transforms an image using morphological operations
 # -*- coding: utf-8 -*-
 
 import os
+from shutil import copyfile
 import cv2
 import numpy as np
 import config as cfg
 
 
+def transform(file, index):
+    """
+    Uses various transformation on image
+    """
+    origin = index
+    scale = (28, 28)
+    if file.startswith(cfg.CITY_PATH):
+        scale = (28, 4*28)
+    # end if
+    normalize_image(file, scale)
+
+    # transformers
+    transformers = [
+        median,
+        dilate,
+    ]
+    transformers.extend([
+        affine1,
+        affine2,
+        affine3
+    ] * 2)
+    transformers.extend([
+        copyfile
+    ] * 3)
+
+    # special transformers
+    specials = [
+        noisy
+    ]
+    specials.extend([
+        copyfile
+    ] * 20)
+
+    # apply transformers
+    folder = os.path.dirname(file)
+    for function1 in transformers + specials:
+        index += 1
+        out = get_name(folder, index)
+        function1(file, out)
+        normalize_image(out, scale)
+        for function2 in transformers:
+            index += 1
+            out2 = get_name(folder, index)
+            function2(out, out2)
+            normalize_image(out2, scale)
+        # end for
+    # end for
+
+    return index
+# end function
+
 def get_name(folder, index):
+    """returns the name of new file"""
     return os.path.join(folder, '{:05d}.bmp'.format(index))
 # end function
 
 
-def bigframe(img):
-    """
-    Trims the image
-    """
-    r, c = img.shape
-    out = np.zeros((3*r, 3*c), np.uint8)
-    out[r:2*r, c:2*c] = img
-    return out
-# end function
-
-
-def copy_image(infile, outfile):
-    img = bigframe(cv2.imread(infile, 0))
-    cv2.imwrite(outfile, img)
-# end function
-
+#-------------------------------------------------------------------#
+#                     ALL TRANSFORMATIONS                           #
+#-------------------------------------------------------------------#
 
 def dilate(infile, outfile):
     img = bigframe(cv2.imread(infile, 0))
@@ -40,7 +80,7 @@ def dilate(infile, outfile):
 
 
 def erode(infile, outfile):
-    img = bigframe(cv2.imread(infile, 0))
+    img = cv2.imread(infile, 0)
     kernel = np.ones((1, 1), np.uint8)
     erosion = cv2.erode(img, kernel, iterations=1)
     cv2.imwrite(outfile, erosion)
@@ -93,35 +133,26 @@ def affine3(infile, outfile):
 # end function
 
 
-def tophat1(infile, outfile):
-    img = bigframe(cv2.imread(infile, 0))
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (6, 6))
-    tophated = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)
-    cv2.imwrite(outfile, tophated)
+def noisy(infile, outfile):
+    img = cv2.imread(infile, 0)
+    kernel = np.random.rand(*img.shape)
+    noisy = img * kernel
+    cv2.imwrite(outfile, noisy)
 # end function
 
 
-def tophat2(infile, outfile):
-    img = bigframe(cv2.imread(infile, 0))
-    kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (4, 6))
-    tophated = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)
-    cv2.imwrite(outfile, tophated)
-# end function
+#-------------------------------------------------------------------#
+#                           OTHER METHODS                           #
+#-------------------------------------------------------------------#
 
-
-def tophat3(infile, outfile):
-    img = bigframe(cv2.imread(infile, 0))
-    kernel = cv2.getStructuringElement(cv2.MORPH_CROSS, (4, 4))
-    tophated = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)
-    cv2.imwrite(outfile, tophated)
-# end function
-
-
-def tophat4(infile, outfile):
-    img = bigframe(cv2.imread(infile, 0))
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (8, 12))
-    tophated = cv2.morphologyEx(img, cv2.MORPH_TOPHAT, kernel)
-    cv2.imwrite(outfile, tophated)
+def bigframe(img):
+    """
+    Trims the image
+    """
+    r, c = img.shape
+    out = np.zeros((3*r, 3*c), np.uint8)
+    out[r:2*r, c:2*c] = img
+    return out
 # end function
 
 
@@ -140,73 +171,16 @@ def trim(img):
     return img[x1:x2, y1:y2]
 # end function
 
+def wbratio(file):
+    image = trim(cv2.imread(file, 0))
+    area = (image.shape[0]*image.shape[1])
+    return area / np.count_nonzero(image)
+# end def
 
 def normalize_image(file, scale):
-    image = cv2.imread(file, 0)
-    image = trim(image)
-    image[image < 100] = 0
-    image[image > 0] = 255
-    image = cv2.resize(image, scale)
-    cv2.imwrite(file, image)
-# end function
-
-
-def transform(file, index):
-    """
-    Uses various transformation on image
-    """
-
-    start = index
-    folder = os.path.dirname(file)
-
-    scale = (28, 28)
-    if os.path.dirname(folder).startswith(cfg.CITY_PATH):
-        scale = (28, 4*28)
-    # end if
-    normalize_image(file, scale)
-
-    # units
-    functions = [
-        median,
-        dilate,
-
-        affine1,
-        affine2,
-        affine3,
-        
-        affine1,
-        affine2,
-        affine3,
-        
-        tophat1,
-        tophat2,
-        tophat3,
-        tophat4,
-        
-        copy_image,
-        copy_image,
-        copy_image,
-    ]
-
-    for fT1 in functions:
-        fn1 = fT1.__name__[:-1]
-        # original units 
-        index += 1
-        out = get_name(folder, index)
-        fT1(file, out)
-        normalize_image(out, scale)
-        # mixture units
-        for fT2 in functions:
-            fn2 = fT1.__name__[:-1]
-            if fn1 == 'tophat' and fn1 == fn2: 
-                continue
-            # apply second transformation
-            index += 1
-            out2 = get_name(folder, index)
-            fT2(out, out2)
-            normalize_image(out2, scale)
-        #end for
-    # end for
-        
-    return index
+    img = cv2.imread(file, 0)
+    img = trim(img)
+    _, img = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
+    img = cv2.resize(img, scale)
+    cv2.imwrite(file, img)
 # end function
