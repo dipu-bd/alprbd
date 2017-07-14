@@ -37,7 +37,7 @@ def transform(file, index):
 
     # special transformers
     specials = [
-        noisy
+        #noisy
     ]
     specials.extend([
         copyfile
