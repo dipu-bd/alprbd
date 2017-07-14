@@ -13,8 +13,9 @@ def main():
     data = get_digit_data()
     layers = [
         row * col,
-        192,
-        56,
+        344,
+        112,
+        26,
         len(cfg.NUMERALS),
     ] # 3 layer network
 
@@ -25,7 +26,7 @@ def main():
     train(data,
           layers=layers,
           batch_size=100,
-          iterations=700,
+          iterations=3000,
           model_file=cfg.DIGIT_MODEL)
 # end function
 

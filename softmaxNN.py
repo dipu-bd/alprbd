@@ -6,6 +6,7 @@ import math
 import numpy as np
 import tensorflow as tf
 import config as cfg
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 def train(ds,

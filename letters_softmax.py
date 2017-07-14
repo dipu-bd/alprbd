@@ -14,9 +14,8 @@ def main():
     layers = [
         row * col,
         212,
-        128,
-        96,
-        74,
+        126,
+        68,
         len(cfg.LETTERS),
     ]
 
@@ -27,7 +26,7 @@ def main():
     train(data,
           layers=layers,
           batch_size=100,
-          iterations=9000,
+          iterations=12000,
           model_file=cfg.LETTER_MODEL)
 # end function
 

@@ -62,10 +62,10 @@ def predict(model, input):
     B = model['bases']
     num = W.shape[0]
 
-    X = tf.placeholder(tf.float64)
+    X = tf.placeholder(tf.float32)
     for i in range(num):
-        W[i] = tf.Variable(W[i], tf.float64)
-        B[i] = tf.Variable(B[i], tf.float64)
+        W[i] = tf.Variable(W[i], tf.float32)
+        B[i] = tf.Variable(B[i], tf.float32)
 
     # for each inner layers
     Y = X
