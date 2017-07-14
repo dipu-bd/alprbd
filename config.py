@@ -6,22 +6,21 @@ import os
 
 # dimension of each image
 IMAGE_DIM = (28, 28)
+CITY_DIM = (28, 4*28)
 
 # dataset directories
 DIGITS_PATH = os.path.join('dataset', 'digits')
 LETTERS_PATH = os.path.join('dataset', 'letters')
+CITY_PATH = os.path.join('dataset', 'city')
 
 # model directories
 DIGIT_MODEL = os.path.join('trained', 'digit.npz')
 LETTER_MODEL = os.path.join('trained', 'letter.npz')
+CITY_MODEL = os.path.join('trained', 'city.npz')
 
 # sample directory
 DIGIT_SAMPLES = 'sample/digits'
 LETTER_SAMPLES = 'sample/letters'
-
-# log directory
-DIGIT_LOGS = 'logs/digits'
-LETTER_LOGS = 'logs/letters'
 
 # The numerals permitted in the vehicle registration plate
 NUMERALS = [

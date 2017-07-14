@@ -9,14 +9,14 @@ from softmaxNN import train
 def main():
     """Main function"""
 
-    row, col = cfg.IMAGE_DIM
-    data = get_digit_data()
+    row, col = cfg.CITY_DIM
+    data = get_city_data()
     layers = [
         row * col,
+        784,
         344,
         112,
-        26,
-        len(cfg.NUMERALS),
+        len(cfg.CITIES),
     ] # 3 layer network
 
     print('Training size =', data.train.labels.shape[0])
@@ -27,7 +27,7 @@ def main():
           layers=layers,
           batch_size=100,
           iterations=3000,
-          model_file=cfg.DIGIT_MODEL)
+          model_file=cfg.CITY_MODEL)
 # end function
 
 if __name__ == '__main__':

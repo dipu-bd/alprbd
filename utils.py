@@ -26,7 +26,7 @@ def get_data(folder, letters):
     """Build the dataset"""
     # get training set
     train_images = os.path.join(folder, 'training_data.npy')
-    train_labels = os.path.join(folder, 'training_labels.npy')    
+    train_labels = os.path.join(folder, 'training_labels.npy')
     train_images = np.load(train_images)
     train_labels = np.load(train_labels)
 
