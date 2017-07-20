@@ -13,9 +13,7 @@ def main():
     data = get_city_data()
     layers = [
         row * col,
-        784,
-        344,
-        112,
+        121,
         len(cfg.CITIES),
     ] # 3 layer network
 
@@ -26,7 +24,7 @@ def main():
     train(data,
           layers=layers,
           batch_size=100,
-          iterations=3000,
+          iterations=5000,
           model_file=cfg.CITY_MODEL)
 # end function
 

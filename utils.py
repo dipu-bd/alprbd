@@ -8,14 +8,11 @@ import numpy as np
 import config as cfg
 from Dataset import Dataset
 
-DIGIT_PATH = os.path.join('dataset', 'digits')
-LETTER_PATH = os.path.join('dataset', 'letters')
-
-def dense_to_one_hot(labels, letters):
+def dense_to_one_hot(labels, classes):
     """Returns one-hot representation of the labels"""
-    labels = [letters.index(x) for x in labels]
+    labels = [classes.index(x) for x in labels]
     num_labels = len(labels)
-    num_classes = len(letters)
+    num_classes = len(classes)
     index_offset = np.arange(num_labels) * num_classes
     labels_one_hot = np.zeros((num_labels, num_classes))
     labels_one_hot.flat[index_offset + np.ravel(labels)] = 1
@@ -51,10 +48,10 @@ def get_digit_data():
     return get_data(cfg.DIGITS_PATH, cfg.NUMERALS)
 # end function
 
-def get_city_data():
-    return get_data(cfg.CITY_PATH, cfg.CITIES)
-# end function
-
 def get_letter_data():
     return get_data(cfg.LETTERS_PATH, cfg.LETTERS)
+# end function
+
+def get_city_data():
+    return get_data(cfg.CITY_PATH, cfg.CITIES)
 # end function
