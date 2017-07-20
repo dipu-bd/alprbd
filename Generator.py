@@ -7,6 +7,7 @@ import os
 import shutil
 from glob import glob
 
+import cv2
 import numpy as np
 import config as cfg
 from Transformer import transform
@@ -73,6 +74,24 @@ def generate_cities(index, save_path):
 # end function
 
 
+def generate_letters(index, save_path):
+    """
+    Copy all files to save_path and apply transformation
+    """
+    for file in glob('letters/**/*.bmp'):
+        index += 1
+        # copy
+        label = file.split(os.sep)[-2]
+        img = cv2.imread(file, 0)
+        # end if
+        dst = get_name(index, save_path, label)
+        cv2.imwrite(dst, img)
+        # transform
+        #index = transform(dst, index)
+    # end for
+    return index
+# end function
+
 def run():
     """
     To generate the image from the texts
@@ -90,9 +109,14 @@ def run():
         index = generate(cfg.LETTERS, font, index, save_path)
     # end for
 
-    print("Generating cities... ", index)
+    print("Generating cities...  ", index)
     save_path = os.path.join(cfg.CITY_PATH, 'generated')
     index = generate_cities(index, save_path)
 
+    print("Generating more letters... ", index)
+    save_path = os.path.join(cfg.LETTERS_PATH, 'generated')
+    index = generate_letters(index, save_path)
+
     print("Generated %d images." % index)
 # end if
+
