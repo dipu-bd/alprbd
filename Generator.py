@@ -10,7 +10,7 @@ from glob import glob
 import cv2
 import numpy as np
 import config as cfg
-from Transformer import transform
+from Transformer import transform, normalize_image
 
 from PIL import Image
 from PIL import ImageFont
@@ -87,6 +87,7 @@ def generate_letters(index, save_path):
         dst = get_name(index, save_path, label)
         cv2.imwrite(dst, img)
         # transform
+        normalize_image(dst, (28, 28))
         #index = transform(dst, index)
     # end for
     return index
