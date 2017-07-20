@@ -98,3 +98,9 @@ def format_docs(folder):
     print("Formatting done.")
     test_integrity(folder);
 # end if
+
+if __name__ == '__main__':
+    format_docs(cfg.DIGITS_PATH)
+    format_docs(cfg.LETTERS_PATH)
+    format_docs(cfg.CITY_PATH)
+# end if
