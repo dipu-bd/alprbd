@@ -89,7 +89,7 @@ Used vertical Sobel operator for extraction. Skewed images were fixed. Then hori
 
 
 
-# Rank 3 (inproceedings. `1 papers`)
+# Rank 3 (Unpublished. `1 papers`)
 ## [piasautomatic] Automatic Detection of Number Plate from Images of Bangladeshi Vehicles (April-2017 ResearchGate)
 
     Target: Bangladeshi Plates
