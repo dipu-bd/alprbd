@@ -10,7 +10,7 @@ This is a branch to review papers on our topic.
 - Links: `3`
 
 
-# Rank 1 (Must refer: `2 papers`)
+# Rank 1 (Must Refer. `2 papers`)
 
 ## [anagnostopoulos2006license] A License Plate-Recognition Algorithm for Intelligent Transportation System Applications (2006 IEEE)
 
@@ -40,7 +40,7 @@ For segmentation, connected component analysis is done. Then bounding box is cal
 
 
 
-# Rank 2 (`5 papers`)
+# Rank 2 (Good Source. `5 papers`)
 
 ## [abolghasemi2009edge] An edge-based color-aided method for license plate detection (2008 - Elsevier)
 
@@ -86,6 +86,17 @@ Used vertical Sobel operator for extraction. Skewed images were fixed. Then hori
 
 > ALPR system is mostly used in Intelligent Transportation System. ALPR is important in the area of highway toll collection, traffic problems, borders and custom security, premises where high security is needed, like national assembly, V.I.P houses and so on. III.
 
+## [amin2014automatic] An automatic number plate recognition of bangladeshi vehicles (2014 IJCA)
+
+    Accuracy: Total = 42%
+        Localization = 88%
+        Extraction = 77%
+        Recognition = 62%
+
+They used Hough transformation to detect ROIs from the edge image. The plate was extracted measuring the rectangular shapes in the image. Finally, a bangla opensource OCR called SHABDAYON  was used for recognition.
+
+> The ANPR was invented in 1976 at the Police Scientific Development Branch in the UK [3]. Prototype systems were working by 1979, and contracts were let to produce industrial systems, first at EMI Electronics, and then at Computer Recognition Systems (CRS) in Wokingham, UK. Early trial systems were deployed on the A1 road and at the Dartford Tunnel. The first arrest through detection of a stolen car was made in 1981.
+
 
 
 
@@ -112,6 +123,7 @@ They experimented with various types of CNN. Their CNN with dropout and Gabor fi
 
 
 
+
 # Rank 4 (Unusable. `2 papers`)
 ## [uddin2016bangladeshi] Bangla License Plate Reader for Metropolitan Cities of Bangladesh Using Template Matching
 
@@ -129,6 +141,7 @@ They focused on metropolitan areas only. The extraction was done by measuring th
     Accuracy: Not specified
 
 They depended on a system that takes images of the car from a certain distance and angle. Detection of plate is done empirically selecting a specific portion of the image. After converting the image to binary, segmentation was done by horizontal and vertical projection. Neural network was used for recognition.
+
 
 
 
