@@ -25,7 +25,7 @@ This paper provides an in-dept literature review.
 
 ## [uddin2016bangladeshi] Bangladeshi Vehicle Digital License Plate Recognition for Metropolitan Cities Using Support Vector Machine (2016 - ICAICT)
 
-    Target: Bangladesh
+    Target: Bangladeshi Plates
     Accuracy: Overall = 91.3%
         Detection: 93.2%
         Segmentation: 98.1%
@@ -52,6 +52,7 @@ They researched on two major areas: to enhance image contrast in plate-like regi
 
 ## [joarder2012bangla] Bangla Automatic Number Plate Recognition System using Artificial Neural Network (2012 - ATST)
 
+    Target: Bangladeshi Plates
     Accuracy: Total = 75.51%
         Detection & Extraction = 92.1%
         Character Segmentation = 97.53%
@@ -70,12 +71,14 @@ Upto detection. Uses histrogram equalization for enhancing constrast. First sele
 
 ## [saha2009license] License Plate Localization from Vehicle Images: An Edge Based Multi-stage Approach (2009 IJRTE)
 
+    Target: Bangladeshi Plates
     Accuracy: 89.2% (#FN: 8%, #FP: 2.8%)
 
 Upto detection. Histrogram based contrast enhancement. Has detailed and algorithm description of localization process.
 
 ## [ghosh2011automatic] Automatic license plate recognition (alpr) for bangladeshi vehicles (2011 GJCST)
 
+    Target: Bangladeshi Plates
     Accuracy:
         Extraction = 84%
         Recognition = 80%
@@ -86,8 +89,17 @@ Used vertical Sobel operator for extraction. Skewed images were fixed. Then hori
 
 > ALPR system is mostly used in Intelligent Transportation System. ALPR is important in the area of highway toll collection, traffic problems, borders and custom security, premises where high security is needed, like national assembly, V.I.P houses and so on. III.
 
+## [alginahi2011automatic] Automatic arabic license plate recognition (2011 IJCEE)
+
+    Target: Arabic Plates
+    Accuracy: 
+        Localization = 98.63%
+        Recognition = 94.9%
+
+
 ## [amin2014automatic] An automatic number plate recognition of bangladeshi vehicles (2014 IJCA)
 
+    Target: Bangladeshi Plates
     Accuracy: Total = 42%
         Localization = 88%
         Extraction = 77%
@@ -125,7 +137,7 @@ They experimented with various types of CNN. Their CNN with dropout and Gabor fi
 
 
 # Rank 4 (Unusable. `2 papers`)
-## [uddin2016bangladeshi] Bangla License Plate Reader for Metropolitan Cities of Bangladesh Using Template Matching
+## [uddin2016bangladeshi] Bangla License Plate Reader for Metropolitan Cities of Bangladesh Using Template Matching (2016)
 
     Target: Bangladeshi Plates
     Accuracy: Not Specified
