@@ -13,11 +13,12 @@ def main():
     data = get_digit_data()
     layers = [
         row * col,
-        344,
-        112,
-        26,
+        200,
+        100,
+        60,
+        30,
         len(cfg.NUMERALS),
-    ] # 3 layer network
+    ] # 5 layer network
 
     print('Training size =', data.train.labels.shape[0])
     print(' Testing size =', data.test.labels.shape[0])

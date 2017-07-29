@@ -17,7 +17,9 @@ class Dataset(object):
         """Initialize the class."""
         if reshape:
             rows = images.shape[0]
-            images = numpy.reshape(images, (rows, 28, 28, 1))            
+            height = 28
+            width = images.shape[1] // height
+            images = numpy.reshape(images, (rows, height, width, 1))
         # end if
 
         self._images = images

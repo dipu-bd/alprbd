@@ -3,28 +3,26 @@ DIGIT classifier
 """
 import config as cfg
 from utils import get_city_data
-from softmaxNN import train
+#from softmaxNN import train
+from convolutional import train
 
 # Import data
 def main():
     """Main function"""
 
     row, col = cfg.CITY_DIM
-    data = get_city_data()
-    layers = [
-        row * col,
-        121,
-        len(cfg.CITIES),
-    ] # 3 layer network
+    data = get_city_data(reshape=True)
 
     print('Training size =', data.train.labels.shape[0])
     print(' Testing size =', data.test.labels.shape[0])
     print()
 
     train(data,
-          layers=layers,
+          #layers=layers,
+          image_size=(28, 4*28),
+          num_classes=len(cfg.CITIES),
           batch_size=100,
-          iterations=5000,
+          iterations=500,
           model_file=cfg.CITY_MODEL)
 # end function
 
