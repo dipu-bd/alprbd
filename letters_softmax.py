@@ -3,21 +3,30 @@ LETTER classifier
 """
 import config as cfg
 from utils import get_letter_data
-from convolutional import train
+from softmaxNN import train
 
 # Import data
 def main():
     """Main function"""
 
-    data = get_letter_data(reshape=True)
+    row, col = cfg.IMAGE_DIM
+    data = get_letter_data()
+    layers = [
+        row * col,
+        256,
+        128,
+        64,
+        len(cfg.LETTERS),
+    ] # 5 layer network
+
     print('Training size =', data.train.labels.shape[0])
     print(' Testing size =', data.test.labels.shape[0])
     print()
 
     train(data,
-          num_classes=len(cfg.LETTERS),
+          layers,
           batch_size=100,
-          iterations=2000,
+          iterations=5000,
           model_file=cfg.LETTER_MODEL)
 # end function
 

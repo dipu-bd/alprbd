@@ -19,7 +19,7 @@ def dense_to_one_hot(labels, classes):
     return labels_one_hot
 # end function
 
-def get_data(folder, letters, reshape=False):
+def get_data(folder, letters):
     """Build the dataset"""
     # get training set
     train_images = os.path.join(folder, 'training_data.npy')
@@ -38,20 +38,20 @@ def get_data(folder, letters, reshape=False):
     test_labels = dense_to_one_hot(test_labels, letters)
 
     # build Dataset objects
-    train = Dataset(train_images, train_labels, reshape=reshape)
-    test = Dataset(test_images, test_labels, reshape=reshape)
+    train = Dataset(train_images, train_labels)
+    test = Dataset(test_images, test_labels)
     ds = collections.namedtuple('Datasets', ['train', 'test'])
     return ds(train=train, test=test)
 # end function
 
-def get_digit_data(reshape=False):
-    return get_data(cfg.DIGITS_PATH, cfg.NUMERALS, reshape)
+def get_digit_data():
+    return get_data(cfg.DIGITS_PATH, cfg.NUMERALS)
 # end function
 
-def get_letter_data(reshape=False):
-    return get_data(cfg.LETTERS_PATH, cfg.LETTERS, reshape)
+def get_letter_data():
+    return get_data(cfg.LETTERS_PATH, cfg.LETTERS)
 # end function
 
-def get_city_data(reshape=False):
-    return get_data(cfg.CITY_PATH, cfg.CITIES, reshape)
+def get_city_data():
+    return get_data(cfg.CITY_PATH, cfg.CITIES)
 # end function

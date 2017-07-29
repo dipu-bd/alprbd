@@ -1,27 +1,13 @@
 """
 A generic module to read data.
 """
-import numpy
-from tensorflow.python.framework import dtypes
+import numpy as np
 
 class Dataset(object):
     """Dataset class object."""
 
-    def __init__(self,
-                 images,
-                 labels,
-                 fake_data=False,
-                 one_hot=False,
-                 dtype=dtypes.float64,
-                 reshape=False):
+    def __init__(self, images, labels):
         """Initialize the class."""
-        if reshape:
-            rows = images.shape[0]
-            height = 28
-            width = images.shape[1] // height
-            images = numpy.reshape(images, (rows, height, width, 1))
-        # end if
-
         self._images = images
         self._num_examples = images.shape[0]
         self._labels = labels
@@ -49,7 +35,7 @@ class Dataset(object):
         return self._epochs_completed
     # end property
 
-    def next_batch(self, batch_size, fake_data=False):
+    def next_batch(self, batch_size):
         """Return the next `batch_size` examples from this data set."""
         start = self._index_in_epoch
         self._index_in_epoch += batch_size
@@ -57,8 +43,8 @@ class Dataset(object):
             # Finished epoch
             self._epochs_completed += 1
             # Shuffle the data
-            perm = numpy.arange(self._num_examples)
-            numpy.random.shuffle(perm)
+            perm = np.arange(self._num_examples)
+            np.random.shuffle(perm)
             self._images = self._images[perm]
             self._labels = self._labels[perm]
             # Start next epoch

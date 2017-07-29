@@ -4,6 +4,7 @@ DIGIT classifier
 import config as cfg
 from utils import get_digit_data
 from softmaxNN import train
+import digit_test as test
 
 # Import data
 def main():
@@ -27,8 +28,10 @@ def main():
     train(data,
           layers=layers,
           batch_size=100,
-          iterations=3000,
+          iterations=1000,
           model_file=cfg.DIGIT_MODEL)
+
+    test.main()
 # end function
 
 if __name__ == '__main__':

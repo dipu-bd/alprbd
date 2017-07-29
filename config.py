@@ -6,7 +6,7 @@ import os
 
 # dimension of each image
 IMAGE_DIM = (28, 28)
-CITY_DIM = (28, 4*28)
+CITY_DIM = (4*28, 28)
 
 # dataset directories
 DIGITS_PATH = os.path.join('dataset', 'digits')
@@ -21,6 +21,7 @@ CITY_MODEL = os.path.join('trained', 'city.npz')
 # sample directory
 DIGIT_SAMPLES = 'sample/digits'
 LETTER_SAMPLES = 'sample/letters'
+CITY_SAMPLES = 'sample/letters'
 
 # The numerals permitted in the vehicle registration plate
 NUMERALS = [
@@ -73,7 +74,7 @@ LETTERS = [
     u"স",
     u"হ",
 
-    #u"ণ",
+    u"ণ",
     u"ষ",
     u"ঞ",
     u"ও",
