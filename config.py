@@ -21,7 +21,7 @@ CITY_MODEL = os.path.join('trained', 'city.npz')
 # sample directory
 DIGIT_SAMPLES = 'sample/digits'
 LETTER_SAMPLES = 'sample/letters'
-CITY_SAMPLES = 'sample/letters'
+CITY_SAMPLES = 'sample/cities'
 
 # The numerals permitted in the vehicle registration plate
 NUMERALS = [

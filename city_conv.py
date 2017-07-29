@@ -70,6 +70,7 @@ def conv_net(x, weights, biases, dropout):
 
     # Output, class prediction
     out = tf.add(tf.matmul(fc1, weights['out']), biases['out'])
+    out = tf.nn.softmax(out)
     return out
 
 # Store layers weight & bias
@@ -165,7 +166,7 @@ with tf.Session() as sess:
         resized = cv2.resize(cropped, cfg.CITY_DIM)
         resized[resized > 128] = 255
         resized[resized < 255] = 0
-        
+
         return resized
     # end function
 

@@ -70,6 +70,7 @@ def conv_net(x, weights, biases, dropout):
 
     # Output, class prediction
     out = tf.add(tf.matmul(fc1, weights['out']), biases['out'])
+    out = tf.nn.softmax(out)
     return out
 
 # Store layers weight & bias
