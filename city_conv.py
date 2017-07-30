@@ -16,7 +16,7 @@ mnist = get_city_data()
 
 # Parameters
 learning_rate = 0.001
-training_iters = 1000
+training_iters = 100000
 batch_size = 100
 display_step = 50
 
@@ -70,7 +70,6 @@ def conv_net(x, weights, biases, dropout):
 
     # Output, class prediction
     out = tf.add(tf.matmul(fc1, weights['out']), biases['out'])
-    out = tf.nn.softmax(out)
     return out
 
 # Store layers weight & bias
@@ -79,10 +78,13 @@ weights = {
     'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
     # 5x5 conv, 32 inputs, 64 outputs
     'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
+    # 5x5 conv, 64 inputs, 128 outputs
+    'wc3': tf.Variable(tf.random_normal([5, 5, 64, 128])),
     # fully connected, 7*7*64 inputs, 1024 outputs
-    'wd1': tf.Variable(tf.random_normal([4*7*7*64, 1024])),
+    'wd1': tf.Variable(tf.random_normal([128*7*7*4, 2048])),
+    'wd2': tf.Variable(tf.random_normal([-1, 512])),
     # 1024 inputs, 10 outputs (class prediction)
-    'out': tf.Variable(tf.random_normal([1024, n_classes]))
+    'out': tf.Variable(tf.random_normal([-1, n_classes]))
 }
 
 biases = {
@@ -178,7 +180,7 @@ with tf.Session() as sess:
         image = trim_image(image)
         image = np.reshape(image, (1, 4*28*28))
         # predict outcome
-        result = sess.run(pred, feed_dict={x: image, keep_prob: 1.})
+        result = sess.run(tf.nn.softmax(pred), feed_dict={x: image, keep_prob: 1.})
         result = result.flatten()
         p = np.argmax(result)           # predicted class
         # show result

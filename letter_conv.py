@@ -16,9 +16,9 @@ mnist = get_letter_data()
 
 # Parameters
 learning_rate = 0.001
-training_iters = 100000
+training_iters = 100+1
 batch_size = 100
-display_step = 50
+display_step = 100
 
 # Network Parameters
 n_input = 784 # MNIST data input (img shape: 28*28)
@@ -70,7 +70,6 @@ def conv_net(x, weights, biases, dropout):
 
     # Output, class prediction
     out = tf.add(tf.matmul(fc1, weights['out']), biases['out'])
-    out = tf.nn.softmax(out)
     return out
 
 # Store layers weight & bias
@@ -178,7 +177,7 @@ with tf.Session() as sess:
         image = trim_image(image)
         image = np.reshape(image, (1, 784))
         # predict outcome
-        result = sess.run(pred, feed_dict={x: image, keep_prob: 1.})
+        result = sess.run(tf.nn.softmax(pred), feed_dict={x: image, keep_prob: 1.})
         result = result.flatten()
         p = np.argmax(result)           # predicted class
         # show result
