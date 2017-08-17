@@ -40,10 +40,10 @@ def process_segment(segment):
     g = []
     if segment.serial >= 2:
         g.extend(api.recognize_digit(segment.image))
-    elif segment.serial == 1:
-        g.extend(api.recognize_letter(segment.image))
-    else:
-        g.extend(api.recognize_city(segment.image))
+    #elif segment.serial == 1:
+        #g.extend(api.recognize_letter(segment.image))
+    #else:
+        #g.extend(api.recognize_city(segment.image))
     # end if
     sorted(g, key=lambda x: -x[1])  # sort
     segment.guess = g

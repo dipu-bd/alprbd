@@ -74,16 +74,16 @@ def match_filter():
     Builds a gaussian match filter
     """
     # formula -- @article(joarder2012bangla)
-    m, n = 10, 20           # window size
+    m, n = 12, 25           # window size
     A, B = 0.003, -0.001    # intensity
     sa, sb = 15.0, 10.0     # spreading
 
-    a = 3  # 0 to a
-    b = 5  # b to m
+    a = 4  # 0 to a
+    b = 6  # b to m
 
-    x1 = m // 6
-    x2 = a + m // 6
-    x3 = b + m // 6
+    x1 = 2
+    x2 = a + 1
+    x3 = b + 1
 
     X = np.arange(m)
     Y = np.arange(n)
@@ -93,7 +93,7 @@ def match_filter():
     X3 = X[b:]
 
     X1 = np.square((X1 - x1) / sa)
-    X2 = np.square((X2 - x2) / 1.0)
+    X2 = np.square((X2 - x2))
     X3 = np.square((X3 - x3) / sb)
 
     H1 = A * np.exp(-X1 / 0.2)

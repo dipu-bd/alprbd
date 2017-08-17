@@ -8,8 +8,8 @@ from ..models import Region
 
 # ---------- Clip Limited Adaptive Histogram Enhancement Function -----------
 # http://docs.opencv.org/3.1.0/d5/daf/tutorial_py_histogram_equalization.html
-CLAHE = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(30, 60))       # for image
-ROI_CLAHE = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(8, 8))   # for ROIs
+CLAHE = cv2.createCLAHE(clipLimit=2.3, tileGridSize=(30, 60))       # for image
+ROI_CLAHE = cv2.createCLAHE(clipLimit=1.0, tileGridSize=(8, 8))     # for ROIs
 
 
 def process(frame):
@@ -19,11 +19,19 @@ def process(frame):
     :return: Image object after processing
     """
     frame.scaled = rescale(frame.original, cfg.SCALE_DIM)
-    frame.gray = cv2.cvtColor(frame.scaled, cv2.COLOR_BGR2GRAY)
+    frame.gray = to_gray(frame.scaled)
     frame.enhanced = CLAHE.apply(frame.gray)
     return frame
 # end function
 
+def to_gray(img):
+    """
+    Returns a grayscale image with predefined formula
+    """
+    b, g, r = cv2.split(img)
+    img = np.uint8(0.299 * r + 0.587 * g + 0.114 * b)
+    return img
+# end def
 
 def auto_crop(img):
     """

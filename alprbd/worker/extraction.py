@@ -16,7 +16,8 @@ def extract(frame):
     """
     frame.plates = []
     for region in frame.roi:
-        for binary in get_binaries(region.image):
+        blur = cv2.bilateralFilter(region.image, 7, 25, 50)
+        for binary in get_binaries(blur):
             # clean and add img
             clean = denoise(binary)
             if clean is not None:
