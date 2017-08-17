@@ -1,4 +1,6 @@
 samples/
+dist/
+*.egg-info/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### VisualStudioCode template
