@@ -1,17 +1,19 @@
 """ Unlicensed """
+import re
+import cv2
 import numpy as np
-from cv2 import imwrite as imsave
 
 
 class Node:
     """An unit of operation"""
 
-    def __init__(self, func, *args, ext=None, **kargs):
+    def __init__(self, func, *args, ext=None, foreach=False, **kargs):
         self.func = func
         self.args = args
         self.kargs = kargs
         self.result = None
         self.extension = ext
+        self.foreach = foreach
     # end def
 
     def get(self):
@@ -22,18 +24,26 @@ class Node:
         """Execute the node"""
         if self.result is None:
             args = [x.get() for x in self.args]
-            self.result = self.func(*args, **self.kargs)
+            if not self.foreach:
+                self.result = self.func(*args, **self.kargs)
+            else: 
+                self.result = []
+                for inp in args[0]:
+                    parg = [ inp ].extend(args[1:])
+                    self.result.append(self.func(*parg, **self.kargs))
+                # end for
+            # end if
         # end if
     # end def
 
     def save(self, filename):
         """Store result to file"""
-        if self.extension is None or self.result is None:
+        if self.extension is None:
             return False
         # end if
         filename = filename + '.' + self.extension
-        if ['jpg', 'bmp', 'png'].index(self.extension) >= 0:
-            imsave(filename, self.result)
+        if re.match('jpg|bmp|png', self.extension):
+            cv2.imwrite(filename, self.result)
         elif self.extension == 'txt':
             np.savetxt(filename, self.result)
         else:
