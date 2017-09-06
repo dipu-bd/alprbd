@@ -13,7 +13,11 @@ def process(*files):
 
 def main():
     """Starts program"""
-    arg = os.path.abspath(sys.argv[1] or 'LPDB')
+    arg = 'LPDB'
+    if len(sys.argv) >= 2:
+        arg = sys.argv[1]
+    # end if
+    arg = os.path.abspath(arg)
 
     if os.path.isdir(arg):
         process(glob(arg + os.sep + '*.jpg'))
