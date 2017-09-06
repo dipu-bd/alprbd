@@ -1,7 +1,7 @@
 """ Unlicensed """
-
 import numpy as np
-from skimage.io import imsave
+from cv2 import imwrite as imsave
+
 
 class Node:
     """An unit of operation"""
