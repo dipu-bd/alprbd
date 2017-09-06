@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Starting point of the system
+"""
+from alpr import main
 
-import sys
-from Main import main
-
-# start program
-main(sys.argv)
+main()
