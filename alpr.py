@@ -8,6 +8,10 @@ from glob import glob
 from shutil import rmtree
 import config as cfg
 
+from node import Node, Var
+from skimage.io import imread
+from skimage.transform import resize
+
 
 def ensure_path(folder):
     """Create folder if not exists"""
@@ -18,7 +22,30 @@ def ensure_path(folder):
 
 def process(file):
     """Process files"""
-    print(file)
+    IMAGE = 'jpg'
+    ARRAY = 'txt'
+
+    op = dict()
+    op['open'] = Node(imread, Var(file), ext=IMAGE)
+    op['resize'] = Node(resize, op['open'], Var(480, 640), mode='wrap', ext=IMAGE)
+
+    base = os.path.basename(file)
+    print(base + ' ', end='')
+
+    name = os.path.splitext(base)[0]
+    out = os.path.join(cfg.OUT_PATH, name)
+    ensure_path(out)
+
+    index = 0
+    for key in op:
+        index += 1
+        dest = os.path.join(out, "{0:02}_{1}".format(index, key))
+        op[key].execute()
+        op[key].save(dest)
+        print('.', end='')
+    # end for
+
+    print('done')
 # end def
 
 def main():
@@ -29,7 +56,9 @@ def main():
     # end if
     arg = os.path.abspath(arg)
 
-    rmtree(cfg.OUT_PATH) # removes previous output dir
+    # if os.path.exists(cfg.OUT_PATH):
+    #     rmtree(cfg.OUT_PATH) # removes previous output dir
+    # # end if
 
     if os.path.isdir(arg):
         for file in glob(arg + os.sep + '*.jpg'):
