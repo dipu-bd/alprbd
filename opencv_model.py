@@ -3,7 +3,7 @@ from collections import OrderedDict
 import cv2
 import numpy as np
 from node import Node, Var
-#from skimage.transform import radon as Radon
+from skimage.transform import radon as Radon
 
 IMAGE = 'jpg'
 ARRAY = 'txt'
@@ -26,15 +26,16 @@ def Model():
     m['bounds'] = Node(bounding_rect, m['contours'], each=True)
     m['extract'] = Node(translate_point, m['bounds'], m['resize'], m['open'], each=True, ext=IMAGE)
     m['gray_plate'] = Node(to_gray, m['extract'], each=True, ext=IMAGE)
-    m['clahe_plate'] = Node(apply_clahe, m['gray'], Var(5, 5), Var(1.0), ext=IMAGE, each=True)
+    m['clahe_plate'] = Node(apply_clahe, m['gray_plate'], Var(5, 5), Var(1.0), ext=IMAGE, each=True)
     m['bilateral'] = Node(cv2.bilateralFilter, m['clahe_plate'], Var(7), Var(25), Var(50), ext=IMAGE, each=True)
-    #m['sobel_plate'] = Node(cv2.Sobel, m['bilateral'], Var(-1), Var(0), Var(1), ksize=3, ext=IMAGE, each=True)
-    #m['thresh_sobel_plate'] = Node(threshold, m['sobel_plate'], Var(100), Var(255), Var(cv2.THRESH_TOZERO), ext=IMAGE, each=True)
-    #m['canny'] = Node(cv2.Canny, m['thresh_sobel_plate'], Var(200), Var(200), L2gradient=True, each=True, ext=IMAGE)
-    #m['resize_plate'] = Node(resize, m['canny'], Var(180), ext=IMAGE, each=True)
-    #m['radon'] = Node(radon, m['resize_plate'], ext=IMAGE, each=True)
-    #m['angle'] = Node(find_angle, m['radon'], ext=ARRAY, each=True)
-    #m['rotate'] = Node(rotate, m['bilateral'], m['angle'])
+    m['sobel_plate'] = Node(cv2.Sobel, m['bilateral'], Var(-1), Var(0), Var(1), ksize=3, ext=IMAGE, each=True)
+    m['thresh_sobel_plate'] = Node(threshold, m['sobel_plate'], Var(100), Var(255), Var(cv2.THRESH_TOZERO), ext=IMAGE, each=True)
+    m['canny'] = Node(cv2.Canny, m['thresh_sobel_plate'], Var(200), Var(200), L2gradient=True, each=True, ext=IMAGE)
+    m['resize_plate'] = Node(resize, m['canny'], Var(180), ext=IMAGE, each=True)
+    m['radon'] = Node(radon, m['resize_plate'], ext=IMAGE, each=True)
+    m['angle'] = Node(find_angle, m['radon'], each=True)
+    m['rotate'] = Node(rotate_all, m['bilateral'], m['angle'])
+    m['trim'] = Node(trim_plate, m['rotate'], each=True, ext=IMAGE)
     return m
 # end def
 
@@ -97,7 +98,7 @@ def find_angle(sinogram):
     return y
 # end def
 
-def rotate(imgs, angles):
+def rotate_all(imgs, angles):
     res = []
     for i, angle in enumerate(angles):
         img = imgs[i]
@@ -105,13 +106,16 @@ def rotate(imgs, angles):
         center = tuple(np.array(img.shape) // 2)
         mat = cv2.getRotationMatrix2D(center, angle, 1.0)
         out = cv2.warpAffine(img, mat, (col * 2, row * 2))
-        x, y = np.nonzero(out)
-        out = out[np.min(x):np.max(x)+1, np.min(y):np.max(y)+1]
         res.append(out)
     # end for
     return res
 # end def
 
+def trim_plate(img):
+    x, y = np.nonzero(img)
+    out = img[np.min(x):np.max(x)+1, np.min(y):np.max(y)+1]
+    return img
+# end def
 
 def match_filter():
     """

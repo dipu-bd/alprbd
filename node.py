@@ -56,7 +56,7 @@ class Node:
         # end if
         return True
     # end def
-    
+
     def save(self, filename):
         """Store result to file"""
         if not self.foreach:
