@@ -7,48 +7,65 @@ import numpy as np
 class Node:
     """An unit of operation"""
 
-    def __init__(self, func, *args, ext=None, foreach=False, **kargs):
+    def __init__(self, func, *args, ext=None, each=False, **kargs):
         self.func = func
         self.args = args
         self.kargs = kargs
         self.result = None
         self.extension = ext
-        self.foreach = foreach
+        self.foreach = each
     # end def
 
     def get(self):
-        return self.result
+        return self.execute()
     # end def
 
     def execute(self):
         """Execute the node"""
-        if self.result is None:
-            args = [x.get() for x in self.args]
-            if not self.foreach:
-                self.result = self.func(*args, **self.kargs)
-            else: 
-                self.result = []
-                for inp in args[0]:
-                    parg = [ inp ].extend(args[1:])
-                    self.result.append(self.func(*parg, **self.kargs))
-                # end for
-            # end if
+        if self.result is not None:
+            return self.result
         # end if
+        args = [x.get() for x in self.args]
+        if not self.foreach:
+            self.result = self.func(*args, **self.kargs)
+            return self.result
+        # end if
+        self.result = []
+        for inp in args[0]:
+            parg = [inp] + args[1:]
+            res = self.func(*parg, **self.kargs)
+            if res is not None:
+                self.result.append(res)
+            # end if
+        # end for
+        return self.result
     # end def
 
-    def save(self, filename):
+    def _save(self, filename, result):
         """Store result to file"""
         if self.extension is None:
             return False
         # end if
         filename = filename + '.' + self.extension
         if re.match('jpg|bmp|png', self.extension):
-            cv2.imwrite(filename, self.result)
+            cv2.imwrite(filename, result)
         elif self.extension == 'txt':
-            np.savetxt(filename, self.result)
+            np.savetxt(filename, result)
         else:
-            np.save(filename, self.result)
+            np.save(filename, result)
         # end if
+        return True
+    # end def
+    
+    def save(self, filename):
+        """Store result to file"""
+        if not self.foreach:
+            return self._save(filename, self.result)
+        # end if
+        for i, res in enumerate(self.result):
+            name = '{}_{:02}'.format(filename, i)
+            self._save(name, res)
+        # end for
         return True
     # end def
 # end class

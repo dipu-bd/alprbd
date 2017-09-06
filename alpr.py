@@ -25,26 +25,24 @@ def process(file):
     gm['_file'].set(file)
 
     base = os.path.basename(file)
-    print(base + ' ', end='')
-
     name = os.path.splitext(base)[0]
     out = os.path.join(cfg.OUT_PATH, name)
     ensure_path(out)
 
+    print(base + ' ... ', out)
     index = 0
     for key in gm:
         if key[0] == '_':
             continue
         # end if
-
+        print('\t', index, key, end='')
         index += 1
         dest = os.path.join(out, "{0:02}_{1}".format(index, key))
         gm[key].execute()
         gm[key].save(dest)
-        print('.', end='')
+        print('.')
     # end for
-
-    print('done')
+    print()
 # end def
 
 def main():
