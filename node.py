@@ -50,7 +50,9 @@ class Node:
         if re.match('jpg|bmp|png', self.extension):
             cv2.imwrite(filename, result)
         elif self.extension == 'txt':
-            np.savetxt(filename, result)
+            if np.isscalar(result):
+                result = np.array([result])
+            np.savetxt(filename, result, fmt="%-12g", newline='\r\n')
         else:
             np.save(filename, result)
         # end if

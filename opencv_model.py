@@ -3,11 +3,8 @@ from collections import OrderedDict
 import cv2
 import numpy as np
 from node import Node, Var
-from skimage.transform import radon 
-from skimage.feature import canny
-from scipy import ndimage as ndi
-from skimage.filters import sobel
-from skimage.segmentation import clear_border, watershed
+from skimage.transform import radon
+from skimage.segmentation import clear_border
 
 IMAGE = 'jpg'
 ARRAY = 'txt'
@@ -37,15 +34,16 @@ def Model():
     m['canny'] = Node(cv2.Canny, m['thresh_sobel_plate'], Var(200), Var(200), L2gradient=True, each=True, ext=IMAGE)
     m['resize_plate'] = Node(resize, m['canny'], Var(180), ext=IMAGE, each=True)
     m['radon'] = Node(apply_radon, m['resize_plate'], ext=IMAGE, each=True)
-    m['angle'] = Node(find_angle, m['radon'], each=True)
+    m['angle'] = Node(find_angle, m['radon'], each=True, ext=ARRAY)
     m['rotate'] = Node(rotate_all, m['bilateral'], m['angle'])
-    m['trim'] = Node(trim_plate, m['rotate'], each=True, ext=IMAGE)
+    m['trim'] = Node(trim_image, m['rotate'], each=True, ext=IMAGE)
     m['binary'] = Node(get_binary, m['trim'], each=True, ext=IMAGE)
     m['clear_border'] = Node(clear_border, m['binary'], each=True, ext=IMAGE)
     m['denoise'] = Node(denoise, m['clear_border'], each=True, ext=IMAGE)
-    m['plate_trim'] = Node(trim_plate, m['denoise'], each=True, ext=IMAGE)
-    #m['combine'] = Node(combine, m['segments'])
-    #m['trim_char'] = Node(trim_plate, m['segments'], each=True, ext=IMAGE)
+    m['plate_trim'] = Node(trim_image, m['denoise'], each=True, ext=IMAGE)
+    m['segments'] = Node(get_segments, m['plate_trim'], each=True)
+    m['combine'] = Node(combine, m['segments'])
+    m['char_trim'] = Node(trim_image, m['combine'], each=True, ext=IMAGE)
 
     return m
 # end def
@@ -133,6 +131,9 @@ def translate_point(box, scaled, img):
 # end def
 
 def apply_radon(img):
+    row, col = img.shape
+    img[[0, row-1], :] = 0
+    img[:, [0, col-1]] = 0
     theta = np.linspace(-90., 90., 180, endpoint=False)
     sinogram = radon(img, theta=theta, circle=True)
     return sinogram
@@ -160,12 +161,6 @@ def rotate_all(imgs, angles):
         res.append(out)
     # end for
     return res
-# end def
-
-def trim_plate(img):
-    x, y = np.nonzero(img)
-    out = img[np.min(x):np.max(x)+1, np.min(y):np.max(y)+1]
-    return np.uint8(out)
 # end def
 
 def get_binary(img):
@@ -200,10 +195,133 @@ def denoise(img):
     return img
 # end def
 
+
+def get_segments(img):
+    """
+    Calculate the horizontal projections.
+    :param img: img to segment
+    """
+    # calculate horizontal projections
+    hors = horizontal(img)
+
+    # calculate vertical projections
+    vers = []
+    for x in hors:
+        vers.extend(vertical(x))
+    # end for
+
+    return vers
+# end function
+
+
+def horizontal(img):
+    """
+    Calculate the horizontal segments.
+    :param img: plate image
+    """
+    hor = []
+    plate = None
+    row_sum = np.mean(img, axis=1)
+    for r, v in enumerate(row_sum):
+        if v >= 1:
+            if plate is None:
+                plate = img[r:r+1, :]
+            else:
+                plate = np.vstack((plate, img[r:r+1, :]))
+            # end if
+        else:
+            if isvalid(plate):
+                hor.append(plate)
+                plate = None
+            # end if
+        # end if
+    # end for
+
+    plate = trim_image(plate)
+    if isvalid(plate):
+        hor.append(plate)
+    # end if
+
+    return hor
+# end if
+
+
+def vertical(img):
+    """
+    Calculate the horizontal segments.
+    :param img: plate image
+    """
+    ver = []
+    plate = None
+    col_sum = np.mean(img, axis=0)
+    for c, v in enumerate(col_sum):
+        if v >= 1:
+            if plate is None:
+                plate = img[:, c:c+1]
+            else:
+                plate = np.hstack((plate, img[:, c:c+1]))
+            # end if
+        else:
+            if isvalid(plate):
+                ver.append(plate)
+                plate = None
+            # end if
+        # end if
+    # end for
+
+    plate = trim_image(plate)
+    if isvalid(plate):
+        ver.append(plate)
+    # end if
+
+    return ver
+# end if
+
+
+def isvalid(plate):
+    """
+    Checks whether the plate is valid
+    :param plate:
+    :return:
+    """
+    if plate is None:
+        return False
+    # end if
+
+    row, col = plate.shape
+    if row < 12 or col < 12:
+        return False
+    # end if
+
+    if np.mean(plate) < 5:
+        return False
+    # end if
+
+    return True
+# end if
+
+
+def trim_image(img):
+    """Keep only important part"""
+    # check image
+    if img is None:
+        return None
+    # end if
+    rows, cols = img.shape
+    # find area
+    nzx, nzy = np.nonzero(img)
+    x1 = max(0, np.min(nzx))
+    x2 = min(rows, np.max(nzx) + 1)
+    y1 = max(0, np.min(nzy))
+    y2 = min(cols, np.max(nzy) + 1)
+    # crop
+    return img[x1:x2, y1:y2]
+# end function
+
 def combine(results):
     out = []
     for res in results:
-        out += res
+        out.extend(res)
     # end for
     return out
 # end def
