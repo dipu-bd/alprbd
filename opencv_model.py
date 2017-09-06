@@ -36,8 +36,46 @@ def Model():
     m['angle'] = Node(find_angle, m['radon'], each=True)
     m['rotate'] = Node(rotate_all, m['bilateral'], m['angle'])
     m['trim'] = Node(trim_plate, m['rotate'], each=True, ext=IMAGE)
+    m['binary'] = Node(get_binary, m['trim'], each=True, ext=IMAGE)
+
     return m
 # end def
+
+def match_filter():
+    """
+    Builds a gaussian match filter
+    """
+    # formula -- @article(joarder2012bangla)
+    m, n = 12, 25           # window size
+    A, B = 0.033, -0.012    # intensity
+    sa, sb = 15.0, 10.0     # spreading
+
+    a = 4  # 0 to a
+    b = 6  # b to m
+
+    x1 = 2
+    x2 = a + 1
+    x3 = b + 1
+
+    X = np.arange(m)
+    Y = np.arange(n)
+
+    X1 = X[:a]
+    X2 = X[a:b]
+    X3 = X[b:]
+
+    X1 = np.square((X1 - x1) / sa)
+    X2 = np.square((X2 - x2))
+    X3 = np.square((X3 - x3) / sb)
+
+    H1 = A * np.exp(-X1 / 0.2)
+    H2 = B * np.exp(-X2 / 2.0)
+    H3 = A * np.exp(-X3 / 0.2)
+    H = np.hstack((H1, H2, H3))
+
+    _, kernel = np.meshgrid(Y, H)
+    return kernel
+# end function
 
 
 def resize(img, wid):
@@ -102,6 +140,10 @@ def rotate_all(imgs, angles):
     res = []
     for i, angle in enumerate(angles):
         img = imgs[i]
+        if angle == 0:
+            res.append(img)
+            continue
+        # end if
         row, col = img.shape
         center = tuple(np.array(img.shape) // 2)
         mat = cv2.getRotationMatrix2D(center, angle, 1.0)
@@ -114,41 +156,19 @@ def rotate_all(imgs, angles):
 def trim_plate(img):
     x, y = np.nonzero(img)
     out = img[np.min(x):np.max(x)+1, np.min(y):np.max(y)+1]
-    return img
+    return out
 # end def
 
-def match_filter():
-    """
-    Builds a gaussian match filter
-    """
-    # formula -- @article(joarder2012bangla)
-    m, n = 12, 25           # window size
-    A, B = 0.033, -0.012    # intensity
-    sa, sb = 15.0, 10.0     # spreading
-
-    a = 4  # 0 to a
-    b = 6  # b to m
-
-    x1 = 2
-    x2 = a + 1
-    x3 = b + 1
-
-    X = np.arange(m)
-    Y = np.arange(n)
-
-    X1 = X[:a]
-    X2 = X[a:b]
-    X3 = X[b:]
-
-    X1 = np.square((X1 - x1) / sa)
-    X2 = np.square((X2 - x2))
-    X3 = np.square((X3 - x3) / sb)
-
-    H1 = A * np.exp(-X1 / 0.2)
-    H2 = B * np.exp(-X2 / 2.0)
-    H3 = A * np.exp(-X3 / 0.2)
-    H = np.hstack((H1, H2, H3))
-
-    _, kernel = np.meshgrid(Y, H)
-    return kernel
+def get_binary(img):
+    """Converts to black and white / binary image"""
+    # normal binary threshold
+    bnw1 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU)[1]
+    # inverse binary threshold
+    bnw2 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU)[1]
+    # calculate ratio of non-zero pixels
+    if np.mean(bnw1) < np.mean(bnw2):
+        return bnw1
+    else:
+        return bnw2
+    # end if
 # end function
