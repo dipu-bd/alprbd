@@ -8,8 +8,8 @@ from glob import glob
 from shutil import rmtree
 
 import config as cfg
-from model import Model
 from node import Var
+from opencv_model import Model
 
 
 def ensure_path(folder):
