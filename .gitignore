@@ -1,6 +1,7 @@
 ### My project 
 *.pyc
 LPDB/
+out/
 
 ### Python template
 # Byte-compiled / optimized / DLL files
