@@ -6,11 +6,10 @@ import os
 import sys
 from glob import glob
 from shutil import rmtree
-import config as cfg
 
-from node import Node, Var
-from skimage.io import imread
-from skimage.transform import resize
+import config as cfg
+from model import Model
+from node import Var
 
 
 def ensure_path(folder):
@@ -22,12 +21,8 @@ def ensure_path(folder):
 
 def process(file):
     """Process files"""
-    IMAGE = 'jpg'
-    ARRAY = 'txt'
-
-    op = dict()
-    op['open'] = Node(imread, Var(file), ext=IMAGE)
-    op['resize'] = Node(resize, op['open'], Var(480, 640), mode='wrap', ext=IMAGE)
+    gm = Model()
+    gm['_file'].set(file)
 
     base = os.path.basename(file)
     print(base + ' ', end='')
@@ -37,11 +32,15 @@ def process(file):
     ensure_path(out)
 
     index = 0
-    for key in op:
+    for key in gm:
+        if key[0] == '_':
+            continue
+        # end if
+
         index += 1
         dest = os.path.join(out, "{0:02}_{1}".format(index, key))
-        op[key].execute()
-        op[key].save(dest)
+        gm[key].execute()
+        gm[key].save(dest)
         print('.', end='')
     # end for
 
