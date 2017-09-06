@@ -3,7 +3,11 @@ from collections import OrderedDict
 import cv2
 import numpy as np
 from node import Node, Var
-from skimage.transform import radon as Radon
+from skimage.transform import radon 
+from skimage.feature import canny
+from scipy import ndimage as ndi
+from skimage.filters import sobel
+from skimage.segmentation import clear_border, watershed
 
 IMAGE = 'jpg'
 ARRAY = 'txt'
@@ -22,7 +26,7 @@ def Model():
     m['matched'] = Node(cv2.filter2D, m['thresh_sobel'], Var(-1), m['match_filter'], ext=IMAGE)
     m['blur'] = Node(cv2.GaussianBlur, m['matched'], Var(15, 15), Var(0), ext=IMAGE)
     m['thresh_blur'] = Node(threshold, m['blur'], Var(180), Var(255), Var(cv2.THRESH_TOZERO), ext=IMAGE)
-    m['contours'] = Node(contours, m['thresh_blur'], Var(cv2.RETR_TREE), Var(cv2.CHAIN_APPROX_SIMPLE))
+    m['contours'] = Node(contours, m['thresh_blur'], Var(cv2.RETR_TREE))
     m['bounds'] = Node(bounding_rect, m['contours'], each=True)
     m['extract'] = Node(translate_point, m['bounds'], m['resize'], m['open'], each=True, ext=IMAGE)
     m['gray_plate'] = Node(to_gray, m['extract'], each=True, ext=IMAGE)
@@ -32,11 +36,16 @@ def Model():
     m['thresh_sobel_plate'] = Node(threshold, m['sobel_plate'], Var(100), Var(255), Var(cv2.THRESH_TOZERO), ext=IMAGE, each=True)
     m['canny'] = Node(cv2.Canny, m['thresh_sobel_plate'], Var(200), Var(200), L2gradient=True, each=True, ext=IMAGE)
     m['resize_plate'] = Node(resize, m['canny'], Var(180), ext=IMAGE, each=True)
-    m['radon'] = Node(radon, m['resize_plate'], ext=IMAGE, each=True)
+    m['radon'] = Node(apply_radon, m['resize_plate'], ext=IMAGE, each=True)
     m['angle'] = Node(find_angle, m['radon'], each=True)
     m['rotate'] = Node(rotate_all, m['bilateral'], m['angle'])
     m['trim'] = Node(trim_plate, m['rotate'], each=True, ext=IMAGE)
     m['binary'] = Node(get_binary, m['trim'], each=True, ext=IMAGE)
+    m['clear_border'] = Node(clear_border, m['binary'], each=True, ext=IMAGE)
+    m['denoise'] = Node(denoise, m['clear_border'], each=True, ext=IMAGE)
+    m['plate_trim'] = Node(trim_plate, m['denoise'], each=True, ext=IMAGE)
+    #m['combine'] = Node(combine, m['segments'])
+    #m['trim_char'] = Node(trim_plate, m['segments'], each=True, ext=IMAGE)
 
     return m
 # end def
@@ -98,8 +107,8 @@ def threshold(*args, **kargs):
     return cv2.threshold(*args, **kargs)[1]
 # end def
 
-def contours(*args, **kargs):
-    return cv2.findContours(*args, **kargs)[1]
+def contours(img, retr):
+    return cv2.findContours(img, retr, cv2.CHAIN_APPROX_SIMPLE)[1]
 # end def
 
 def bounding_rect(cnt):
@@ -123,9 +132,9 @@ def translate_point(box, scaled, img):
     return img[x:x+r+1, y:y+c+1]
 # end def
 
-def radon(img):
+def apply_radon(img):
     theta = np.linspace(-90., 90., 180, endpoint=False)
-    sinogram = Radon(img, theta=theta, circle=True)
+    sinogram = radon(img, theta=theta, circle=True)
     return sinogram
 # end def
 
@@ -156,15 +165,15 @@ def rotate_all(imgs, angles):
 def trim_plate(img):
     x, y = np.nonzero(img)
     out = img[np.min(x):np.max(x)+1, np.min(y):np.max(y)+1]
-    return out
+    return np.uint8(out)
 # end def
 
 def get_binary(img):
     """Converts to black and white / binary image"""
     # normal binary threshold
-    bnw1 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU)[1]
+    bnw1 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU+ cv2.THRESH_BINARY)[1]
     # inverse binary threshold
-    bnw2 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU)[1]
+    bnw2 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU + cv2.THRESH_BINARY_INV)[1]
     # calculate ratio of non-zero pixels
     if np.mean(bnw1) < np.mean(bnw2):
         return bnw1
@@ -172,3 +181,29 @@ def get_binary(img):
         return bnw2
     # end if
 # end function
+
+def denoise(img):
+    """Denoise image"""
+    row, col = img.shape
+    for cnt in contours(img.copy(), cv2.RETR_EXTERNAL):
+        y, x, c, r = cv2.boundingRect(cnt)
+        if not (35 < r < row - 25 and 35 < c < col - 25):
+            cv2.fillConvexPoly(img, cnt, 0)
+        # end if
+    # end for
+
+    # check mean white pixels
+    if np.mean(img) < 4:
+        return None
+    # end if
+
+    return img
+# end def
+
+def combine(results):
+    out = []
+    for res in results:
+        out += res
+    # end for
+    return out
+# end def
