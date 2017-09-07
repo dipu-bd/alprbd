@@ -36,14 +36,15 @@ def Model():
     m['radon'] = Node(apply_radon, m['resize_plate'], ext=IMAGE, each=True)
     m['angle'] = Node(find_angle, m['radon'], each=True, ext=ARRAY)
     m['rotate'] = Node(rotate_all, m['bilateral'], m['angle'])
+    #m['combine'] = Node(combine, m['rotate'], m['bilateral'])
     m['trim'] = Node(trim_image, m['rotate'], each=True, ext=IMAGE)
     m['binary'] = Node(get_binary, m['trim'], each=True, ext=IMAGE)
     m['clear_border'] = Node(clear_border, m['binary'], each=True, ext=IMAGE)
     m['denoise'] = Node(denoise, m['clear_border'], each=True, ext=IMAGE)
     m['plate_trim'] = Node(trim_image, m['denoise'], each=True, ext=IMAGE)
     m['segments'] = Node(get_segments, m['plate_trim'], each=True)
-    m['combine'] = Node(combine, m['segments'])
-    m['char_trim'] = Node(trim_image, m['combine'], each=True, ext=IMAGE)
+    m['combine_char'] = Node(combine, m['segments'])
+    m['char_trim'] = Node(trim_image, m['combine_char'], each=True, ext=IMAGE)
 
     return m
 # end def
@@ -123,11 +124,18 @@ def translate_point(box, scaled, img):
     y, x, c, r = box
     scaled_height, scaled_width = scaled.shape[:2]
     height, width = img.shape[:2]
+
     x = (x * height) // scaled_height
     y = (y * width) // scaled_width
     r = (r * height) // scaled_height
     c = (c * width) // scaled_width
-    return img[x:x+r+1, y:y+c+1]
+
+    x1 = max(0, x - 3)
+    x2 = min(height, x + r + 7)
+    y1 = max(0, y - 4)
+    y2 = min(width, y + c + 9)
+
+    return img[x1:x2, y1:y2]
 # end def
 
 def apply_radon(img):
@@ -166,7 +174,7 @@ def rotate_all(imgs, angles):
 def get_binary(img):
     """Converts to black and white / binary image"""
     # normal binary threshold
-    bnw1 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU+ cv2.THRESH_BINARY)[1]
+    bnw1 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU + cv2.THRESH_BINARY)[1]
     # inverse binary threshold
     bnw2 = cv2.threshold(np.uint8(img), 50, 255, cv2.THRESH_OTSU + cv2.THRESH_BINARY_INV)[1]
     # calculate ratio of non-zero pixels
@@ -182,7 +190,7 @@ def denoise(img):
     row, col = img.shape
     for cnt in contours(img.copy(), cv2.RETR_EXTERNAL):
         y, x, c, r = cv2.boundingRect(cnt)
-        if not (35 < r < row - 25 and 35 < c < col - 25):
+        if not (25 < r < row - 25 and 25 < c < col - 25):
             cv2.fillConvexPoly(img, cnt, 0)
         # end if
     # end for
@@ -310,18 +318,22 @@ def trim_image(img):
     rows, cols = img.shape
     # find area
     nzx, nzy = np.nonzero(img)
-    x1 = max(0, np.min(nzx))
-    x2 = min(rows, np.max(nzx) + 1)
-    y1 = max(0, np.min(nzy))
-    y2 = min(cols, np.max(nzy) + 1)
+    x1 = max(0, np.min(nzx) - 1)
+    x2 = min(rows, np.max(nzx) + 3)
+    y1 = max(0, np.min(nzy) - 1)
+    y2 = min(cols, np.max(nzy) + 3)
     # crop
     return img[x1:x2, y1:y2]
 # end function
 
-def combine(results):
+def combine(*args):
     out = []
-    for res in results:
-        out.extend(res)
+    for result in args:
+        if hasattr(result, 'shape'):
+            out.append(result)
+        else:
+            out.extend(combine(*result))
+        # end if
     # end for
     return out
 # end def

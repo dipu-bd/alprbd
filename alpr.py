@@ -29,20 +29,20 @@ def process(file):
     out = os.path.join(cfg.OUT_PATH, name)
     ensure_path(out)
 
-    print(base + ' ... ', out)
+    print(base, end='')
     index = 0
     for key in gm:
         if key[0] == '_':
             continue
         # end if
-        print('\t', index, key, end='')
+        #print('\t', index, key, end='')
         index += 1
         dest = os.path.join(out, "{0:02}_{1}".format(index, key))
         gm[key].execute()
         gm[key].save(dest)
-        print('.')
+        print('.', end='')
     # end for
-    print()
+    print(out, end='\n')
 # end def
 
 def main():
@@ -53,9 +53,9 @@ def main():
     # end if
     arg = os.path.abspath(arg)
 
-    # if os.path.exists(cfg.OUT_PATH):
-    #     rmtree(cfg.OUT_PATH) # removes previous output dir
-    # # end if
+    if os.path.exists(cfg.OUT_PATH):
+        rmtree(cfg.OUT_PATH) # removes previous output dir
+    # end if
 
     if os.path.isdir(arg):
         for file in glob(arg + os.sep + '*.jpg'):
@@ -69,4 +69,3 @@ def main():
 if __name__ == '__main__':
     main()
 # end if
-
