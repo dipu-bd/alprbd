@@ -16,7 +16,7 @@ mnist = get_letter_data()
 
 # Parameters
 learning_rate = 0.001
-training_iters = 100+1
+training_iters = 10000
 batch_size = 100
 display_step = 100
 
