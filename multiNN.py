@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 5 layer Neural network classifier using softmax activation.
 """

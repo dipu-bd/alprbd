@@ -9,11 +9,11 @@ import numpy as np
 from glob import glob
 import tensorflow as tf
 import config as cfg
-from utils import get_letter_data
+from utils import get_digit_data
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 tf.set_random_seed(0)
 
-mnist = get_letter_data()
+mnist = get_digit_data()
 
 # Parameters
 learning_rate = 0.001
@@ -23,7 +23,7 @@ display_step = 100
 
 # Network Parameters
 n_input = 784 # MNIST data input (img shape: 28*28)
-n_classes = len(cfg.LETTERS) # MNIST total classes (0-9 digits)
+n_classes = len(cfg.NUMERALS) # MNIST total classes (0-9 digits)
 dropout = 0.75 # Dropout, probability to keep units
 
 # tf Graph input
@@ -131,7 +131,7 @@ with tf.Session() as sess:
     # end while
     print("Optimization Finished!")
 
-    with open(os.path.join('plots', 'letters-cnn.txt'), 'w') as f:
+    with open(os.path.join('plots', 'digits-cnn.txt'), 'w') as f:
         f.write(output)
     # end with
 
@@ -179,8 +179,8 @@ with tf.Session() as sess:
     # end function
 
     # test letters
-    letters = cfg.LETTERS
-    for file in read_images(cfg.LETTER_SAMPLES):
+    letters = cfg.NUMERALS
+    for file in read_images(cfg.DIGIT_SAMPLES):
         # prepare image data
         image = cv2.imread(file, 0)
         image = trim_image(image)
@@ -195,14 +195,14 @@ with tf.Session() as sess:
     # end for
 
 
-# Iter 1000, Minibatch Loss= 13363663.000000, Training Accuracy= 0.18000
-# Iter 2000, Minibatch Loss= 6815284.500000, Training Accuracy= 0.29000
-# Iter 3000, Minibatch Loss= 3122724.500000, Training Accuracy= 0.56000
-# Iter 4000, Minibatch Loss= 1602556.000000, Training Accuracy= 0.68000
-# Iter 5000, Minibatch Loss= 1277358.500000, Training Accuracy= 0.74000
-# Iter 10000, Minibatch Loss= 309330.406250, Training Accuracy= 0.95000
-# Iter 20000, Minibatch Loss= 2461.639893, Training Accuracy= 0.99000
-# Iter 30000, Minibatch Loss= 17532.650391, Training Accuracy= 0.99000
+# Iter 1000, Minibatch Loss= 2699463.000000, Training Accuracy= 0.66000
+# Iter 2000, Minibatch Loss= 284226.906250, Training Accuracy= 0.94000
+# Iter 3000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
+# Iter 4000, Minibatch Loss= 7335.979980, Training Accuracy= 0.99000
+# Iter 5000, Minibatch Loss= 28762.919922, Training Accuracy= 0.99000
+# Iter 10000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
+# Iter 20000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
+# Iter 30000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
 # Iter 40000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
 # Iter 50000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
 # Iter 60000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
@@ -210,16 +210,21 @@ with tf.Session() as sess:
 # Iter 80000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
 # Iter 90000, Minibatch Loss= 0.000000, Training Accuracy= 1.00000
 # Optimization Finished!
-# Testing Accuracy: 0.999339
-#     ch.jpg = চ (100.00% sure)
-#   ch_1.jpg = চ (100.00% sure)
-#   ch_2.jpg = চ (100.00% sure)
-#   ch_3.jpg = চ (100.00% sure)
-#     ga.jpg = গ (100.00% sure)
-#   ga_1.jpg = গ (100.00% sure)
-#   ga_2.jpg = গ (100.00% sure)
-#   ga_3.jpg = গ (100.00% sure)
-#    gh_.jpg = ল (100.00% sure)
-#     ka.jpg = ক (100.00% sure)
-#   ka_1.jpg = ক (100.00% sure)
-#    kha.jpg = খ (100.00% sure)
+# Testing Accuracy: 1.0
+#      0.jpg = ০ (100.00% sure)
+#    1_1.jpg = ১ (100.00% sure)
+#    1_2.jpg = ১ (100.00% sure)
+#    1_3.jpg = ১ (100.00% sure)
+#    1_4.jpg = ১ (100.00% sure)
+#      2.jpg = ২ (100.00% sure)
+#    3_1.jpg = ৩ (100.00% sure)
+#    3_2.jpg = ৩ (100.00% sure)
+#      4.jpg = ৪ (100.00% sure)
+#      5.jpg = ৫ (100.00% sure)
+#      6.jpg = ৬ (100.00% sure)
+#    7_1.jpg = ৭ (100.00% sure)
+#    7_2.jpg = ৭ (100.00% sure)
+#      8.jpg = ৮ (100.00% sure)
+#    8_2.jpg = ৮ (100.00% sure)
+#      9.jpg = ৯ (100.00% sure)
+#    9_1.jpg = ৯ (100.00% sure)

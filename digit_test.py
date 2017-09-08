@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 For testing the trained model
 """

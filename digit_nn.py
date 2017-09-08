@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 """
 DIGIT classifier
 """
 import config as cfg
 from utils import get_digit_data
-from softmaxNN import train
+from multiNN import train
 import digit_test as test
 
 # Import data
