@@ -14,7 +14,6 @@ def transform(file, index):
     """
     Uses various transformation on image
     """
-    if cv2.imread(file) is None: return
     normalize_image(file)
 
     # transformers
@@ -33,7 +32,7 @@ def transform(file, index):
 
     # special transformers
     specials = [
-        #noisy
+        noisy
     ]
     specials.extend([
         copyfile
@@ -104,12 +103,10 @@ def affine1(infile, outfile):
 
 def affine2(infile, outfile):
     img = bigframe(cv2.imread(infile, 0))
-
     rows, cols = img.shape
     pts1 = np.float32([[5, 5], [10, 5], [5, 20]])
     pts2 = np.float32([[6, 4], [10, 5], [6, 20]])
     M = cv2.getAffineTransform(pts1, pts2)
-
     dst = cv2.warpAffine(img, M, (cols, rows))
     cv2.imwrite(outfile, dst)
 # end function
@@ -117,7 +114,6 @@ def affine2(infile, outfile):
 
 def affine3(infile, outfile):
     img = bigframe(cv2.imread(infile, 0))
-
     rows, cols = img.shape
     pts1 = np.float32([[5, 5], [10, 5], [5, 20]])
     pts2 = np.float32([[4, 6], [10, 5], [4, 20]])
@@ -144,8 +140,6 @@ def bigframe(img):
     """
     Trims the image
     """
-    if img is None:
-        return img
     r, c = img.shape
     out = np.zeros((3*r, 3*c), np.uint8)
     out[r:2*r, c:2*c] = img
@@ -157,8 +151,6 @@ def trim(img):
     """
     Trims the image
     """
-    if img is None: 
-        return img
     rows, cols = img.shape
     # find area
     nzx, nzy = np.nonzero(img)
@@ -172,11 +164,8 @@ def trim(img):
 
 def normalize_image(file):
     img = cv2.imread(file, 0)
-    if img is None: return
     img = trim(img)
-    if img is None: return
     _, img = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
     img = cv2.resize(img, (28, 28))
-    if img is None: return
     cv2.imwrite(file, img)
 # end function

@@ -24,41 +24,25 @@ LETTERS = [
     u"অ",
     u"ই",
     u"উ",
-    #u"এ",
     u"ক",
     u"খ",
     u"গ",
     u"ঘ",
-    #u"ঙ",
     u"চ",
     u"ছ",
     u"জ",
     u"ঝ",
-    #u"ত",
-    #u"থ",
     u"ট",
     u"ঠ",
     u"ঢ",
-    #u"ড",
-    #u"দ",
-    #u"ধ",
-    #u"ন",
     u"প",
-    #u"ফ",
     u"ব",
     u"ভ",
     u"ম",
-    #u"য",
-    #u"র",
     u"ল",
     u"শ",
     u"স",
-    u"হ",
-
-    #u"ণ",
-    #u"ষ",
-    #u"ঞ",
-    #u"ও",
+    u"হ"
 ]
 
 # Reference https://en.wikipedia.org/wiki/Vehicle_registration_plates_of_Bangladesh
@@ -77,4 +61,3 @@ DATASET_RATIO = 0.85  # training data
 # output directories
 DIGITS_PATH = os.path.join('dataset', 'digits')
 LETTERS_PATH = os.path.join('dataset', 'letters')
-

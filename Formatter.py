@@ -10,7 +10,7 @@ import numpy as np
 import config as cfg
 
 def read_images(folder):
-    return [file for file in glob(folder + '/**/*.bmp', recursive=True)]
+    return [file for file in glob(os.path.join(folder,'**', '*.bmp'), recursive=True)]
 # end if
 
 def get_train_files(folder):

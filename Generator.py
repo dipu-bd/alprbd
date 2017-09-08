@@ -61,7 +61,7 @@ def generate_letters(index, save_path):
     """
     Copy all files to save_path and apply transformation
     """
-    for file in glob('letters\\**\\*.bmp'):
+    for file in glob(os.path.join('letters','**','*.bmp')):
         index += 1
         # copy
         label = file.split(os.sep)[-2]
