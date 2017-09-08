@@ -102,5 +102,4 @@ def format_docs(folder):
 if __name__ == '__main__':
     format_docs(cfg.DIGITS_PATH)
     format_docs(cfg.LETTERS_PATH)
-    format_docs(cfg.CITY_PATH)
 # end if

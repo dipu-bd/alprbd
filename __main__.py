@@ -15,4 +15,3 @@ Generator.run()
 
 Formatter.format_docs(cfg.DIGITS_PATH)
 Formatter.format_docs(cfg.LETTERS_PATH)
-Formatter.format_docs(cfg.CITY_PATH)

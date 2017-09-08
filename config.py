@@ -65,7 +65,7 @@ LETTERS = [
 
 # fonts - [(location, size)]
 UNICODE_FONTS = [
-    ("fonts/bangla.ttf", 72),
+   # ("fonts/bangla.ttf", 72),
     ("fonts/siyamrupali.ttf", 38),
     ("fonts/solaimanlipi.ttf", 46),
     ("fonts/sutonnyomj.ttf", 48)
@@ -77,4 +77,4 @@ DATASET_RATIO = 0.85  # training data
 # output directories
 DIGITS_PATH = os.path.join('dataset', 'digits')
 LETTERS_PATH = os.path.join('dataset', 'letters')
-CITY_PATH = os.path.join('dataset', 'city')
+

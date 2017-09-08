@@ -39,7 +39,7 @@ def get_name(index, save_path, label):
 def generate(data, font, index, save_path):
     """
     Generates images for every letters given in the array
-    """    
+    """
     for letter in data:
         index += 1
         # create a grayscale image
@@ -57,28 +57,11 @@ def generate(data, font, index, save_path):
 # end function
 
 
-def generate_cities(index, save_path):
-    """
-    Copy all files to save_path and apply transformation
-    """
-    for file in glob('city/*.bmp'):
-        index += 1
-        # copy
-        label = os.path.splitext(os.path.basename(file))[0]
-        dst = get_name(index, save_path, label)
-        shutil.copyfile(file, dst)
-        # transform
-        index = transform(dst, index)
-    # end for
-    return index
-# end function
-
-
 def generate_letters(index, save_path):
     """
     Copy all files to save_path and apply transformation
     """
-    for file in glob('letters/**/*.bmp'):
+    for file in glob('letters\\**\\*.bmp'):
         index += 1
         # copy
         label = file.split(os.sep)[-2]
@@ -87,7 +70,7 @@ def generate_letters(index, save_path):
         dst = get_name(index, save_path, label)
         cv2.imwrite(dst, img)
         # transform
-        normalize_image(dst, (28, 28))
+        normalize_image(dst)
         #index = transform(dst, index)
     # end for
     return index
@@ -109,10 +92,6 @@ def run():
         save_path = os.path.join(cfg.LETTERS_PATH, 'generated')
         index = generate(cfg.LETTERS, font, index, save_path)
     # end for
-
-    print("Generating cities...  ", index)
-    save_path = os.path.join(cfg.CITY_PATH, 'generated')
-    index = generate_cities(index, save_path)
 
     print("Generating more letters... ", index)
     save_path = os.path.join(cfg.LETTERS_PATH, 'generated')

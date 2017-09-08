@@ -14,12 +14,8 @@ def transform(file, index):
     """
     Uses various transformation on image
     """
-    origin = index
-    scale = (28, 28)
-    if file.startswith(cfg.CITY_PATH):
-        scale = (28, 4*28)
-    # end if
-    normalize_image(file, scale)
+    if cv2.imread(file) is None: return
+    normalize_image(file)
 
     # transformers
     transformers = [
@@ -45,16 +41,16 @@ def transform(file, index):
 
     # apply transformers
     folder = os.path.dirname(file)
-    for function1 in transformers + specials:
+    for function1 in transformers:
         index += 1
         out = get_name(folder, index)
         function1(file, out)
-        normalize_image(out, scale)
+        normalize_image(out)
         for function2 in transformers:
             index += 1
             out2 = get_name(folder, index)
             function2(out, out2)
-            normalize_image(out2, scale)
+            normalize_image(out2)
         # end for
     # end for
 
@@ -96,7 +92,6 @@ def median(infile, outfile):
 
 def affine1(infile, outfile):
     img = bigframe(cv2.imread(infile, 0))
-    
     rows, cols = img.shape
     pts1 = np.float32([[5, 5], [20, 5], [5, 20]])
     pts2 = np.float32([[4, 6], [20, 5], [6, 22]])
@@ -149,6 +144,8 @@ def bigframe(img):
     """
     Trims the image
     """
+    if img is None:
+        return img
     r, c = img.shape
     out = np.zeros((3*r, 3*c), np.uint8)
     out[r:2*r, c:2*c] = img
@@ -160,6 +157,8 @@ def trim(img):
     """
     Trims the image
     """
+    if img is None: 
+        return img
     rows, cols = img.shape
     # find area
     nzx, nzy = np.nonzero(img)
@@ -171,16 +170,13 @@ def trim(img):
     return img[x1:x2, y1:y2]
 # end function
 
-def wbratio(file):
-    image = trim(cv2.imread(file, 0))
-    area = (image.shape[0]*image.shape[1])
-    return area / np.count_nonzero(image)
-# end def
-
-def normalize_image(file, scale):
+def normalize_image(file):
     img = cv2.imread(file, 0)
+    if img is None: return
     img = trim(img)
+    if img is None: return
     _, img = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
-    img = cv2.resize(img, scale)
+    img = cv2.resize(img, (28, 28))
+    if img is None: return
     cv2.imwrite(file, img)
 # end function
