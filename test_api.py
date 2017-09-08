@@ -11,7 +11,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def read_images(folder):
     """Read all images from a directory recursively"""
-    return np.sort([file for file in glob(folder + '**/*.*', recursive=True)])
+    return np.sort([file for file in glob(os.path.join(folder, '**', '*.*'), recursive=True)])
 # end if
 
 def trim_image(img):

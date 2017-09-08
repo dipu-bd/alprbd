@@ -75,20 +75,28 @@ def train(ds,
     display_step = 100
     step = 1
     # Keep training until reach max iterations
+    output = 'iteration, loss, accuracy\n'
     while step < iterations:
         batch_x, batch_y = ds.train.next_batch(batch_size)
         # Run optimization op (backprop)
         sess.run(optimizer, feed_dict={X: batch_x, Y_: batch_y, pkeep: 0.75})
+        # Calculate batch loss and accuracy
+        loss, acc = sess.run([cost, accuracy], feed_dict={X: batch_x,
+                                                          Y_: batch_y,
+                                                          pkeep: 1.})
         if (step <= 50 and step % 10 == 0) or (step % display_step == 0):
-            # Calculate batch loss and accuracy
-            loss, acc = sess.run([cost, accuracy], feed_dict={X: batch_x,
-                                                              Y_: batch_y,
-                                                              pkeep: 1.})
             print("Iter " + str(step * batch_size) + ", Minibatch Loss= " + \
                   "{:.6f}".format(loss) + ", Training Accuracy= " + \
                   "{:.5f}".format(acc))
+        # end if
+        output += "{}, {:.18f}, {:.18f}\n".format(step * batch_size, loss, acc)
         step += 1
-    print("Optimization Finished!")
+    # end while
+    print("\nOptimization Finished!")
+
+    with open(os.path.join('plots', 'digit-all.txt'), 'w') as f:
+        f.write(output)
+    # end with
 
     # Calculate accuracy for 256 mnist test images
     print("Testing Accuracy:", \

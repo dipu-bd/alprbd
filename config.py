@@ -6,17 +6,14 @@ import os
 
 # dimension of each image
 IMAGE_DIM = (28, 28)
-CITY_DIM = (4*28, 28)
 
 # dataset directories
 DIGITS_PATH = os.path.join('dataset', 'digits')
 LETTERS_PATH = os.path.join('dataset', 'letters')
-CITY_PATH = os.path.join('dataset', 'city')
 
 # model directories
 DIGIT_MODEL = os.path.join('trained', 'digit.npz')
 LETTER_MODEL = os.path.join('trained', 'letter.npz')
-CITY_MODEL = os.path.join('trained', 'city.npz')
 
 # sample directory
 DIGIT_SAMPLES = 'sample/digits'

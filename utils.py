@@ -51,7 +51,3 @@ def get_digit_data():
 def get_letter_data():
     return get_data(cfg.LETTERS_PATH, cfg.LETTERS)
 # end function
-
-def get_city_data():
-    return get_data(cfg.CITY_PATH, cfg.CITIES)
-# end function

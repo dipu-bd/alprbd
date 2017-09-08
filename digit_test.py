@@ -8,7 +8,7 @@ def main():
     """Main function"""
     run(model_file=cfg.DIGIT_MODEL,
         sample_folder=cfg.DIGIT_SAMPLES,
-        letters=cfg.NUMERALS)    
+        letters=cfg.NUMERALS)
 # end function
 
 if __name__ == '__main__':
