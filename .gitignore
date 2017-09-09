@@ -6,6 +6,7 @@ dataset/
 samples/
 dist/
 *.egg-info/
+plots/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### VisualStudioCode template
