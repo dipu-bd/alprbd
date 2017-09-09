@@ -6,6 +6,8 @@ from .executor import Execute
 class Node:
     """Node is a independent unit that holds some data or a function"""
 
+    _id = 0
+
     def __init__(self, data, name=None):
         self._args = []
         self._kargs = OrderedDict()
@@ -30,12 +32,12 @@ class Node:
     def _set_id(self):
         self._id += 1
         self.__id__ = self._id
-        if not self.name:
+        if self.name is None:
             self.name = 'Node_' + self._id
         # end if
     # end if
 
-    def get(self, key == None):
+    def get(self, key=None):
         """Get a named argument"""
         if key is None:
             return self.execute()
@@ -75,10 +77,11 @@ class Node:
     # end def
 
     def execute(self):
+        """Executes the node and returns the result"""
         if self.result is not None:
             return self.result
         # end if
-        self.result = execute(self)
+        self.result = Execute(self)
         return self.result
     # end def
 
