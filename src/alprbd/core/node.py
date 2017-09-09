@@ -13,9 +13,6 @@ class Node:
         self._set_id()
         self.data = data
         self.result = None
-        if not callable(self.data):
-            self.result = self.data 
-        # end if
     # end def
 
     @property
@@ -77,11 +74,11 @@ class Node:
         return self
     # end def
 
-    def self.execute():
+    def execute(self):
         if self.result is not None:
             return self.result
         # end if
-        self.result = Execute(self)
+        self.result = execute(self)
         return self.result
     # end def
 
