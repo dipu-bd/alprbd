@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
 """Unlicensed"""
 from collections import OrderedDict
+from .executor import Execute
 
 class Node:
+    """Node is a independent unit that holds some data or a function"""
 
     def __init__(self, data, name=None):
-        self.name = name
-        self.data = data
         self._args = []
         self._kargs = OrderedDict()
+        self.name = name
+        self._set_id()
+        self.data = data
+        self.result = None
+        if not callable(self.data):
+            self.result = self.data 
+        # end if
     # end def
 
     @property
@@ -23,9 +30,19 @@ class Node:
         return self._kargs
     # end def
 
-    def get(self, key):
+    def _set_id(self):
+        self._id += 1
+        self.__id__ = self._id
+        if not self.name:
+            self.name = 'Node_' + self._id
+        # end if
+    # end if
+
+    def get(self, key == None):
         """Get a named argument"""
-        if key in self._kargs:
+        if key is None:
+            return self.execute()
+        elif key in self._kargs:
             return self._kargs[key]
         else:
             return None
@@ -58,6 +75,14 @@ class Node:
             self._kargs[key] = Node(vals[0], name=name)
         # end if
         return self
+    # end def
+
+    def self.execute():
+        if self.result is not None:
+            return self.result
+        # end if
+        self.result = Execute(self)
+        return self.result
     # end def
 
 # end class
