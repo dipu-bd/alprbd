@@ -14,7 +14,7 @@ def Model():
     m = OrderedDict()
     m['_file'] = Var(None)
     m['open'] = Node(cv2.imread, m['_file'], ext=IMAGE)
-    m['resize'] = Node(resize, m['open'], Var(640), ext=IMAGE)
+    m['resize'] = Node(rescale, m['open'], Var(640), ext=IMAGE)
     m['gray'] = Node(to_gray, m['resize'], ext=IMAGE)
     m['clahe'] = Node(apply_clahe, m['gray'], Var(30, 60), Var(2.3), ext=IMAGE)
     m['sobel'] = Node(cv2.Sobel, m['clahe'], Var(-1), Var(1), Var(0), ksize=3, ext=IMAGE)
@@ -32,9 +32,10 @@ def Model():
     m['sobel_plate'] = Node(cv2.Sobel, m['bilateral'], Var(-1), Var(0), Var(1), ksize=3, ext=IMAGE, each=True)
     m['thresh_sobel_plate'] = Node(threshold, m['sobel_plate'], Var(100), Var(255), Var(cv2.THRESH_TOZERO), ext=IMAGE, each=True)
     m['canny'] = Node(cv2.Canny, m['thresh_sobel_plate'], Var(200), Var(200), L2gradient=True, each=True, ext=IMAGE)
-    m['resize_plate'] = Node(resize, m['canny'], Var(180), ext=IMAGE, each=True)
-    m['radon'] = Node(apply_radon, m['resize_plate'], ext=IMAGE, each=True)
-    m['angle'] = Node(find_angle, m['radon'], each=True, ext=ARRAY)
+    m['resize_plate'] = Node(rescale, m['canny'], Var(180), ext=IMAGE, each=True)
+    m['radon_t'] = Node(apply_radon, m['resize_plate'], each=True)
+    m['radon'] = Node(smooth_radon, m['radon_t'], ext=IMAGE, each=True)
+    m['angle'] = Node(find_angle, m['radon_t'], each=True, ext=ARRAY)
     m['rotate'] = Node(rotate_all, m['bilateral'], m['angle'])
     #m['combine'] = Node(combine, m['rotate'], m['bilateral'])
     m['trim'] = Node(trim_image, m['rotate'], each=True, ext=IMAGE)
@@ -45,6 +46,7 @@ def Model():
     m['segments'] = Node(get_segments, m['plate_trim'], each=True)
     m['combine_char'] = Node(combine, m['segments'])
     m['char_trim'] = Node(trim_image, m['combine_char'], each=True, ext=IMAGE)
+    m['resize_char'] = Node(resize, m['char_trim'], Var(28, 28), each=True, ext=IMAGE)
 
     return m
 # end def
@@ -86,10 +88,31 @@ def match_filter():
 # end function
 
 
-def resize(img, wid):
+def smooth_radon(img):
+    img += np.min(img)
+    img /= np.max(img)
+    img *= 255
+    return np.uint8(img)
+# end def
+
+def rescale(img, wid):
     """Resize image preserving aspect ratio"""
     row, col = img.shape[:2]
     return cv2.resize(img, (wid, wid * row // col))
+# end def
+
+def rescale2(img, hi):
+    """Resize image preserving aspect ratio"""
+    row, col = img.shape[:2]
+    return cv2.resize(img, (hi * col // row, hi))
+# end def
+
+def resize(img, size):
+    """Resize image preserving aspect ratio"""
+    row, col = img.shape[:2]
+    if 2 * row < col:
+        return rescale2(img, size[0])
+    return cv2.resize(img, size)
 # end def
 
 def to_gray(img):
@@ -336,4 +359,8 @@ def combine(*args):
         # end if
     # end for
     return out
+# end def
+
+def recognize(segments):
+    
 # end def

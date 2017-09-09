@@ -4,6 +4,7 @@ Starting point of the system
 
 import os
 import sys
+import cv2
 from glob import glob
 from shutil import rmtree
 
@@ -29,8 +30,9 @@ def process(file):
     out = os.path.join(cfg.OUT_PATH, name)
     ensure_path(out)
 
-    print(base, end='')
+    print(base, end='\n')
     index = 0
+    total = 0
     for key in gm:
         if key[0] == '_':
             continue
@@ -38,11 +40,18 @@ def process(file):
         #print('\t', index, key, end='')
         index += 1
         dest = os.path.join(out, "{0:02}_{1}".format(index, key))
+        
+        start = cv2.getTickCount()
         gm[key].execute()
+        time = cv2.getTickCount() - start
+        time /= cv2.getTickFrequency()
+        total += time
+
         gm[key].save(dest)
-        print('.', end='')
+        print('  ', key.title(), '& $%.4f$' % time)
     # end for
-    print(out, end='\n')
+    print('==== %.4f' % total, '====\n')
+    return total
 # end def
 
 def main():
@@ -53,14 +62,19 @@ def main():
     # end if
     arg = os.path.abspath(arg)
 
-    if os.path.exists(cfg.OUT_PATH):
-        rmtree(cfg.OUT_PATH) # removes previous output dir
-    # end if
+    # if os.path.exists(cfg.OUT_PATH):
+    #     rmtree(cfg.OUT_PATH) # removes previous output dir
+    # # end if
 
     if os.path.isdir(arg):
-        for file in glob(arg + os.sep + '*.jpg'):
-            process(file)
+        time = 0
+        files = glob(arg + os.sep + '*.jpg')
+        for file in files:
+            time += process(file)
         # end for
+        avg = time / len(files)
+        print('==========================')
+        print('Average = ', ' %.4f' % avg)
     else:
         process(arg)
     # end if
