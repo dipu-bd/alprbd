@@ -3,10 +3,7 @@ Initializes the project
 """
 from argparse import ArgumentParser
 
-from . import models
-from . import worker
-from . import helper
-from . import config
+from .worker import Worker
 
 __version__ = "1.0-alpha"
 
@@ -15,11 +12,12 @@ def process_args(args):
     Process arguments
     :param args:
     """
-    worker.ALPRWorker(args.input_image,
-                      extract=args.extract,
-                      json=args.json,
-                      mark=args.mark,
-                      top_n=args.top_n).start()
+    Worker(args.input_image,
+           extract=args.extract,
+           json=args.json,
+           mark=args.mark,
+           top_n=args.top_n
+           ).start()
 # end function
 
 
