@@ -2,6 +2,8 @@
 *.pyc
 LPDB/
 out/
+dataset/
+trained/
 
 ### Python template
 # Byte-compiled / optimized / DLL files
