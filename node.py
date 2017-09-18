@@ -14,6 +14,7 @@ class Node:
         self.result = None
         self.extension = ext
         self.foreach = each
+        self.outfile = None
     # end def
 
     def get(self):
@@ -53,22 +54,28 @@ class Node:
             if np.isscalar(result):
                 result = np.array([result])
             np.savetxt(filename, result, fmt="%-12g", newline='\r\n')
+        elif self.extension == 'out':
+            with open(filename, "w") as f:
+                f.write('\n\n'.join(result).strip())
+            #end with
         else:
             np.save(filename, result)
         # end if
-        return True
+        return filename
     # end def
 
     def save(self, filename):
         """Store result to file"""
         if not self.foreach:
-            return self._save(filename, self.result)
+            self.outfile = self._save(filename, self.result)
+            return self.outfile
         # end if
+        self.outfile = []
         for i, res in enumerate(self.result):
             name = '{}_{:02}'.format(filename, i)
-            self._save(name, res)
+            self.outfile.append(self._save(name, res))
         # end for
-        return True
+        return self.outfile
     # end def
 # end class
 

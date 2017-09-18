@@ -1,10 +1,12 @@
 """ Unlicensed """
+import os
 from collections import OrderedDict
 import cv2
 import numpy as np
 from node import Node, Var
 from skimage.transform import radon
 from skimage.segmentation import clear_border
+from subprocess import call
 
 IMAGE = 'jpg'
 ARRAY = 'txt'
@@ -47,6 +49,7 @@ def Model():
     m['combine_char'] = Node(combine, m['segments'])
     m['char_trim'] = Node(trim_image, m['combine_char'], each=True, ext=IMAGE)
     m['resize_char'] = Node(resize, m['char_trim'], Var(28, 28), each=True, ext=IMAGE)
+    m['recognize'] = Node(recognize, Var([ m['plate_trim'] ]), each=True, ext='out')
 
     return m
 # end def
@@ -165,7 +168,7 @@ def apply_radon(img):
     row, col = img.shape
     img[[0, row-1], :] = 0
     img[:, [0, col-1]] = 0
-    theta = np.linspace(-90., 90., 180, endpoint=False)
+    theta = np.linspace(-90., 90., max(img.shape), endpoint=False)
     sinogram = radon(img, theta=theta, circle=True)
     return sinogram
 # end def
@@ -361,6 +364,22 @@ def combine(*args):
     return out
 # end def
 
-def recognize(segments):
-    
+def recognize(node):
+    res = []
+    for file in node.outfile:
+        full = os.path.abspath(file)
+        cmd = 'tesseract -l ben "' + full + '" stdout'
+        out = os.popen(cmd).read()
+        
+        out = [x.strip() for x in out.split('\n') if len(x.strip()) > 0]
+        if len(out) > 1:
+            out[1] = out[1].replace(' ', '')
+            if len(out[1]) == 6:
+                out[1] = out[1][:2] + '-' + out[1][2:]
+            # end if
+        # end if
+        out = '\n'.join(out).strip()
+        res.append(out)
+    # end for
+    return res
 # end def
